@@ -228,7 +228,7 @@ export default function DashboardPage() {
           </div>
 
           {isPlusModalOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
+            <div className="fixed inset-0 flex items-center justify-center bg-[#1d1c1c96] bg-opacity-50 z-50 p-4">
               <div className="relative bg-white rounded-lg shadow-lg w-full max-w-[95vw] sm:max-w-[500px] md:max-w-[600px] p-4 sm:p-6 max-h-[90vh] overflow-y-auto">
                 <div className="flex items-center justify-between pb-3">
                   <h3 className="text-lg sm:text-xl font-semibold">Add Task</h3>
