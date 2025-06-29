@@ -14,7 +14,8 @@ axiosInstance.interceptors.request.use(
     (config) => {
         console.log('Making request to:', config.url);
         // You can add auth token here if needed
-        const token = localStorage.getItem('token');
+        // const token = localStorage.getItem('Token');
+        const token = localStorage.getItem("Token")?.replace(/^"|"$/g, "");
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -46,7 +47,7 @@ axiosInstance.interceptors.response.use(
                     // Only redirect to login if it's not the leads endpoint
                     if (!error.config.url.includes('/lead/GetAllLeads')) {
                         console.error('Unauthorized access - redirecting to login');
-                        localStorage.removeItem('token');
+                        localStorage.removeItem('Token');
                         window.location.href = '/login';
                     } else {
                         console.error('Unauthorized access to leads - not redirecting');

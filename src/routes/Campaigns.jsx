@@ -1,254 +1,383 @@
-import React, { useState, useEffect } from 'react';
-import { Play, Pause, MoreHorizontal, Search, Filter, PlusCircle, ChevronDown, CheckCircle, AlertCircle, Circle, ArrowUpDown, X, Zap, Plus, SquarePen, ShieldX, CircleCheck } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import {
+  Play,
+  Pause,
+  MoreHorizontal,
+  Search,
+  Filter,
+  ChevronDown,
+  CheckCircle,
+  AlertCircle,
+  Circle,
+  X,
+  Zap,
+  Plus,
+  Loader2,
+  Trash2,
+  Edit3,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 import { useCampaignQuery } from "../reactQuery/hooks/useCampaignQuery";
 import { toast } from "react-hot-toast";
 
 function Campaigns() {
-
   const {
-    campaignsObject, createCampaignMutation, activePauseMutation, updateCampaignMutation, deleteCampaignMutation
+    campaignsObject,
+    createCampaignMutation,
+    activePauseMutation,
+    updateCampaignMutation,
+    deleteCampaignMutation,
   } = useCampaignQuery();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('All statuses');
-  const [sortOrder, setSortOrder] = useState('Oldest first');
+
+  // State management
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All statuses");
+  const [sortOrder, setSortOrder] = useState("Newest first");
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
   const [showSortDropdown, setShowSortDropdown] = useState(false);
   const [showNewCampaignModal, setShowNewCampaignModal] = useState(false);
-  const [newCampaignName, setNewCampaignName] = useState('');
-  const [campaigns, setCampaigns] = useState([]);
-  const [createLoading, setCreateLoading] = useState(false);
-  const [updateNameLoading, setUpdateNameLoading] = useState(false);
-  
-  const [showOptions, setShowOptions] = useState(null); // Track which campaign's options are shown
-  const [newName, setNewName] = useState('');
-
+  const [newCampaignName, setNewCampaignName] = useState("");
+  const [showOptions, setShowOptions] = useState(null);
+  const [newName, setNewName] = useState("");
   const [showUpdateNameModal, setShowUpdateNameModal] = useState(false);
-  const [campaignToUpdate, setCampaignToUpdate] = useState(''); 
+  const [campaignToUpdate, setCampaignToUpdate] = useState("");
+  const [selectedCampaigns, setSelectedCampaigns] = useState(new Set());
+  const [selectAll, setSelectAll] = useState(false);
 
-  const [modelOpen, setmodelOpen] = useState(false);
-  const handleModal = () => {
-    setmodelOpen(!modelOpen);
-  };
+  // Loading states
+  const isCreateLoading = createCampaignMutation.isPending;
+  const isUpdateLoading = updateCampaignMutation.isPending;
+  const isDeleteLoading = deleteCampaignMutation.isPending;
+  const isToggleLoading = activePauseMutation.isPending;
 
-  const handleMoreClick = (campaignId) => {
-    setShowOptions((prev) => (prev === campaignId ? null : campaignId)); 
-  };
+  // Click outside handler
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setShowStatusDropdown(false);
+      setShowSortDropdown(false);
+      setShowOptions(null);
+    };
 
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
+  // Memoized campaigns list with filtering and sorting
+  const filteredAndSortedCampaigns = useMemo(() => {
+    let filtered = campaignsObject?.campaigns || [];
+
+    // Apply search filter
+    if (searchQuery.trim()) {
+      filtered = filtered.filter((campaign) =>
+        campaign.Name?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Apply status filter
+    if (statusFilter !== "All statuses") {
+      filtered = filtered.filter(
+        (campaign) => campaign.Status === statusFilter
+      );
+    }
+
+    // Apply sorting
+    const sorted = [...filtered];
+    switch (sortOrder) {
+      case "Newest first":
+        sorted.sort(
+          (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+        );
+        break;
+      case "Oldest first":
+        sorted.sort(
+          (a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0)
+        );
+        break;
+      case "Name A - Z":
+        sorted.sort((a, b) => (a.Name || "").localeCompare(b.Name || ""));
+        break;
+      case "Name Z - A":
+        sorted.sort((a, b) => (b.Name || "").localeCompare(a.Name || ""));
+        break;
+      default:
+        break;
+    }
+
+    return sorted;
+  }, [campaignsObject?.campaigns, searchQuery, statusFilter, sortOrder]);
+
+  // Event handlers
+  const handleMoreClick = useCallback((campaignId) => {
+    setShowOptions((prev) => (prev === campaignId ? null : campaignId));
+  }, []);
+
+  const handleStatusChange = useCallback((status) => {
+    setStatusFilter(status);
+    setShowStatusDropdown(false);
+  }, []);
+
+  const handleSortChange = useCallback((sort) => {
+    setSortOrder(sort);
+    setShowSortDropdown(false);
+  }, []);
+
+  const handleDropdownClick = useCallback((e) => {
+    e.stopPropagation();
+  }, []);
+
+  // Campaign selection handlers
+  const handleSelectCampaign = useCallback((campaignId) => {
+    setSelectedCampaigns((prev) => {
+      const newSelection = new Set(prev);
+      if (newSelection.has(campaignId)) {
+        newSelection.delete(campaignId);
+      } else {
+        newSelection.add(campaignId);
+      }
+      return newSelection;
+    });
+  }, []);
+
+  const handleSelectAll = useCallback(() => {
+    if (selectAll) {
+      setSelectedCampaigns(new Set());
+    } else {
+      setSelectedCampaigns(
+        new Set(filteredAndSortedCampaigns.map((c) => c.id))
+      );
+    }
+    setSelectAll(!selectAll);
+  }, [selectAll, filteredAndSortedCampaigns]);
+
+  // Update selectAll state when campaigns change
+  useEffect(() => {
+    const allSelected =
+      filteredAndSortedCampaigns.length > 0 &&
+      filteredAndSortedCampaigns.every((campaign) =>
+        selectedCampaigns.has(campaign.id)
+      );
+    setSelectAll(allSelected);
+  }, [selectedCampaigns, filteredAndSortedCampaigns]);
+
+  // Configuration options
   const statusOptions = [
-    { value: 'All statuses', icon: <Filter size={16} className="text-gray-400" /> },
-    { value: 'Active', icon: <Play size={16} className="text-blue-500" /> },
-    { value: 'Draft', icon: <Circle size={16} className="text-gray-400" /> },
-    { value: 'Paused', icon: <Pause size={16} className="text-yellow-500" /> },
-    { value: 'Error', icon: <AlertCircle size={16} className="text-red-500" /> },
-    { value: 'Completed', icon: <CheckCircle size={16} className="text-green-500" /> }
+    {
+      value: "All statuses",
+      icon: <Filter size={16} className="text-gray-400" />,
+    },
+    { value: "Active", icon: <Play size={16} className="text-blue-500" /> },
+    { value: "Draft", icon: <Circle size={16} className="text-gray-400" /> },
+    { value: "Paused", icon: <Pause size={16} className="text-yellow-500" /> },
+    {
+      value: "Error",
+      icon: <AlertCircle size={16} className="text-red-500" />,
+    },
+    {
+      value: "Completed",
+      icon: <CheckCircle size={16} className="text-green-500" />,
+    },
   ];
 
   const sortOptions = [
-    { value: 'Newest first', label: 'Newest first' },
-    { value: 'Oldest first', label: 'Oldest first' },
-    { value: 'Name A - Z', label: 'Name A - Z' },
-    { value: 'Name Z - A', label: 'Name Z - A' }
+    { value: "Newest first", label: "Newest first" },
+    { value: "Oldest first", label: "Oldest first" },
+    { value: "Name A - Z", label: "Name A - Z" },
+    { value: "Name Z - A", label: "Name Z - A" },
   ];
 
-  const handleStatusChange = (status) => {
-    setStatusFilter(status);
-    setShowStatusDropdown(false);
-  };
-
-  const handleSortChange = (sort) => {
-    setSortOrder(sort);
-    setShowSortDropdown(false);
-    const sortedCampaigns = [...campaigns];
-    
-    if (sort === 'Newest first') {
-      sortedCampaigns.sort((a, b) => b.id - a.id);
-    } else if (sort === 'Oldest first') {
-      sortedCampaigns.sort((a, b) => a.id - b.id);
-    } else if (sort === 'Name A - Z') {
-      sortedCampaigns.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sort === 'Name Z - A') {
-      sortedCampaigns.sort((a, b) => b.name.localeCompare(a.name));
+  // Campaign action handlers
+  const handleCreateCampaign = useCallback(() => {
+    if (!newCampaignName.trim()) {
+      toast.error("Please enter a campaign name");
+      return;
     }
 
-    setCampaigns(sortedCampaigns);
-  };
+    const data = { Name: newCampaignName.trim() };
 
-  useEffect(() => {
-    console.log("H: ", campaignsObject);
+    createCampaignMutation.mutate(data, {
+      onSuccess: () => {
+        toast.success(`Campaign "${newCampaignName}" created successfully!`);
+        setNewCampaignName("");
+        setShowNewCampaignModal(false);
+      },
+      onError: (error) => {
+        console.error("Campaign creation error:", error);
+        toast.error(
+          error?.response?.data?.message || "Failed to create campaign"
+        );
+      },
+    });
+  }, [newCampaignName, createCampaignMutation]);
 
-    setCampaigns(campaignsObject?.campaigns || []);
-    console.log("Campaigns: ", campaigns);
-  }, [campaignsObject])
-
-  useEffect(() => {
-    console.log("Updated campaigns state:", campaigns);
-  }, [campaigns]);
-
-  const handleDropdownClick = (e) => {
-    e.stopPropagation();
-  };
-
-  const handleCreateCampaign = () => {
-    if (newCampaignName.trim()) {
-      setCreateLoading(true);  // Start loading when the request is triggered
-  
-      const data = {
-        Name: newCampaignName
-      }
-  
-      createCampaignMutation.mutate(data, {
-        onSuccess: (data) => {
-          console.log("Campaign creation success:", data);
-          setCreateLoading(false);  // Ensure loading is set to false after success
-          setNewCampaignName('');
-        },
-        onError: (error) => {
-          console.error("Campaign creation error:", error);
-          setCreateLoading(false);  // Ensure loading is set to false after error
-        }
-      });
+  const handleUpdateName = useCallback(() => {
+    if (!newName.trim()) {
+      toast.error("Please enter a valid name");
+      return;
     }
-  };
 
-  const handleUpdateName = () => {
-    setShowOptions(null);
-    if (newName.trim()) {
-      setUpdateNameLoading(true);  // Start loading when the request is triggered
-  
-      const data = {
-        Name: newName
-      }
+    const data = { Name: newName.trim() };
 
-      console.log("Campaign:", campaignToUpdate);
-      // setUpdateNameLoading(false);
-  
-      updateCampaignMutation.mutate(
-        {campaignId: campaignToUpdate, data}, 
-        {
-        onSuccess: (data) => {
-          console.log("Campaign creation success:", data);
-          setUpdateNameLoading(false);
+    updateCampaignMutation.mutate(
+      { campaignId: campaignToUpdate, data },
+      {
+        onSuccess: () => {
+          toast.success("Campaign name updated successfully!");
           setShowUpdateNameModal(false);
-          setNewName('');
+          setNewName("");
+          setCampaignToUpdate("");
+          setShowOptions(null);
         },
         onError: (error) => {
-          console.error("Campaign creation error:", error);
-          setUpdateNameLoading(false);
-          
-        }
+          console.error("Campaign update error:", error);
+          toast.error(
+            error?.response?.data?.message || "Failed to update campaign name"
+          );
+        },
+      }
+    );
+  }, [newName, campaignToUpdate, updateCampaignMutation]);
+
+  const handleDeleteCampaign = useCallback(
+    (campaignId, campaignName) => {
+      if (
+        !window.confirm(
+          `Are you sure you want to delete "${campaignName}"? This action cannot be undone.`
+        )
+      ) {
+        return;
+      }
+
+      setShowOptions(null);
+      deleteCampaignMutation.mutate(campaignId, {
+        onSuccess: () => {
+          toast.success(`Campaign "${campaignName}" deleted successfully!`);
+        },
+        onError: (error) => {
+          console.error("Campaign deletion error:", error);
+          toast.error(
+            error?.response?.data?.message || "Failed to delete campaign"
+          );
+        },
       });
-    }
-    else{
-      toast.error("Enter a valid name.");
-    }
-    
-    setShowUpdateNameModal(false);
-  };
+    },
+    [deleteCampaignMutation]
+  );
 
-  const handleDeleteCampaign = (campaignId) => {
-    setShowOptions(null);
-    deleteCampaignMutation.mutate(campaignId, {
-      onSuccess: () => {
-        console.log("Campaign Deleted:", campaignId);
-      },
-      onError: (error) => console.log("Error toggling campaign status:", error),
-    });
-  }
+  const handleToggleStatus = useCallback(
+    (campaignId, currentStatus) => {
+      const newStatus = currentStatus === "Active" ? "Paused" : "Active";
 
-  const handleToggleStatus = (campaignId) => {
-    activePauseMutation.mutate(campaignId, {
-      onSuccess: () => {
-        console.log("Campaign status toggled:", campaignId);
-      },
-      onError: (error) => console.log("Error toggling campaign status:", error),
-    });
-  };
-  
+      activePauseMutation.mutate(campaignId, {
+        onSuccess: () => {
+          toast.success(`Campaign ${newStatus.toLowerCase()} successfully!`);
+        },
+        onError: (error) => {
+          console.error("Error toggling campaign status:", error);
+          toast.error(
+            error?.response?.data?.message || "Failed to update campaign status"
+          );
+        },
+      });
+    },
+    [activePauseMutation]
+  );
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Main content */}
-      <main className="max-w-7xl px-3 py-6  mx-auto">
+      <main className="max-w-7xl px-3 sm:px-4 lg:px-6 py-4 sm:py-6 mx-auto">
+        {/* Header */}
+        <div className="mb-4 sm:mb-6">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+            Campaigns
+          </h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-1">
+            Manage and monitor your email campaigns
+          </p>
+        </div>
         {/* Filters and actions */}
-        <div className="flex flex-col md:flex-row gap-2 justify-between mb-6">
-          <div className="relative rounded-md w-64">
-            <div className="relative flex items-center w-72">
-            <Search size={20} className="absolute left-3 text-gray-400" />
-            <input
-              type="text"
-              className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 outline-none text-gray-700"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+        <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 justify-between mb-4 sm:mb-6">
+          <div className="relative w-full lg:w-auto">
+            <div className="relative flex items-center w-full sm:w-72">
+              <Search size={20} className="absolute left-3 text-gray-400" />
+              <input
+                type="text"
+                className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 outline-none text-gray-700 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm sm:text-base"
+                placeholder="Search campaigns..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
           </div>
 
-          </div>
-          <div className="flex flex-col w-52 md:w-auto gap-2 md:flex-row space-x-4">
-            <div className="relative">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            {/* Status Filter */}
+            <div className="relative w-full sm:w-auto">
               <button
                 type="button"
-                className="inline-flex items-center cursor-pointer justify-center w-full rounded-full border border-gray-300 px-4 py-2 bg-white text-sm font-medium gap-1 text-gray-400 hover:bg-gray-50 focus:outline-none"
-                id="filter-menu"
+                className="inline-flex items-center justify-center w-full rounded-full border border-gray-300 px-3 sm:px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer min-w-[120px] sm:min-w-[140px]"
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowStatusDropdown(!showStatusDropdown);
                   setShowSortDropdown(false);
                 }}
               >
-                <Zap size={18} className='text-gray-400' />
-                {statusFilter}
+                <Zap size={16} className="mr-2 text-gray-400" />
+                <span className="truncate">{statusFilter}</span>
                 <ChevronDown size={16} className="ml-2 text-gray-400" />
               </button>
-              
+
               {/* Status dropdown */}
               {showStatusDropdown && (
-                <div 
-                  className="origin-top-right absolute right-0 left-1 mt-2 w-56 rounded-md shadow-lg bg-white border-gray-300 ring-opacity-5 focus:outline-none z-10"
+                <div
+                  className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white border border-gray-200 ring-1 ring-black ring-opacity-5 focus:outline-none z-20"
                   onClick={handleDropdownClick}
                 >
                   <div className="py-1">
                     {statusOptions.map((option) => (
                       <button
                         key={option.value}
-                        className="w-full cursor-pointer text-left px-4 py-2 text-sm hover:text-teal-800 hover:bg-[#defffcf7] flex gap-2 items-center"
-                        onClick={() => handleStatusChange(option.name)}>
-                        {option.icon} {option.value} 
-                        <hr className="text-gray-100" />
+                        className="w-full text-left px-4 py-2 text-sm hover:bg-teal-50 hover:text-teal-800 flex items-center gap-2 cursor-pointer"
+                        onClick={() => handleStatusChange(option.value)}
+                      >
+                        {option.icon}
+                        <span>{option.value}</span>
                       </button>
                     ))}
                   </div>
                 </div>
               )}
             </div>
-            <div className="relative">
+
+            {/* Sort Filter */}
+            <div className="relative w-full sm:w-auto">
               <button
                 type="button"
-                className="inline-flex justify-center cursor-pointer w-full rounded-full border border-gray-300 px-4 py-2 bg-white text-sm font-medium gap-1 text-gray-400 hover:bg-gray-50 focus:outline-none"
-                id="sort-menu"
+                className="inline-flex justify-center items-center w-full rounded-full border border-gray-300 px-3 sm:px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer min-w-[120px] sm:min-w-[140px]"
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowSortDropdown(!showSortDropdown);
                   setShowStatusDropdown(false);
                 }}
               >
-                {sortOrder}
+                <span className="truncate">{sortOrder}</span>
                 <ChevronDown size={16} className="ml-2 text-gray-400" />
               </button>
-              
+
               {/* Sort dropdown */}
               {showSortDropdown && (
-                <div 
-                  className="origin-top-right absolute right-0 left-1 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+                <div
+                  className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white border border-gray-200 ring-1 ring-black ring-opacity-5 focus:outline-none z-20"
                   onClick={handleDropdownClick}
                 >
                   <div className="py-1">
                     {sortOptions.map((option) => (
                       <button
                         key={option.value}
-                        className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center ${
-                          sortOrder === option.value ? 'text-teal-600 font-medium' : 'text-gray-700'
+                        className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center cursor-pointer ${
+                          sortOrder === option.value
+                            ? "text-teal-600 bg-teal-50 font-medium"
+                            : "text-gray-700"
                         }`}
                         onClick={() => handleSortChange(option.value)}
                       >
@@ -259,280 +388,692 @@ function Campaigns() {
                 </div>
               )}
             </div>
-            <button onClick={() => setShowNewCampaignModal(true)} type="button" className="cursor-pointer text-white flex justify-center bg-teal-600 hover:bg-teal-600 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2">
-              <Plus size={18} className="mr-2" />
-              Add new
+
+            {/* Add Campaign Button */}
+            <button
+              onClick={() => setShowNewCampaignModal(true)}
+              type="button"
+              className="inline-flex items-center justify-center px-4 sm:px-5 py-2 text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer disabled:opacity-50 w-full sm:w-auto"
+              disabled={isCreateLoading}
+            >
+              {isCreateLoading ? (
+                <Loader2 size={16} className="mr-2 animate-spin" />
+              ) : (
+                <Plus size={16} className="mr-2" />
+              )}
+              <span className="whitespace-nowrap">Add Campaign</span>
             </button>
           </div>
         </div>
 
-        {/* Campaigns table */}
-        <div className="bg-white shadow  sm:rounded-md">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  <input
-                    type="checkbox"
-                    className="focus:ring-teal-500 h-4 w-4 text-teal-600 border-gray-300 rounded"
-                  />
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Progress
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Sent
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Click
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Replies
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Opportunities
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  <span className="sr-only">More</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {campaigns.map((campaign) => (
-                <tr key={campaign.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
+        {/* Bulk Actions */}
+        {selectedCampaigns.size > 0 && (
+          <div className="mb-3 sm:mb-4 p-3 bg-teal-50 border border-teal-200 rounded-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <span className="text-sm font-medium text-teal-800">
+                {selectedCampaigns.size} campaign
+                {selectedCampaigns.size > 1 ? "s" : ""} selected
+              </span>
+              <div className="flex gap-2">
+                <button className="px-3 py-1 text-sm text-teal-700 hover:text-teal-900 cursor-pointer">
+                  Bulk Actions
+                </button>
+                <button
+                  onClick={() => setSelectedCampaigns(new Set())}
+                  className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 cursor-pointer"
+                >
+                  Clear Selection
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Campaigns table - Desktop */}
+        <div className="hidden lg:block bg-white shadow rounded-lg overflow-hidden">
+          {filteredAndSortedCampaigns.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-gray-400 mb-4">
+                <Search size={48} className="mx-auto" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                {searchQuery || statusFilter !== "All statuses"
+                  ? "No campaigns found"
+                  : "No campaigns yet"}
+              </h3>
+              <p className="text-gray-500 mb-6">
+                {searchQuery || statusFilter !== "All statuses"
+                  ? "Try adjusting your search or filters"
+                  : "Create your first campaign to get started"}
+              </p>
+              {!searchQuery && statusFilter === "All statuses" && (
+                <button
+                  onClick={() => setShowNewCampaignModal(true)}
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 rounded-md cursor-pointer"
+                >
+                  <Plus size={16} className="mr-2" />
+                  Create Campaign
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th scope="col" className="px-6 py-3 text-left">
+                      <input
+                        type="checkbox"
+                        className="focus:ring-teal-500 h-4 w-4 text-teal-600 border-gray-300 rounded cursor-pointer"
+                        checked={selectAll}
+                        onChange={handleSelectAll}
+                      />
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                    >
+                      Name
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                    >
+                      Status
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                    >
+                      Progress
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                    >
+                      Sent
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                    >
+                      Clicks
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                    >
+                      Replies
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                    >
+                      Opportunities
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                    >
+                      Actions
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                    >
+                      <span className="sr-only">More</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {filteredAndSortedCampaigns.map((campaign) => (
+                    <tr
+                      key={campaign.id}
+                      className={`hover:bg-gray-50 transition-colors ${
+                        selectedCampaigns.has(campaign.id) ? "bg-teal-50" : ""
+                      }`}
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <input
+                          type="checkbox"
+                          className="focus:ring-teal-500 h-4 w-4 text-teal-600 border-gray-300 rounded cursor-pointer"
+                          checked={selectedCampaigns.has(campaign.id)}
+                          onChange={() => handleSelectCampaign(campaign.id)}
+                        />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <Link
+                          to={`/campaigns/target/${campaign.id}`}
+                          className="text-sm font-medium text-gray-900 hover:text-teal-600 transition-colors"
+                        >
+                          {campaign.Name || "Unnamed Campaign"}
+                        </Link>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            campaign.Status === "Active"
+                              ? "bg-blue-100 text-blue-800"
+                              : campaign.Status === "Error"
+                              ? "bg-red-100 text-red-800"
+                              : campaign.Status === "Paused"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : campaign.Status === "Draft"
+                              ? "bg-gray-100 text-gray-800"
+                              : "bg-green-100 text-green-800"
+                          }`}
+                        >
+                          {campaign.Status || "Draft"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="w-32">
+                          <div className="bg-gray-200 rounded-full h-2.5">
+                            <div
+                              className={`h-2.5 rounded-full transition-all duration-300 ${
+                                campaign.Status === "Active"
+                                  ? "bg-blue-500"
+                                  : campaign.Status === "Error"
+                                  ? "bg-red-500"
+                                  : campaign.Status === "Completed"
+                                  ? "bg-green-500"
+                                  : "bg-yellow-500"
+                              }`}
+                              style={{ width: `${campaign.progress || 0}%` }}
+                            ></div>
+                          </div>
+                          <div className="text-xs text-gray-500 mt-1">
+                            {campaign.progress || 0}%
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                        {campaign.sent || 0}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                        {campaign.clicks || 0}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-gray-900 font-medium">
+                            {campaign.replies || 0}
+                          </span>
+                          <div className="w-px h-4 bg-gray-300"></div>
+                          <span className="text-xs text-gray-500">
+                            {campaign.replyRate || 0}%
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                        {campaign.opportunities || 0}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <button
+                          onClick={() =>
+                            handleToggleStatus(campaign.id, campaign.Status)
+                          }
+                          className={`p-2 rounded-full hover:bg-gray-100 transition-colors cursor-pointer ${
+                            isToggleLoading
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
+                          }`}
+                          disabled={isToggleLoading}
+                          title={
+                            campaign.Status === "Active"
+                              ? "Pause Campaign"
+                              : "Start Campaign"
+                          }
+                        >
+                          {isToggleLoading ? (
+                            <Loader2
+                              size={16}
+                              className="animate-spin text-gray-400"
+                            />
+                          ) : campaign.Status === "Active" ? (
+                            <Pause size={16} className="text-yellow-600" />
+                          ) : (
+                            <Play size={16} className="text-green-600" />
+                          )}
+                        </button>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium relative">
+                        <button
+                          onClick={() => handleMoreClick(campaign.id)}
+                          className="p-2 rounded-full hover:bg-gray-100 transition-colors cursor-pointer"
+                          title="More options"
+                        >
+                          <MoreHorizontal size={16} className="text-gray-400" />
+                        </button>
+
+                        {/* Options dropdown */}
+                        {showOptions === campaign.id && (
+                          <div className="absolute right-0 top-12 w-48 bg-white shadow-lg border border-gray-200 rounded-md z-30">
+                            <div className="py-1">
+                              <button
+                                className="flex items-center w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors"
+                                onClick={() => {
+                                  setCampaignToUpdate(campaign.id);
+                                  setNewName(campaign.Name || "");
+                                  setShowUpdateNameModal(true);
+                                  setShowOptions(null);
+                                }}
+                              >
+                                <Edit3
+                                  size={16}
+                                  className="mr-3 text-gray-400"
+                                />
+                                Update Name
+                              </button>
+                              <hr className="border-gray-100" />
+                              <button
+                                className="flex items-center w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 cursor-pointer transition-colors"
+                                onClick={() =>
+                                  handleDeleteCampaign(
+                                    campaign.id,
+                                    campaign.Name
+                                  )
+                                }
+                                disabled={isDeleteLoading}
+                              >
+                                <Trash2 size={16} className="mr-3" />
+                                Delete Campaign
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* Campaigns cards - Mobile & Tablet */}
+        <div className="lg:hidden space-y-3 sm:space-y-4">
+          {filteredAndSortedCampaigns.length === 0 ? (
+            <div className="bg-white shadow rounded-lg p-6 sm:p-8 text-center">
+              <div className="text-gray-400 mb-4">
+                <Search size={48} className="mx-auto" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                {searchQuery || statusFilter !== "All statuses"
+                  ? "No campaigns found"
+                  : "No campaigns yet"}
+              </h3>
+              <p className="text-gray-500 mb-6">
+                {searchQuery || statusFilter !== "All statuses"
+                  ? "Try adjusting your search or filters"
+                  : "Create your first campaign to get started"}
+              </p>
+              {!searchQuery && statusFilter === "All statuses" && (
+                <button
+                  onClick={() => setShowNewCampaignModal(true)}
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 rounded-md cursor-pointer"
+                >
+                  <Plus size={16} className="mr-2" />
+                  Create Campaign
+                </button>
+              )}
+            </div>
+          ) : (
+            filteredAndSortedCampaigns.map((campaign) => (
+              <div
+                key={campaign.id}
+                className={`bg-white shadow rounded-lg p-4 sm:p-6 transition-all hover:shadow-md ${
+                  selectedCampaigns.has(campaign.id)
+                    ? "ring-2 ring-teal-500 ring-opacity-50 bg-teal-50"
+                    : ""
+                }`}
+              >
+                {/* Card Header */}
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-start gap-3 flex-1 min-w-0">
                     <input
                       type="checkbox"
-                      className="focus:ring-teal-500 h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      className="focus:ring-teal-500 h-4 w-4 text-teal-600 border-gray-300 rounded cursor-pointer mt-1"
+                      checked={selectedCampaigns.has(campaign.id)}
+                      onChange={() => handleSelectCampaign(campaign.id)}
                     />
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {/* <Link to='/campaigns/target/'> */}
-                    <Link to={`/campaigns/target/${campaign.id}`}>
-                      <div className="text-sm font-medium text-gray-900">{campaign.Name}</div>
-                    </Link>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      campaign.Status === 'Active' ? 'bg-blue-100 text-blue-800' : 
-                      campaign.Status === 'Error' ? 'bg-red-100 text-red-800' : 
-                      campaign.Status === 'Paused' ? 'bg-yellow-100 text-yellow-800' :
-                      campaign.Status === 'Draft' ? 'bg-gray-100 text-gray-800' :
-                      'bg-green-100 text-green-800'
-                    }`}>
-                      {campaign.Status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="w-32">
-                      <div className="bg-gray-200 rounded-full h-2.5">
-                        <div 
-                          className={`h-2.5 rounded-full ${
-                            campaign.status === 'Active' ? 'bg-teal-500' : 
-                            campaign.status === 'Error' ? 'bg-red-500' :
-                            campaign.status === 'Completed' ? 'bg-green-500' :
-                            'bg-yellow-500'
-                          }`} 
-                          style={{ width: `${campaign.progress}%` }}
-                        ></div>
+                    <div className="flex-1 min-w-0">
+                      <Link
+                        to={`/campaigns/target/${campaign.id}`}
+                        className="text-lg font-medium text-gray-900 hover:text-teal-600 transition-colors block truncate"
+                      >
+                        {campaign.Name || "Unnamed Campaign"}
+                      </Link>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span
+                          className={`px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full ${
+                            campaign.Status === "Active"
+                              ? "bg-blue-100 text-blue-800"
+                              : campaign.Status === "Error"
+                              ? "bg-red-100 text-red-800"
+                              : campaign.Status === "Paused"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : campaign.Status === "Draft"
+                              ? "bg-gray-100 text-gray-800"
+                              : "bg-green-100 text-green-800"
+                          }`}
+                        >
+                          {campaign.Status || "Draft"}
+                        </span>
                       </div>
-                      <div className="text-xs text-gray-500 mt-1">{campaign.progress}%</div>
                     </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {campaign.sent}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {campaign.clicks}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap flex items-center gap-1">
-                    <div className="text-sm text-gray-400 font-bold">{campaign.replies}</div>
-                    <p className='w-0.5 h-4 border text-gray-400 rounded'></p>
-                    <div className="text-xs text-gray-400">{campaign.replyRate}%</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {campaign.opportunities}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {/* {campaign.Status === 'Active' ? (
-                      <button className="text-gray-400 hover:text-gray-500">
-                        <Pause size={18} />
-                      </button>
-                    ) : (
-                      <button className="text-gray-400 hover:text-gray-500">
-                        <Play size={18} />
-                      </button>
-                    )} */}
+                  </div>
+                  <div className="flex items-center gap-2 ml-2">
                     <button
-                      onClick={() => handleToggleStatus(campaign.id, campaign.Status)}
-                      className={`text-gray-400 hover:text-gray-500 cursor-pointer`}
+                      onClick={() =>
+                        handleToggleStatus(campaign.id, campaign.Status)
+                      }
+                      className={`p-2 rounded-full hover:bg-gray-100 transition-colors cursor-pointer ${
+                        isToggleLoading ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
+                      disabled={isToggleLoading}
+                      title={
+                        campaign.Status === "Active"
+                          ? "Pause Campaign"
+                          : "Start Campaign"
+                      }
                     >
-                      {campaign.Status === 'Active' ? (
-                        <Pause size={18} />
+                      {isToggleLoading ? (
+                        <Loader2
+                          size={16}
+                          className="animate-spin text-gray-400"
+                        />
+                      ) : campaign.Status === "Active" ? (
+                        <Pause size={16} className="text-yellow-600" />
                       ) : (
-                        <Play size={18} />
+                        <Play size={16} className="text-green-600" />
                       )}
                     </button>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium relative">
-                  <button 
-                    onClick={() => handleMoreClick(campaign.id)}
-                    className="text-gray-400 hover:text-gray-500 cursor-pointer"
-                  >
-                    <MoreHorizontal size={18} />
-                  </button>
+                    <div className="relative">
+                      <button
+                        onClick={() => handleMoreClick(campaign.id)}
+                        className="p-2 rounded-full hover:bg-gray-100 transition-colors cursor-pointer"
+                        title="More options"
+                      >
+                        <MoreHorizontal size={16} className="text-gray-400" />
+                      </button>
 
-                  {/* Show Update Name and Delete buttons when More icon is clicked */}
-                  {showOptions === campaign.id && (
-                    <div className="absolute right-5 w-48 bg-white shadow-lg border border-gray-200 rounded-md z-10">
-                      <div className="">
-                        {/* Update Name Button */}
-                        <button
-                          className="block text-gray-700 px-4 py-3 text-sm w-full text-left hover:bg-gray-100 cursor-pointer"
-                          onClick={() => {
-                            setCampaignToUpdate(campaign.id);  // Set the campaign to update
-                            setShowUpdateNameModal(true);   // Open the modal
-                          }}
-                        >
-                          Update Name
-                        </button>
-                        <hr className="border-gray-200" />
-                        {/* Delete Button */}
-                        <button
-                          className="block text-red-600 px-4 py-3 text-sm w-full text-left hover:bg-gray-100 cursor-pointer"
-                          onClick={() => handleDeleteCampaign(campaign.id)}
-                        >
-                          Delete
-                        </button>
-                      </div>
+                      {/* Options dropdown */}
+                      {showOptions === campaign.id && (
+                        <div className="absolute right-0 top-12 w-48 bg-white shadow-lg border border-gray-200 rounded-md z-30">
+                          <div className="py-1">
+                            <button
+                              className="flex items-center w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors"
+                              onClick={() => {
+                                setCampaignToUpdate(campaign.id);
+                                setNewName(campaign.Name || "");
+                                setShowUpdateNameModal(true);
+                                setShowOptions(null);
+                              }}
+                            >
+                              <Edit3 size={16} className="mr-3 text-gray-400" />
+                              Update Name
+                            </button>
+                            <hr className="border-gray-100" />
+                            <button
+                              className="flex items-center w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 cursor-pointer transition-colors"
+                              onClick={() =>
+                                handleDeleteCampaign(campaign.id, campaign.Name)
+                              }
+                              disabled={isDeleteLoading}
+                            >
+                              <Trash2 size={16} className="mr-3" />
+                              Delete Campaign
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
+                </div>
 
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                {/* Progress Bar */}
+                <div className="mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-gray-600 font-medium">
+                      Progress
+                    </span>
+                    <span className="text-sm text-gray-500">
+                      {campaign.progress || 0}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        campaign.Status === "Active"
+                          ? "bg-blue-500"
+                          : campaign.Status === "Error"
+                          ? "bg-red-500"
+                          : campaign.Status === "Completed"
+                          ? "bg-green-500"
+                          : "bg-yellow-500"
+                      }`}
+                      style={{ width: `${campaign.progress || 0}%` }}
+                    ></div>
+                  </div>
+                </div>
+
+                {/* Stats Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div className="text-center">
+                    <div className="text-xl font-bold text-gray-900">
+                      {campaign.sent || 0}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wide">
+                      Sent
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-xl font-bold text-gray-900">
+                      {campaign.clicks || 0}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wide">
+                      Clicks
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-xl font-bold text-gray-900">
+                      {campaign.replies || 0}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wide">
+                      Replies
+                    </div>
+                    <div className="text-xs text-gray-400 mt-1">
+                      {campaign.replyRate || 0}% rate
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-xl font-bold text-gray-900">
+                      {campaign.opportunities || 0}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wide">
+                      Opportunities
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </main>
 
-      {/* New Campaign Modal */}
+      {/* Create Campaign Modal */}
       {showNewCampaignModal && (
-        <div className="fixed inset-0 overflow-y-auto z-50 flex items-center justify-center">
+        <div className="fixed inset-0 overflow-y-auto z-50 flex items-center justify-center p-4">
           {/* Overlay */}
-          <div className="fixed inset-0 bg-opacity-25" onClick={() => setShowNewCampaignModal(false)}></div>
-          
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+            onClick={() => !isCreateLoading && setShowNewCampaignModal(false)}
+          ></div>
+
           {/* Modal */}
-          <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full ms-16 me-4 p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-gray-900">Let's create a new campaign</h3>
-              <button 
-                className="text-gray-400 hover:text-gray-500"
-                onClick={() => setShowNewCampaignModal(false)}
+          <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-4 sm:p-6 transform transition-all">
+            <div className="flex justify-between items-center mb-4 sm:mb-6">
+              <div>
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
+                  Create New Campaign
+                </h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  Give your campaign a memorable name
+                </p>
+              </div>
+              <button
+                className="text-gray-400 hover:text-gray-500 p-1 rounded-full hover:bg-gray-100 transition-colors"
+                onClick={() =>
+                  !isCreateLoading && setShowNewCampaignModal(false)
+                }
+                disabled={isCreateLoading}
               >
                 <X size={20} />
               </button>
             </div>
-            
-            <div className="mb-6">
-              <label htmlFor="campaign-name" className="block text-sm font-medium text-gray-700 mb-2">
-                What would you like to name it?
+
+            <div className="mb-4 sm:mb-6">
+              <label
+                htmlFor="campaign-name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Campaign Name *
               </label>
               <input
                 type="text"
                 id="campaign-name"
-                className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-                placeholder="My Campaign"
+                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-sm sm:text-base"
+                placeholder="e.g., Q1 Lead Generation"
                 value={newCampaignName}
                 onChange={(e) => setNewCampaignName(e.target.value)}
+                onKeyPress={(e) =>
+                  e.key === "Enter" &&
+                  !isCreateLoading &&
+                  handleCreateCampaign()
+                }
                 autoFocus
+                disabled={isCreateLoading}
+                maxLength={100}
               />
+              <div className="mt-1 text-xs text-gray-500">
+                {newCampaignName.length}/100 characters
+              </div>
             </div>
-            
-            <div className="flex justify-end space-x-3">
+
+            <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
               <button
                 type="button"
-                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50"
                 onClick={() => setShowNewCampaignModal(false)}
+                disabled={isCreateLoading}
               >
                 Cancel
               </button>
               <button
                 type="button"
-                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-500 hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                className="w-full sm:w-auto px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-w-[100px]"
                 onClick={handleCreateCampaign}
-                disabled={!newCampaignName.trim() || createLoading}
+                disabled={!newCampaignName.trim() || isCreateLoading}
               >
-                {createLoading ? 'Creating Campaign...' : 'Create'}
+                {isCreateLoading ? (
+                  <div className="flex items-center justify-center">
+                    <Loader2 size={16} className="animate-spin mr-2" />
+                    Creating...
+                  </div>
+                ) : (
+                  "Create Campaign"
+                )}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* New Campaign Modal */}
+      {/* Update Campaign Name Modal */}
       {showUpdateNameModal && (
-        <div className="fixed inset-0 overflow-y-auto z-50 flex items-center justify-center">
+        <div className="fixed inset-0 overflow-y-auto z-50 flex items-center justify-center p-4">
           {/* Overlay */}
-          <div className="fixed inset-0 bg-opacity-25" onClick={() => setShowUpdateNameModal(false)}></div>
-          
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+            onClick={() => !isUpdateLoading && setShowUpdateNameModal(false)}
+          ></div>
+
           {/* Modal */}
-          <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full ms-16 me-4 p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-gray-900">Let's update the campaign name</h3>
-              <button 
-                className="text-gray-400 hover:text-gray-500 cursor-pointer"
-                onClick={() => setShowUpdateNameModal(false)}
+          <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-4 sm:p-6 transform transition-all">
+            <div className="flex justify-between items-center mb-4 sm:mb-6">
+              <div>
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
+                  Update Campaign Name
+                </h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  Enter a new name for your campaign
+                </p>
+              </div>
+              <button
+                className="text-gray-400 hover:text-gray-500 p-1 rounded-full hover:bg-gray-100 transition-colors"
+                onClick={() =>
+                  !isUpdateLoading && setShowUpdateNameModal(false)
+                }
+                disabled={isUpdateLoading}
               >
                 <X size={20} />
               </button>
             </div>
-            
-            <div className="mb-6">
-              <label htmlFor="campaign-name" className="block text-sm font-medium text-gray-700 mb-2">
-                Enter the new name
+
+            <div className="mb-4 sm:mb-6">
+              <label
+                htmlFor="campaign-update-name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                New Campaign Name *
               </label>
               <input
                 type="text"
                 id="campaign-update-name"
-                className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-                placeholder="My Campaign"
+                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-sm sm:text-base"
+                placeholder="Enter new campaign name"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
+                onKeyPress={(e) =>
+                  e.key === "Enter" && !isUpdateLoading && handleUpdateName()
+                }
                 autoFocus
+                disabled={isUpdateLoading}
+                maxLength={100}
               />
+              <div className="mt-1 text-xs text-gray-500">
+                {newName.length}/100 characters
+              </div>
             </div>
-            
-            <div className="flex justify-end space-x-3">
+
+            <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
               <button
                 type="button"
-                className="px-4 py-2 cursor-pointer border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50"
                 onClick={() => setShowUpdateNameModal(false)}
+                disabled={isUpdateLoading}
               >
                 Cancel
               </button>
               <button
                 type="button"
-                className="px-4 py-2 cursor-pointer border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-500 hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                className="w-full sm:w-auto px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-w-[100px]"
                 onClick={handleUpdateName}
-                disabled={!newName || updateNameLoading}
+                disabled={!newName.trim() || isUpdateLoading}
               >
-                {updateNameLoading ? 'Updating Campaign...' : 'Update'}
+                {isUpdateLoading ? (
+                  <div className="flex items-center justify-center">
+                    <Loader2 size={16} className="animate-spin mr-2" />
+                    Updating...
+                  </div>
+                ) : (
+                  "Update Name"
+                )}
               </button>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 }
