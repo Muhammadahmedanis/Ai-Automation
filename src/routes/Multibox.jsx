@@ -12,6 +12,7 @@ import {
   Search,
 } from "lucide-react";
 import { useState } from "react";
+import MailboxSlider from "../components/MailboxSlider";
 
 const emails = [
   {
@@ -49,6 +50,8 @@ const Inbox = () => {
   const [text, setText] = useState("");
   const [showReplyBox, setShowReplyBox] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
+  const [sliderOpen, setSliderOpen] = useState(false);
 
   const handleToggle = () => setIsOpen(!isOpen);
   const handleClose = () => setIsOpen(false);
@@ -177,11 +180,12 @@ const Inbox = () => {
             </button>
           </div>
 
-          <div className="bg-white p-2 sm:p-3 rounded-xl sm:rounded-2xl shadow-sm flex items-center justify-center">
-            <button className="flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm bg-purple-50 hover:bg-purple-100 text-purple-600 font-medium transition-colors">
+          <div className="bg-white p-2 sm:p-3 cursor-pointer rounded-xl sm:rounded-2xl shadow-sm flex items-center justify-center">
+            <button onClick={() => setSliderOpen(!sliderOpen)} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm bg-purple-50 hover:bg-purple-100 text-purple-600 font-medium transition-colors">
               <User className="w-4 h-4" />
               <span>About Lead</span>
             </button>
+            <MailboxSlider sliderOpen={sliderOpen} setSliderOpen={setSliderOpen} />
           </div>
         </div>
 
