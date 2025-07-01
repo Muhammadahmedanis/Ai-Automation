@@ -1,91 +1,141 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  Legend,
+} from "recharts";
 
 function StatsChart() {
-  const canvasRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const data = [
+    { name: "No's. Dialed", value: 200, color: "#7a858b" },
+    { name: "Emails sent", value: 1200, color: "#4285f4" },
+    { name: "Replied", value: 520, color: "#fb8805" },
+    { name: "Calls Clicked", value: 30, color: "#1baf6b" },
+    { name: "Opened", value: 600, color: "#9747ff" },
+    { name: "Opportunities", value: 10, color: "#fbbc05" },
+  ];
+
+  const centerStats = {
+    totalReplies: 2,
+    totalInteractions: data.reduce((sum, item) => sum + item.value, 0),
+  };
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    // Responsive canvas sizing
-    const size = Math.min(window.innerWidth < 640 ? 160 : 200, 200);
-    canvas.width = size;
-    canvas.height = size;
-
-    // Set up the circular progress chart
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius =
-      Math.min(centerX, centerY) - (window.innerWidth < 640 ? 15 : 20);
-
-    // Draw segments
-    const segments = [
-      { color: "#7a858b", value: 17 },
-      { color: "#4285f4", value: 17 },
-      { color: "#fb8805", value: 17 },
-      { color: "#1baf6b", value: 16 },
-      { color: "#9747ff", value: 16 },
-      { color: "#fbbc05", value: 17 },
-    ];
-
-    let startAngle = -Math.PI / 2;
-    segments.forEach((segment) => {
-      const endAngle = startAngle + (2 * Math.PI * segment.value) / 100;
-
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-      ctx.lineWidth = window.innerWidth < 640 ? 10 : 13;
-      ctx.strokeStyle = segment.color;
-      ctx.stroke();
-
-      startAngle = endAngle;
-    });
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 300);
+    return () => clearTimeout(timer);
   }, []);
+
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0];
+      return (
+        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
+          <p className="font-medium text-gray-800">{data.name}</p>
+          <p className="text-sm text-gray-600">
+            <span
+              className="font-semibold"
+              style={{ color: data.payload.color }}
+            >
+              {data.value.toLocaleString()}
+            </span>
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const onPieEnter = (_, index) => {
+    setActiveIndex(index);
+  };
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div className="relative flex items-center justify-center group w-fit mx-auto">
-        {/* Canvas (Moves Left on Hover) */}
-        <canvas
-          ref={canvasRef}
-          width={200}
-          height={200}
-          className="transition-transform duration-300 ease-in-out transform group-hover:-translate-x-6 sm:group-hover:-translate-x-9"
-        />
+      <div
+        className={`relative transition-all duration-500 transform ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+        }`}
+      >
+        <div className="h-48 sm:h-56 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={80}
+                paddingAngle={2}
+                dataKey="value"
+                animationBegin={0}
+                animationDuration={1000}
+                onMouseEnter={onPieEnter}
+              >
+                {data.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={entry.color}
+                    stroke={activeIndex === index ? "#fff" : "none"}
+                    strokeWidth={activeIndex === index ? 2 : 0}
+                    style={{
+                      transform:
+                        activeIndex === index ? "scale(1.05)" : "scale(1)",
+                      transformOrigin: "center",
+                      transition: "all 0.3s ease",
+                    }}
+                  />
+                ))}
+              </Pie>
+              <Tooltip content={<CustomTooltip />} />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
 
-        {/* Text (Appears on Hover) */}
-        <div className="absolute left-[105%] sm:left-[110%] opacity-0 translate-x-2 transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:translate-x-0">
-          <div className="text-lg sm:text-2xl font-semibold">2</div>
-          <div className="text-xs sm:text-sm text-muted-foreground">
+        {/* Center Content */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+          <div className="text-2xl sm:text-3xl font-bold text-gray-800">
+            {centerStats.totalReplies}
+          </div>
+          <div className="text-xs sm:text-sm text-gray-500 font-medium">
             Replies
+          </div>
+          <div className="text-xs text-gray-400 mt-1">
+            of {centerStats.totalInteractions.toLocaleString()}
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-3 text-center divide-x divide-gray-300">
-        {[
-          { value: 200, label: "No's. Dialed", color: "#7a858b" },
-          { value: 1200, label: "Emails sent", color: "#4285f4" },
-          { value: 520, label: "Replied", color: "#fb8805" },
-          { value: 30, label: "Calls Clicked", color: "#1baf6b" },
-          { value: 600, label: "Opened", color: "#9747ff" },
-          { value: 10, label: "Opportunities", color: "#fbbc05" },
-        ].map((item, index) => (
-          <div key={index} className="px-2 sm:px-4 py-2 sm:py-3">
-            <div className="flex flex-col items-center gap-1 sm:gap-2">
-              <div className="flex items-center gap-1 sm:gap-2">
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+        {data.map((item, index) => (
+          <div
+            key={index}
+            className={`p-3 sm:p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 ${
+              activeIndex === index
+                ? "border-gray-300 bg-gray-50 shadow-md"
+                : "border-gray-200 bg-white hover:border-gray-300"
+            }`}
+            onMouseEnter={() => setActiveIndex(index)}
+          >
+            <div className="flex flex-col items-center gap-2">
+              <div className="flex items-center gap-2">
                 <div
-                  className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full"
-                  style={{ backgroundColor: item?.color }}
+                  className="w-3 h-3 sm:w-4 sm:h-4 rounded-full shadow-sm"
+                  style={{ backgroundColor: item.color }}
                 ></div>
-                <div className="text-sm sm:text-xl font-semibold">
-                  {item.value}
+                <div className="text-lg sm:text-2xl font-bold text-gray-800">
+                  {item.value.toLocaleString()}
                 </div>
               </div>
-              <div className="text-[10px] sm:text-[12px] text-gray-500 text-center leading-tight">
-                {item.label}
+              <div className="text-[10px] sm:text-xs text-gray-600 text-center leading-tight font-medium">
+                {item.name}
               </div>
             </div>
           </div>

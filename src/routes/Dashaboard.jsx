@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Bell,
   ChartSpline,
@@ -12,6 +12,9 @@ import {
   Calendar,
   Clock3,
   FileText,
+  TrendingUp,
+  Activity,
+  Target,
 } from "lucide-react";
 import MetricCard from "../components/MetricCard";
 import LiveFeed from "../components/LiveFeed";
@@ -24,109 +27,203 @@ import widget from "../assets/widget.png";
 
 export default function DashboardPage() {
   const [selectedView, setSelectedView] = useState("month");
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for first modal
-  const [isPlusModalOpen, setIsPlusModalOpen] = useState(false); // State for second modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPlusModalOpen, setIsPlusModalOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [metrics, setMetrics] = useState({
+    activeEmails: 12,
+    peopleReached: 1264,
+    meetingsBooked: 156,
+    opportunities: 156,
+  });
+
+  // Update time every minute
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Simulate real-time metric updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMetrics((prev) => ({
+        activeEmails: prev.activeEmails + Math.floor(Math.random() * 2),
+        peopleReached: prev.peopleReached + Math.floor(Math.random() * 10),
+        meetingsBooked: prev.meetingsBooked + Math.floor(Math.random() * 2),
+        opportunities: prev.opportunities + Math.floor(Math.random() * 3),
+      }));
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const getGreeting = () => {
+    const hour = currentTime.getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
+  };
 
   return (
-    <div className="pl-2 sm:pl-4 md:pl-[20px] bg-[rgb(251,251,251)] min-h-screen">
+    <div className="pl-2 sm:pl-4 md:pl-[20px] bg-gradient-to-br from-[rgb(251,251,251)] to-[rgb(245,250,255)] min-h-screen">
       <div className="min-h-screen bg-background">
         <main className="container mx-auto p-2 sm:p-4 md:p-6 max-w-full">
+          {/* Enhanced Header Section */}
           <div className="mb-4 sm:mb-6 flex items-center justify-between flex-col sm:flex-row gap-3 sm:gap-4">
             <div className="text-center sm:text-left w-full sm:w-auto">
-              <h2 className="text-xl sm:text-2xl font-semibold">
-                Evening, Beetoo 👋🏻
+              <div className="flex items-center gap-2 justify-center sm:justify-start mb-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-xs text-gray-500">Live Dashboard</span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                {getGreeting()}, Beetoo 👋🏻
               </h2>
-              <p className="text-xs sm:text-sm text-gray-400 font-semibold">
-                Track your activities, leads, analytics, and more
+              <p className="text-xs sm:text-sm text-gray-500 font-medium mt-1">
+                Track your activities, leads, analytics, and more •{" "}
+                {currentTime.toLocaleDateString()}
               </p>
+              <div className="flex items-center gap-4 mt-2 justify-center sm:justify-start">
+                <div className="flex items-center gap-1">
+                  <TrendingUp className="h-3 w-3 text-green-500" />
+                  <span className="text-xs text-green-600 font-medium">
+                    +12% this week
+                  </span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Activity className="h-3 w-3 text-blue-500" />
+                  <span className="text-xs text-blue-600 font-medium">
+                    24 active campaigns
+                  </span>
+                </div>
+              </div>
             </div>
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="flex items-center gap-2 bg-[rgb(21,163,149)] rounded-full px-3 sm:px-4 py-2 text-white cursor-pointer text-sm sm:text-base whitespace-nowrap"
-            >
-              <Ratio className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="hidden sm:inline">Add widget</span>
-              <span className="sm:hidden">Add</span>
-            </button>
+            <div className="flex items-center gap-3">
+              <button className="relative p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 group">
+                <Bell className="h-5 w-5 text-gray-600 group-hover:text-teal-600" />
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs flex items-center justify-center">
+                  <span className="w-1.5 h-1.5 bg-white rounded-full"></span>
+                </span>
+              </button>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="flex items-center gap-2 bg-gradient-to-r from-[rgb(21,163,149)] to-[rgb(18,140,128)] rounded-full px-4 sm:px-6 py-2.5 text-white cursor-pointer text-sm sm:text-base whitespace-nowrap shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              >
+                <Ratio className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="hidden sm:inline font-medium">Add widget</span>
+                <span className="sm:hidden font-medium">Add</span>
+              </button>
+            </div>
           </div>
 
+          {/* Enhanced Add Widget Modal */}
           {isModalOpen && (
-            <div className="fixed inset-0 top-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
-              <div className="relative bg-white rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-[95vw] sm:max-w-[600px] max-h-[90vh] overflow-hidden">
-                <div className="flex items-center justify-between pb-3">
-                  <h3 className="text-lg sm:text-xl font-semibold">
-                    Add Widget
-                  </h3>
+            <div className="fixed inset-0 top-0 flex items-center justify-center bg-black bg-opacity-60 z-50 p-4 backdrop-blur-sm">
+              <div className="relative bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-[95vw] sm:max-w-[700px] max-h-[90vh] overflow-hidden">
+                <div className="flex items-center justify-between pb-4 border-b border-gray-200">
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-bold text-gray-800">
+                      Add Widget
+                    </h3>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Choose a widget to add to your dashboard
+                    </p>
+                  </div>
                   <button
                     onClick={() => setIsModalOpen(false)}
-                    className="text-gray-400 hover:text-gray-600 cursor-pointer p-1"
+                    className="text-gray-400 hover:text-gray-600 cursor-pointer p-2 hover:bg-gray-100 rounded-full transition-all duration-200"
                   >
-                    <X className="h-5 w-5 sm:h-6 sm:w-6" />
+                    <X className="h-6 w-6" />
                   </button>
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-6 mt-6">
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                      <Search className="text-gray-400 h-4 w-4 sm:h-5 sm:w-5" />
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                      <Search className="text-gray-400 h-5 w-5" />
                     </div>
                     <input
                       type="search"
-                      id="default-search"
-                      className="block w-full px-4 outline-none py-2.5 sm:py-3 pl-9 sm:pl-10 text-sm text-gray-900 border border-green-400 rounded-full bg-gray-50"
-                      placeholder="Search Mockups, Logos..."
+                      className="block w-full px-4 outline-none py-3 pl-12 text-sm text-gray-900 border border-gray-300 rounded-xl bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                      placeholder="Search widgets..."
                     />
                   </div>
                 </div>
-                <div className="h-[60vh] sm:h-[70vh] overflow-auto">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+
+                <div className="h-[60vh] overflow-auto">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     {[
                       {
                         icon: (
-                          <ChartSpline className="text-teal-600" size={18} />
+                          <ChartSpline className="text-teal-600" size={24} />
                         ),
-                        title: "Stats",
+                        title: "Analytics Dashboard",
+                        description:
+                          "Comprehensive analytics with charts and metrics",
+                        category: "Analytics",
                       },
                       {
-                        icon: <Bell className="text-orange-400" size={18} />,
-                        title: "Live Feed",
+                        icon: <Bell className="text-orange-500" size={24} />,
+                        title: "Live Activity Feed",
+                        description: "Real-time updates on user interactions",
+                        category: "Notifications",
                       },
                       {
                         icon: (
                           <ClipboardList
-                            className="text-purple-500"
-                            size={18}
+                            className="text-purple-600"
+                            size={24}
                           />
                         ),
-                        title: "Tasks",
+                        title: "Task Manager",
+                        description: "Organize and track your daily tasks",
+                        category: "Productivity",
                       },
                       {
                         icon: (
-                          <UsersRound className="text-blue-400" size={18} />
+                          <UsersRound className="text-blue-500" size={24} />
                         ),
-                        title: "Top People",
+                        title: "Top Performers",
+                        description: "Track your best leads and contacts",
+                        category: "CRM",
+                      },
+                      {
+                        icon: <Target className="text-green-600" size={24} />,
+                        title: "Goal Tracker",
+                        description: "Monitor your progress towards targets",
+                        category: "Goals",
+                      },
+                      {
+                        icon: <Activity className="text-red-500" size={24} />,
+                        title: "System Monitor",
+                        description: "Track system performance and health",
+                        category: "Monitoring",
                       },
                     ].map((widgetItem, index) => (
                       <div
                         key={index}
-                        className="border-none p-2 sm:p-3 rounded-md shadow-md bg-white"
+                        className="group border border-gray-200 p-5 rounded-xl shadow-sm bg-white hover:shadow-lg hover:border-green-300 transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
                       >
-                        <div className="bg-gray-200 p-2 sm:p-3 rounded-md">
+                        <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-4 rounded-xl mb-4 group-hover:from-green-50 group-hover:to-blue-50 transition-all duration-300">
                           <img
                             src={widget}
-                            className="w-full h-32 sm:h-40 bg-white border-none rounded-md object-cover"
-                            alt="Widget"
+                            className="w-full h-32 sm:h-36 bg-white border border-gray-200 rounded-lg object-cover"
+                            alt="Widget Preview"
                           />
                         </div>
-                        <div className="flex items-center gap-2 mt-2 text-gray-700">
+                        <div className="flex items-center gap-3 mb-2">
                           {widgetItem.icon}
-                          <span className="font-medium text-sm sm:text-base">
-                            {widgetItem.title}
-                          </span>
+                          <div>
+                            <h4 className="font-semibold text-gray-800 group-hover:text-gray-900">
+                              {widgetItem.title}
+                            </h4>
+                            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                              {widgetItem.category}
+                            </span>
+                          </div>
                         </div>
-                        <p className="text-gray-500 text-xs sm:text-sm mt-1 line-clamp-2">
-                          Lorem ipsum dolor sit amet consectetur, adipisicing
-                          elit.
+                        <p className="text-gray-600 text-sm leading-relaxed">
+                          {widgetItem.description}
                         </p>
                       </div>
                     ))}
@@ -136,69 +233,93 @@ export default function DashboardPage() {
             </div>
           )}
 
-          <div className="mb-6 sm:mb-8 grid gap-3 sm:gap-4 p-2 sm:p-4 md:p-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Enhanced Metrics Section */}
+          <div className="mb-6 sm:mb-8 grid gap-4 sm:gap-6 p-2 sm:p-4 md:p-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <MetricCard
               icon="mail"
               label="Active emails"
-              value="12"
+              value={metrics.activeEmails.toString()}
               iconColor="text-[#6ca1f7]"
               bgColor="bg-[#ecf3fe]"
+              trend="+8%"
+              trendDirection="up"
             />
             <MetricCard
               icon="users"
               label="People Reached"
-              value="1,264"
+              value={metrics.peopleReached.toLocaleString()}
               iconColor="text-[#fcbd75]"
               bgColor="bg-[#fff3e6]"
+              trend="+12%"
+              trendDirection="up"
             />
             <MetricCard
               icon="calendar"
               label="Meetings Booked"
-              value="156"
+              value={metrics.meetingsBooked.toString()}
               iconColor="text-[#34a853]"
               bgColor="bg-[#ebf6ee]"
+              trend="+24%"
+              trendDirection="up"
             />
             <MetricCard
               icon="briefcase"
               label="Opportunities"
-              value="156"
+              value={metrics.opportunities.toString()}
               iconColor="text-[#ae70ff]"
               bgColor="bg-[#f5edff]"
+              trend="+15%"
+              trendDirection="up"
             />
           </div>
 
-          <div className="grid gap-3 sm:gap-4 p-2 sm:p-4 md:p-6 grid-cols-1 lg:grid-cols-3">
-            <div className="p-4 sm:p-6 border-none rounded-lg shadow-md bg-white">
-              <h3 className="font-semibold mb-4 text-sm sm:text-base">
-                Live feed
-              </h3>
+          {/* Enhanced Dashboard Grid */}
+          <div className="grid gap-4 sm:gap-6 p-2 sm:p-4 md:p-6 grid-cols-1 lg:grid-cols-3">
+            {/* Live Feed Section */}
+            <div className="p-4 sm:p-6 border-none rounded-xl shadow-lg bg-white hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-base sm:text-lg text-gray-800">
+                  Live Feed
+                </h3>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-xs text-gray-500">Real-time</span>
+                </div>
+              </div>
               <LiveFeed />
             </div>
 
-            <div className="p-4 sm:p-6 border-none rounded-lg shadow-md bg-white">
+            {/* Stats Section */}
+            <div className="p-4 sm:p-6 border-none rounded-xl shadow-lg bg-white hover:shadow-xl transition-all duration-300">
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="font-semibold text-sm sm:text-base">Stats</h3>
-                <Link to="/analytics">
-                  <MoveUpRight className="text-gray-400 h-4 w-4 sm:h-5 sm:w-5" />
+                <h3 className="font-bold text-base sm:text-lg text-gray-800">
+                  Analytics Overview
+                </h3>
+                <Link
+                  to="/analytics"
+                  className="group flex items-center gap-1 text-sm text-gray-500 hover:text-teal-600 transition-colors"
+                >
+                  <span>View All</span>
+                  <MoveUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </Link>
               </div>
 
-              <div className="w-fit mx-auto rounded-full bg-gray-200 p-1 mb-4">
+              <div className="w-fit mx-auto rounded-xl bg-gray-100 p-1 mb-6">
                 <button
-                  className={`px-2 sm:px-3 md:px-4 py-1 sm:py-2 text-xs sm:text-sm rounded-full cursor-pointer transition-all duration-300 ${
+                  className={`px-3 sm:px-4 py-2 text-xs sm:text-sm rounded-lg cursor-pointer transition-all duration-300 font-medium ${
                     selectedView === "month"
-                      ? "bg-gray-500 text-white"
-                      : "bg-gray-200 text-gray-400"
+                      ? "bg-white text-gray-800 shadow-sm"
+                      : "bg-transparent text-gray-500 hover:text-gray-700"
                   }`}
                   onClick={() => setSelectedView("month")}
                 >
                   Monthly
                 </button>
                 <button
-                  className={`px-2 sm:px-3 md:px-4 py-1 sm:py-2 text-xs sm:text-sm rounded-full cursor-pointer transition-all duration-300 ${
+                  className={`px-3 sm:px-4 py-2 text-xs sm:text-sm rounded-lg cursor-pointer transition-all duration-300 font-medium ${
                     selectedView === "week"
-                      ? "bg-gray-500 text-white"
-                      : "bg-gray-200 text-gray-400"
+                      ? "bg-white text-gray-800 shadow-sm"
+                      : "bg-transparent text-gray-500 hover:text-gray-700"
                   }`}
                   onClick={() => setSelectedView("week")}
                 >
@@ -208,123 +329,154 @@ export default function DashboardPage() {
               <StatsChart />
             </div>
 
-            <div className="p-3 sm:p-4 md:p-6 border-none rounded-lg shadow-md bg-white">
+            {/* Tasks Section */}
+            <div className="p-4 sm:p-5 md:p-6 border-none rounded-xl shadow-lg bg-white hover:shadow-xl transition-all duration-300">
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2 sm:gap-3">
-                  <h3 className="font-semibold text-sm sm:text-base">Tasks</h3>
-                  <span className="rounded-full bg-orange-100 px-2 py-0.5 text-xs text-orange-600">
+                  <h3 className="font-bold text-base sm:text-lg text-gray-800">
+                    Tasks
+                  </h3>
+                  <span className="rounded-full bg-gradient-to-r from-orange-100 to-red-100 px-2 py-1 text-xs text-orange-700 font-semibold border border-orange-200">
                     5 New
                   </span>
                 </div>
-                <Plus
-                  className="bg-gray-300 rounded-lg p-1 cursor-pointer h-6 w-6 sm:h-7 sm:w-7"
+                <button
                   onClick={() => setIsPlusModalOpen(true)}
-                />
+                  className="bg-gradient-to-r from-gray-100 to-gray-200 hover:from-teal-100 hover:to-teal-200 rounded-xl p-2 cursor-pointer transition-all duration-300 hover:scale-110 group"
+                >
+                  <Plus className="h-5 w-5 text-gray-600 group-hover:text-teal-600 transition-colors" />
+                </button>
               </div>
-              <div className="min-h-[300px] sm:min-h-[400px]">
+              <div className="min-h-[300px] sm:min-h-[400px] overflow-y-auto">
                 <TaskList />
               </div>
             </div>
           </div>
 
+          {/* Enhanced Add Task Modal */}
           {isPlusModalOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-[#1d1c1c96] bg-opacity-50 z-50 p-4">
-              <div className="relative bg-white rounded-lg shadow-lg w-full max-w-[95vw] sm:max-w-[500px] md:max-w-[600px] p-4 sm:p-6 max-h-[90vh] overflow-y-auto">
-                <div className="flex items-center justify-between pb-3">
-                  <h3 className="text-lg sm:text-xl font-semibold">Add Task</h3>
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50 p-4 backdrop-blur-sm">
+              <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-[95vw] sm:max-w-[600px] p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
+                <div className="flex items-center justify-between pb-4 border-b border-gray-200">
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-bold text-gray-800">
+                      Create New Task
+                    </h3>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Add a new task to your workflow
+                    </p>
+                  </div>
                   <button
                     onClick={() => setIsPlusModalOpen(false)}
-                    className="text-gray-400 hover:text-gray-600 cursor-pointer p-1"
+                    className="text-gray-400 hover:text-gray-600 cursor-pointer p-2 hover:bg-gray-100 rounded-full transition-all duration-200"
                   >
-                    <X className="h-5 w-5 sm:h-6 sm:w-6" />
+                    <X className="h-6 w-6" />
                   </button>
                 </div>
 
-                <div>
-                  <form className="space-y-4">
+                <form className="space-y-6 mt-6">
+                  <div>
+                    <div className="flex gap-2 items-center mb-3">
+                      <RiEditCircleLine size={20} className="text-teal-600" />
+                      <label className="block text-sm font-semibold text-gray-700">
+                        Task Title
+                      </label>
+                    </div>
+                    <input
+                      type="text"
+                      className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all text-sm"
+                      placeholder="Enter task title..."
+                    />
+                  </div>
+
+                  <div>
+                    <div className="flex gap-2 items-center mb-3">
+                      <FileText size={20} className="text-teal-600" />
+                      <label className="block text-sm font-semibold text-gray-700">
+                        Description
+                      </label>
+                    </div>
+                    <textarea
+                      rows="4"
+                      className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all text-sm resize-none"
+                      placeholder="Describe the task in detail..."
+                    ></textarea>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <div className="flex gap-1 items-center mb-3">
-                        <RiEditCircleLine size={20} className="text-gray-400" />
-                        <label className="block text-sm font-medium">
-                          Task Title
+                      <div className="flex gap-2 items-center mb-3">
+                        <Calendar size={20} className="text-teal-600" />
+                        <label className="block text-sm font-semibold text-gray-700">
+                          Due Date
                         </label>
                       </div>
                       <input
-                        type="text"
-                        className="mt-1 block w-full p-2 sm:p-3 cursor-pointer border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm sm:text-base"
+                        type="date"
+                        className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all text-sm"
                       />
                     </div>
                     <div>
-                      <div className="flex gap-1 items-center mb-3">
-                        <FileText size={20} className="text-gray-400" />
-                        <label className="block text-sm font-medium">
-                          Description
+                      <div className="flex gap-2 items-center mb-3">
+                        <Clock3 size={20} className="text-teal-600" />
+                        <label className="block text-sm font-semibold text-gray-700">
+                          Time
                         </label>
                       </div>
-                      <textarea
-                        rows="3"
-                        className="mt-1 block w-full p-2 sm:p-3 cursor-pointer border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm sm:text-base resize-none"
-                      ></textarea>
+                      <input
+                        type="time"
+                        className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all text-sm"
+                      />
                     </div>
-                    <div className="flex flex-col sm:flex-row items-center gap-4">
-                      <div className="w-full sm:w-1/2">
-                        <div className="flex gap-1 items-center mb-3">
-                          <Calendar size={20} className="text-gray-400" />
-                          <label className="block text-sm font-medium">
-                            Date
-                          </label>
-                        </div>
-                        <input
-                          type="date"
-                          className="mt-1 block cursor-pointer w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm sm:text-base"
-                        />
-                      </div>
-                      <div className="w-full sm:w-1/2">
-                        <div className="flex gap-1 items-center mb-3">
-                          <Clock3 size={20} className="text-gray-400" />
-                          <label className="block text-sm font-medium">
-                            Time
-                          </label>
-                        </div>
-                        <input
-                          type="time"
-                          className="mt-1 block cursor-pointer w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm sm:text-base"
-                        />
-                      </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-3">
+                        Priority Level
+                      </label>
+                      <select className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all text-sm">
+                        <option value="low">Low Priority</option>
+                        <option value="medium">Medium Priority</option>
+                        <option value="high">High Priority</option>
+                      </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-3">
+                      <label className="block text-sm font-semibold text-gray-700 mb-3">
                         Assign to Person
                       </label>
                       <input
                         type="text"
-                        className="mt-1 block cursor-pointer w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm sm:text-base"
+                        className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all text-sm"
+                        placeholder="Enter assignee name..."
                       />
                     </div>
-                    <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4">
-                      <button
-                        onClick={() => setIsPlusModalOpen(false)}
-                        type="button"
-                        className="w-full sm:w-auto text-gray-900 cursor-pointer bg-white border border-gray-300 font-medium rounded-full text-sm px-5 py-2.5 hover:bg-gray-50 transition-colors"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        onClick={() => setIsPlusModalOpen(false)}
-                        type="button"
-                        className="w-full sm:w-auto text-white cursor-pointer flex gap-2 items-center justify-center bg-[rgb(21,163,149)] hover:bg-[rgb(18,140,128)] focus:outline-none font-medium rounded-full text-sm px-5 py-2.5 transition-colors"
-                      >
-                        <FileText size={16} />
-                        Save Task
-                      </button>
-                    </div>
-                  </form>
-                </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t border-gray-200">
+                    <button
+                      onClick={() => setIsPlusModalOpen(false)}
+                      type="button"
+                      className="w-full sm:w-auto px-6 py-3 text-gray-700 bg-gray-100 border border-gray-300 font-medium rounded-xl text-sm hover:bg-gray-200 transition-all duration-200"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => setIsPlusModalOpen(false)}
+                      type="button"
+                      className="w-full sm:w-auto px-6 py-3 text-white bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 focus:outline-none font-medium rounded-xl text-sm transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                    >
+                      <FileText size={16} />
+                      Create Task
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           )}
 
-          <div className="mt-3 sm:mt-4 md:mt-6 border-none rounded-lg shadow-md bg-white">
+          {/* Enhanced Top People Section */}
+          <div className="mt-6 sm:mt-8 border-none rounded-xl shadow-lg bg-white hover:shadow-xl transition-all duration-300">
             <TopPeople />
           </div>
         </main>

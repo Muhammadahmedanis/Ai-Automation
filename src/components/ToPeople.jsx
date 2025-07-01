@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FiPlus } from "react-icons/fi";
 import { MdArrowOutward } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
@@ -9,189 +9,292 @@ import {
   MailOpen,
   Search,
   User,
+  TrendingUp,
+  Star,
+  Filter,
+  Download,
+  MoreVertical,
 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 
-const people = [
+const initialPeople = [
   {
+    id: 1,
     email: "xmitchell@hotmail.com",
     contact: "Lynn Tanner",
     provider: "Microsoft",
     status: "Verified",
+    score: 95,
+    avatar: "https://i.pravatar.cc/40?img=1",
+    lastActivity: "2 hours ago",
+    engagement: "high",
   },
   {
+    id: 2,
     email: "tbaker@outlook.com",
     contact: "Capt. Trunk",
     provider: "Google",
     status: "Not yet contacted",
+    score: 78,
+    avatar: "https://i.pravatar.cc/40?img=2",
+    lastActivity: "1 day ago",
+    engagement: "medium",
   },
   {
+    id: 3,
     email: "mgonzalez@aol.com",
     contact: "Thomas Anum",
     provider: "Google",
     status: "Not yet contacted",
+    score: 62,
+    avatar: "https://i.pravatar.cc/40?img=3",
+    lastActivity: "3 days ago",
+    engagement: "low",
   },
 ];
 
 export default function ToPeople() {
+  const [people, setPeople] = useState(initialPeople);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState("all");
+  const [visiblePeople, setVisiblePeople] = useState([]);
+
+  useEffect(() => {
+    // Animate people appearing
+    people.forEach((person, index) => {
+      setTimeout(() => {
+        setVisiblePeople((prev) => [...prev, person.id]);
+      }, index * 100);
+    });
+  }, [people]);
+
+  const filteredPeople = people.filter((person) => {
+    const matchesSearch =
+      person.contact.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      person.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter =
+      selectedFilter === "all" ||
+      (selectedFilter === "verified" && person.status === "Verified") ||
+      (selectedFilter === "pending" && person.status === "Not yet contacted");
+    return matchesSearch && matchesFilter;
+  });
 
   const handleAnother = () => {
     setIsSecondModalOpen(true);
     setIsModalOpen(false);
   };
 
+  const getEngagementColor = (engagement) => {
+    switch (engagement) {
+      case "high":
+        return "text-green-600 bg-green-100";
+      case "medium":
+        return "text-yellow-600 bg-yellow-100";
+      case "low":
+        return "text-red-600 bg-red-100";
+      default:
+        return "text-gray-600 bg-gray-100";
+    }
+  };
+
+  const getStatusColor = (status) => {
+    return status === "Verified"
+      ? "text-green-600 bg-green-100 border-green-200"
+      : "text-orange-600 bg-orange-100 border-orange-200";
+  };
+
   return (
-    <div className="p-3 sm:p-4 md:p-6">
-      <div className="mb-4 sm:mb-6 flex items-center justify-between">
-        <h3 className="font-semibold text-sm sm:text-base">Top Lead</h3>
-        <button className="ml-auto">
+    <div className="p-4 sm:p-6 md:p-8">
+      {/* Enhanced Header */}
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <h3 className="font-bold text-lg sm:text-xl text-gray-800">
+            Top Leads
+          </h3>
+          <div className="flex items-center gap-2">
+            <TrendingUp className="h-4 w-4 text-green-500" />
+            <span className="text-sm text-green-600 font-medium">
+              +{people.length} this week
+            </span>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+            <Download className="h-4 w-4 text-gray-600" />
+          </button>
           <Link to="/analytics">
-            <MdArrowOutward className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <MdArrowOutward className="h-4 w-4 text-gray-600" />
+            </button>
           </Link>
-        </button>
+        </div>
       </div>
 
-      <div className="mb-4 sm:mb-6 flex items-center gap-3 sm:gap-4 flex-col sm:flex-row">
+      {/* Enhanced Search and Filter Section */}
+      <div className="mb-6 flex items-center gap-4 flex-col sm:flex-row">
         <div className="relative w-full sm:flex-1">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Search className="text-gray-400 h-4 w-4 sm:h-5 sm:w-5" />
+          <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+            <Search className="text-gray-400 h-4 w-4" />
           </div>
           <input
             type="search"
-            className="block w-full p-2 sm:p-3 pl-8 sm:pl-10 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-500 focus:border-green-500 outline-none"
-            placeholder="Search leads..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="block w-full p-3 pl-11 text-sm border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
+            placeholder="Search leads by name or email..."
           />
         </div>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 bg-[#15a395] text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-[#128a7e] transition-colors text-sm sm:text-base whitespace-nowrap"
-        >
-          <FiPlus className="h-4 w-4" />
-          <span className="hidden sm:inline cursor-pointer">Add leads</span>
-          <span className="sm:hidden">Add</span>
-        </button>
-      </div>
 
-      {/* Desktop Table View */}
-      <div className="hidden lg:block overflow-x-auto">
-        <table className="w-full border border-gray-300 rounded-lg">
-          <thead className="bg-gray-50">
-            <tr className="border border-gray-300">
-              <th className="px-3 sm:px-4 py-3 text-left">
-                <input
-                  type="checkbox"
-                  className="rounded border-muted cursor-pointer"
-                />
-              </th>
-              <th className="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-medium text-gray-500">
-                EMAIL
-              </th>
-              <th className="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-medium text-gray-500">
-                CONTACT
-              </th>
-              <th className="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-medium text-gray-500">
-                PROVIDER
-              </th>
-              <th className="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-medium text-gray-500">
-                STATUS
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {people.map((person) => (
-              <tr
-                key={person.email}
-                className="border border-gray-300 text-xs sm:text-sm hover:bg-gray-50"
-              >
-                <td className="px-3 sm:px-4 py-3">
-                  <input
-                    type="checkbox"
-                    className="rounded border-muted cursor-pointer"
-                  />
-                </td>
-                <td className="px-3 sm:px-4 py-3 text-gray-400 truncate max-w-0">
-                  {person.email}
-                </td>
-                <td className="px-3 sm:px-4 py-3 text-gray-400 truncate">
-                  {person.contact}
-                </td>
-                <td className="px-3 sm:px-4 py-3 text-gray-400">
-                  <div className="flex items-center gap-1">
-                    <FcGoogle size={18} />
-                    <span className="hidden sm:inline">{person.provider}</span>
-                  </div>
-                </td>
-                <td className="px-3 sm:px-4 py-3">
-                  <div className="flex flex-col xl:flex-row xl:items-center gap-1 xl:gap-2">
-                    <div className="flex items-center gap-1 bg-blue-50 rounded-full px-2 py-0.5 w-fit">
-                      <CircleCheck size={14} className="text-blue-500" />
-                      <span className="text-xs text-blue-500">Verified</span>
-                    </div>
-                    <div className="flex items-center gap-1 bg-gray-100 rounded-full px-2 py-0.5 w-fit">
-                      <Clock className="h-3 w-3 text-gray-400" />
-                      <span className="text-xs text-gray-400 hidden xl:inline">
-                        Not yet contacted
-                      </span>
-                      <span className="text-xs text-gray-400 xl:hidden">
-                        Pending
-                      </span>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Mobile Card View */}
-      <div className="lg:hidden space-y-3 sm:space-y-4">
-        {people.map((person) => (
-          <div
-            key={person.email}
-            className="bg-white border border-gray-300 rounded-lg p-3 sm:p-4 shadow-sm"
+        <div className="flex items-center gap-2">
+          <select
+            value={selectedFilter}
+            onChange={(e) => setSelectedFilter(e.target.value)}
+            className="p-3 border border-gray-300 rounded-xl bg-white text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
           >
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex items-center gap-2 min-w-0 flex-1">
-                <input
-                  type="checkbox"
-                  className="rounded border-muted cursor-pointer flex-shrink-0"
-                />
-                <div className="min-w-0 flex-1">
-                  <p className="font-medium text-gray-900 text-sm sm:text-base truncate">
-                    {person.contact}
-                  </p>
-                  <p className="text-xs sm:text-sm text-gray-500 truncate">
+            <option value="all">All Status</option>
+            <option value="verified">Verified</option>
+            <option value="pending">Pending</option>
+          </select>
+
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-2 bg-gradient-to-r from-[#15a395] to-[#128a7e] text-white px-4 py-3 rounded-xl hover:shadow-lg transition-all transform hover:scale-105 text-sm font-medium"
+          >
+            <FiPlus className="h-4 w-4" />
+            <span>Add Lead</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Enhanced Cards View for Mobile and Desktop */}
+      <div className="space-y-4">
+        {filteredPeople.map((person, index) => (
+          <div
+            key={person.id}
+            className={`bg-white border border-gray-200 rounded-xl p-4 sm:p-5 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 ${
+              visiblePeople.includes(person.id)
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-4"
+            }`}
+            style={{ transitionDelay: `${index * 100}ms` }}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4 flex-1 min-w-0">
+                <div className="relative">
+                  <img
+                    src={person.avatar}
+                    alt={person.contact}
+                    className="w-12 h-12 rounded-full border-2 border-gray-200 shadow-sm"
+                  />
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h4 className="font-semibold text-gray-900 truncate">
+                      {person.contact}
+                    </h4>
+                    <div className="flex items-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`h-3 w-3 ${
+                            i < Math.floor(person.score / 20)
+                              ? "text-yellow-400 fill-current"
+                              : "text-gray-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600 truncate mb-2">
                     {person.email}
                   </p>
+
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <div
+                      className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(
+                        person.status
+                      )}`}
+                    >
+                      {person.status === "Verified" ? (
+                        <CircleCheck className="inline h-3 w-3 mr-1" />
+                      ) : (
+                        <Clock className="inline h-3 w-3 mr-1" />
+                      )}
+                      {person.status}
+                    </div>
+
+                    <div
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${getEngagementColor(
+                        person.engagement
+                      )}`}
+                    >
+                      {person.engagement.charAt(0).toUpperCase() +
+                        person.engagement.slice(1)}{" "}
+                      Engagement
+                    </div>
+
+                    <div className="flex items-center gap-1 text-xs text-gray-500">
+                      {person.provider === "Google" ? (
+                        <FcGoogle className="h-4 w-4" />
+                      ) : (
+                        <div className="h-4 w-4 bg-blue-500 rounded text-white text-xs flex items-center justify-center">
+                          M
+                        </div>
+                      )}
+                      <span>{person.provider}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
+
+              <div className="flex items-center gap-3">
+                <div className="text-right">
+                  <div className="text-lg font-bold text-gray-800">
+                    {person.score}
+                  </div>
+                  <div className="text-xs text-gray-500">Lead Score</div>
+                </div>
+
+                <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                  <MoreVertical className="h-4 w-4 text-gray-600" />
+                </button>
+              </div>
             </div>
 
-            <div className="flex items-center justify-between mb-3">
+            <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+              <div className="text-xs text-gray-500">
+                Last activity: {person.lastActivity}
+              </div>
               <div className="flex items-center gap-2">
-                <FcGoogle size={18} />
-                <span className="text-xs sm:text-sm text-gray-400">
-                  {person.provider}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              <div className="flex items-center gap-1 bg-blue-50 rounded-full px-2 py-0.5">
-                <CircleCheck size={14} className="text-blue-500" />
-                <span className="text-xs text-blue-500">Verified</span>
-              </div>
-              <div className="flex items-center gap-1 bg-gray-100 rounded-full px-2 py-0.5">
-                <Clock className="h-3 w-3 text-gray-400" />
-                <span className="text-xs text-gray-400">Not yet contacted</span>
+                <button className="px-3 py-1 text-xs font-medium text-blue-600 bg-blue-100 rounded-full hover:bg-blue-200 transition-colors">
+                  View Profile
+                </button>
+                <button className="px-3 py-1 text-xs font-medium text-green-600 bg-green-100 rounded-full hover:bg-green-200 transition-colors">
+                  Send Email
+                </button>
               </div>
             </div>
           </div>
         ))}
+
+        {filteredPeople.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-2">
+              <User className="h-12 w-12 mx-auto mb-4" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No leads found
+            </h3>
+            <p className="text-gray-500">
+              Try adjusting your search or filter criteria.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Modal */}
