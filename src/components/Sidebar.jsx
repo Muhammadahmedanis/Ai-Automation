@@ -10,13 +10,14 @@ import {
   User,
   Settings,
   HelpCircle,
+  LayoutDashboard,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import logo2 from "../assets/logo2.png";
 
 const menuItems = [
-  { name: "Dashboard", icon: Camera, slug: "/" },
+  { name: "Dashboard", icon: LayoutDashboard, slug: "/" },
   { name: "AI Lead Scout", icon: User, slug: "ai-lead-scouts" },
   { name: "Email Accounts", icon: Mail, slug: "email-accounts" },
   { name: "Multibox", icon: Inbox, slug: "multi-box" },

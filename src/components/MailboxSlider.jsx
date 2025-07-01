@@ -16,8 +16,12 @@ import {
   MessageSquareText, 
   ClipboardList, 
   StickyNote,
-  X
+  X,
+  BookCopy,
+  Sparkle,
+  Clock3
 } from "lucide-react";
+import { RiEditCircleLine } from "react-icons/ri";
 
 export default function MailboxSlider({ sliderOpen, setSliderOpen }) {
   const pipelineStages = [
@@ -115,8 +119,11 @@ const iconMap = {
 };
 
 const [activeTab, setActiveTab] = useState("all");
-
 const [showMore, setShowMore] = useState(false);
+const [showNotesModal, setShowNotesModal] = useState(false);
+
+const [isPlusModalOpen, setIsPlusModalOpen] = useState(false);
+
 
 // Filtered past activities based on selected tab
 const filteredActivities = activeTab === "all"
@@ -198,12 +205,117 @@ const filteredActivities = activeTab === "all"
             <div className="space-y-4 bg-white shadow-sm">
               <h4 className="font-semibold text-lg text-black">Quick Actions</h4>
               <div className="grid grid-cols-3 gap-3">
-                {[{ Icon: Phone, label: "Call" }, { Icon: Mail, label: "Email" }, { Icon: Calendar, label: "Meeting" }, {Icon: NotebookPen , label: 'New Task'}].map(({ Icon, label }, i) => (
-                  <button key={i} className="flex flex-col items-center justify-center p-3 ">
-                    <Icon className="w-12 h-12 text-teal-600 mb-1 p-3 rounded-full bg-green-50" />
-                    <span className="text-xs font-medium text-black">{label}</span>
-                  </button>
-                ))}
+              {[
+                { Icon: Phone, label: "Call" },
+                { Icon: Mail, label: "Email" },
+                { Icon: Calendar, label: "Meeting" },
+                { Icon: NotebookPen, label: "New Task" },
+              ].map(({ Icon, label }, i) => (
+                <button
+                  key={i}
+                  onClick={() => label === "New Task" && setIsPlusModalOpen(true)}
+                  className="flex flex-col items-center justify-center p-3"
+                >
+                  <Icon className="w-12 h-12 text-teal-600 mb-1 p-3 rounded-full bg-green-50" />
+                  <span className="text-xs font-medium text-black">{label}</span>
+                </button>
+              ))}
+
+                {isPlusModalOpen && (
+                  <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+                    <div className="relative bg-white rounded-lg shadow-lg max-w-[95vw] sm:max-w-[500px] md:max-w-[600px] p-4 sm:p-6 max-h-[90vh] overflow-y-auto">
+                      <div className="flex items-center justify-between pb-3">
+                        <h3 className="text-lg sm:text-xl font-semibold">Add Task</h3>
+                        <button
+                          onClick={() => setIsPlusModalOpen(false)}
+                          className="text-gray-400 hover:text-gray-600 cursor-pointer p-1"
+                        >
+                          <X className="h-5 w-5 sm:h-6 sm:w-6" />
+                        </button>
+                      </div>
+
+                      <form className="space-y-4">
+                        {/* Task Title */}
+                        <div>
+                          <div className="flex gap-1 items-center mb-3">
+                            <RiEditCircleLine size={20} className="text-gray-400" />
+                            <label className="block text-sm font-medium">Task Title</label>
+                          </div>
+                          <input
+                            type="text"
+                            className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm sm:text-base"
+                          />
+                        </div>
+
+                        {/* Description */}
+                        <div>
+                          <div className="flex gap-1 items-center mb-3">
+                            <FileText size={20} className="text-gray-400" />
+                            <label className="block text-sm font-medium">Description</label>
+                          </div>
+                          <textarea
+                            rows="3"
+                            className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm sm:text-base resize-none"
+                          ></textarea>
+                        </div>
+
+                        {/* Date and Time */}
+                        <div className="flex flex-col sm:flex-row items-center gap-4">
+                          <div className="w-full sm:w-1/2">
+                            <div className="flex gap-1 items-center mb-3">
+                              <Calendar size={20} className="text-gray-400" />
+                              <label className="block text-sm font-medium">Date</label>
+                            </div>
+                            <input
+                              type="date"
+                              className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm sm:text-base"
+                            />
+                          </div>
+                          <div className="w-full sm:w-1/2">
+                            <div className="flex gap-1 items-center mb-3">
+                              <Clock3 size={20} className="text-gray-400" />
+                              <label className="block text-sm font-medium">Time</label>
+                            </div>
+                            <input
+                              type="time"
+                              className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm sm:text-base"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Assign To */}
+                        <div>
+                          <label className="block text-sm font-medium mb-3">
+                            Assign to Person
+                          </label>
+                          <input
+                            type="text"
+                            className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm sm:text-base"
+                          />
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4">
+                          <button
+                            onClick={() => setIsPlusModalOpen(false)}
+                            type="button"
+                            className="w-full sm:w-auto text-gray-900 bg-white border border-gray-300 font-medium rounded-full text-sm px-5 py-2.5 hover:bg-gray-50"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={() => setIsPlusModalOpen(false)}
+                            type="button"
+                            className="w-full sm:w-auto text-white bg-[rgb(21,163,149)] hover:bg-[rgb(18,140,128)] flex gap-2 items-center justify-center rounded-full text-sm px-5 py-2.5"
+                          >
+                            <FileText size={16} />
+                            Save Task
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -246,9 +358,39 @@ const filteredActivities = activeTab === "all"
                 <button className="flex items-center gap-2 cursor-pointer text-gray-600 px-4 py-1.5 border border-gray-300 rounded-full">
                     <Phone size={15} /> Call
                 </button>
-                <button className="flex items-center gap-2 cursor-pointer text-gray-600 px-4 py-1.5 border border-gray-300 rounded-full">
+                <button onClick={() => setShowNotesModal(!showNotesModal)} className="flex items-center gap-2 cursor-pointer text-gray-600 px-4 py-1.5 border border-gray-300 rounded-full">
                     <NotebookPen size={15} /> Add notes   
                 </button>
+              {showNotesModal && (
+              <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+                <div className="relative bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md max-h-[90vh] overflow-y-auto">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold">Add notes</h3>
+                    <button
+                      onClick={() => setShowNotesModal(false)}
+                      className="text-gray-500 hover:text-gray-700 cursor-pointer bg-gray-200 p-1.5 rounded-full text-sm transition-colors"
+                    >
+                      <X size={18} />
+                    </button>
+                  </div>
+                  <p className="text-[14px]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae minima veniam quisquam? Temporibus quis quae minus repellendus </p>
+
+                  <button className="absolute right-3 shadow-sm p-1.5 cursor-pointer rounded-lg flex items-center gap-1">Add with AI <Sparkle className="w-3 h-3 text-yellow-500" /></button>
+                  <div className="flex justify-end mt-12 gap-3">
+                    <button
+                      onClick={() => setShowNotesModal(false)}
+                      className="w-full sm:w-auto text-black cursor-pointer border border-gray-300 rounded-full px-4 py-2 text-sm hover:bg-gray-50 transition-colors">
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => setShowNotesModal(false)}
+                      className="w-full sm:w-auto flex gap-1 items-center text-white cursor-pointer bg-teal-600 border border-gray-300 rounded-full px-4 py-2 text-sm hover:bg-gray-50 transition-colors">
+                      <BookCopy size={18} /> Save
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
                 </div>
             </div>
             {/* Activities */}

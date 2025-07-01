@@ -1,5 +1,5 @@
 import { CloudUpload } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useWorkspaceQuery } from "../reactQuery/hooks/useWorkspaceQuery";
 import { BiLoaderCircle } from "react-icons/bi";
 
@@ -79,13 +79,13 @@ const Support = () => {
 
                     {/* Subject */}
                     <div className="mb-4">
-                        <label className="block font-medium mb-2">Subject</label>
+                        <label className="block font-medium mb-2">Issue</label>
                         <input
                             type="text"
                             name="Subject"
                             value={formData.Subject}
                             onChange={handleInputChange}
-                            placeholder="Subject"
+                            placeholder="Issue"
                             className="w-full px-3 py-2 border border-gray-200 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none  focus:ring-teal-500"
                         />
                     </div>
