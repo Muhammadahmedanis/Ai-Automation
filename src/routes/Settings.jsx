@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useAuthQuery } from "../reactQuery/hooks/useAuthQuery";
 import {
   Copy,
@@ -18,6 +19,7 @@ import { BiLoaderCircle } from "react-icons/bi";
 import { IoSettingsOutline } from "react-icons/io5";
 
 const Settings = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
 
@@ -174,6 +176,41 @@ const Settings = () => {
 
   const [activeTab, setActiveTab] = useState("profile");
   const [activeTab2, setActiveTab2] = useState("team");
+  const [highlightCalendarIntegration, setHighlightCalendarIntegration] =
+    useState(false);
+
+  // Handle URL parameters to set the active tab
+  useEffect(() => {
+    const tabParam = searchParams.get("tab");
+    const fromParam = searchParams.get("from"); // Track where user came from
+    const validTabs = [
+      "profile",
+      "workspace",
+      "integrations",
+      "businessDetails",
+    ];
+
+    if (tabParam && validTabs.includes(tabParam)) {
+      setActiveTab(tabParam);
+
+      // If they're coming to the integrations tab from calendar, highlight the calendar integration
+      if (tabParam === "integrations" && fromParam === "calendar") {
+        setHighlightCalendarIntegration(true);
+        // Remove highlight after 4 seconds
+        setTimeout(() => {
+          setHighlightCalendarIntegration(false);
+        }, 4000);
+      }
+
+      // Clear the URL parameters after setting the tab to keep the URL clean
+      setSearchParams((prev) => {
+        const newParams = new URLSearchParams(prev);
+        newParams.delete("tab");
+        newParams.delete("from");
+        return newParams;
+      });
+    }
+  }, [searchParams, setSearchParams]);
 
   const handleProfileChange = (e) => {
     const { name, value } = e.target;
@@ -327,10 +364,10 @@ const Settings = () => {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-1">
             <nav className="grid grid-cols-2 md:grid-cols-4 gap-1">
               <button
-                className={`py-2 sm:py-3 px-1 sm:px-2 text-xs sm:text-sm font-medium rounded-md transition-all duration-200 ${
+                className={`py-2 sm:py-3 px-1 sm:px-2 text-xs sm:text-sm cursor-pointer font-medium rounded-md transition-all duration-200 ${
                   activeTab === "profile"
                     ? "bg-gray-300  shadow-sm"
-                    : "text-gray-600 hover:text-green-600 hover:bg-green-50"
+                    : "text-gray-600 hover:text-gray-600 hover:bg-gray-100"
                 }`}
                 onClick={() => setActiveTab("profile")}
               >
@@ -340,10 +377,10 @@ const Settings = () => {
                 </div>
               </button>
               <button
-                className={`py-2 sm:py-3 px-1 sm:px-2 text-xs sm:text-sm font-medium rounded-md transition-all duration-200 ${
+                className={`py-2 sm:py-3 px-1 sm:px-2 text-xs sm:text-sm cursor-pointer font-medium rounded-md transition-all duration-200 ${
                   activeTab === "workspace"
                     ? "bg-gray-300  shadow-sm"
-                    : "text-gray-600 hover:text-green-600 hover:bg-green-50"
+                    : "text-gray-600 hover:text-gray-600 hover:bg-gray-100"
                 }`}
                 onClick={() => setActiveTab("workspace")}
               >
@@ -370,10 +407,10 @@ const Settings = () => {
                 </div>
               </button>
               <button
-                className={`py-2 sm:py-3 px-1 sm:px-2 text-xs sm:text-sm font-medium rounded-md transition-all duration-200 ${
+                className={`py-2 sm:py-3 px-1 sm:px-2 text-xs sm:text-sm cursor-pointer font-medium rounded-md transition-all duration-200 ${
                   activeTab === "integrations"
                     ? "bg-gray-300  shadow-sm"
-                    : "text-gray-600 hover:text-green-600 hover:bg-green-50"
+                    : "text-gray-600 hover:text-gray-600 hover:bg-gray-100"
                 }`}
                 onClick={() => setActiveTab("integrations")}
               >
@@ -395,10 +432,10 @@ const Settings = () => {
                 </div>
               </button>
               <button
-                className={`py-2 sm:py-3 px-1 sm:px-2 text-xs sm:text-sm font-medium rounded-md transition-all duration-200 ${
+                className={`py-2 sm:py-3 px-1 sm:px-2 text-xs cursor-pointer sm:text-sm font-medium rounded-md transition-all duration-200 ${
                   activeTab === "businessDetails"
                     ? "bg-gray-300  shadow-sm"
-                    : "text-gray-600 hover:text-green-600 hover:bg-green-50"
+                    : "text-gray-600 hover:text-gray-600 hover:bg-gray-100"
                 }`}
                 onClick={() => setActiveTab("businessDetails")}
               >
@@ -1199,6 +1236,50 @@ const Settings = () => {
           </>
         ) : activeTab === "integrations" ? (
           <div className="px-2 sm:px-4 md:px-6 lg:px-8">
+            {highlightCalendarIntegration && (
+              <div className="mb-6 bg-gradient-to-r from-teal-50 to-blue-50 border border-teal-200 rounded-lg p-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex-shrink-0">
+                    <svg
+                      className="w-5 h-5 text-teal-600"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-sm font-medium text-teal-800">
+                      Calendar Integration Required
+                    </h3>
+                    <p className="text-sm text-teal-700 mt-1">
+                      To use the Calendar features, please connect your Google
+                      Calendar below.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setHighlightCalendarIntegration(false)}
+                    className="flex-shrink-0 text-teal-400 hover:text-teal-600"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            )}
             <div className="relative mb-4 sm:mb-6">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <Search size={16} className="sm:w-5 sm:h-5 text-gray-600" />
@@ -1249,7 +1330,7 @@ const Settings = () => {
                   for seamless collaboration.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
-                  <button className="flex items-center justify-center text-sm gap-1 text-gray-500 px-3 py-1.5 rounded-full hover:bg-gray-100 transition-colors">
+                  <button className="w-full sm:w-auto cursor-pointer flex items-center justify-center text-sm gap-1 text-gray-500 px-3 py-1.5 rounded-full hover:bg-gray-100 transition-colors">
                     <IoSettingsOutline size={16} />
                     <span>Manage</span>
                   </button>
@@ -1260,7 +1341,19 @@ const Settings = () => {
               </div>
 
               {/* Google Calendar */}
-              <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-lg border border-gray-100 shadow-sm group hover:border-[#15A395] transition-colors duration-200">
+              <div
+                className={`bg-white p-4 sm:p-5 lg:p-6 rounded-lg border shadow-sm group transition-all duration-300 ${
+                  highlightCalendarIntegration
+                    ? "border-teal-500 ring-2 ring-teal-200 shadow-teal-100"
+                    : "border-gray-100 hover:border-[#15A395]"
+                }`}
+              >
+                {highlightCalendarIntegration && (
+                  <div className="mb-3 flex items-center gap-2 text-teal-600 text-sm font-medium">
+                    <div className="w-2 h-2 bg-teal-500 rounded-full animate-pulse"></div>
+                    Connect here to use Calendar features
+                  </div>
+                )}
                 <div className="mb-3 sm:mb-4">
                   <svg
                     width="32"
@@ -1292,11 +1385,18 @@ const Settings = () => {
                   important event.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
-                  <button className="flex items-center justify-center text-sm gap-1 text-gray-500 px-3 py-1.5 rounded-full hover:bg-gray-100 transition-colors">
+                  <button className="w-full sm:w-auto cursor-pointer flex items-center justify-center text-sm gap-1 text-gray-500 px-3 py-1.5 rounded-full hover:bg-gray-100 transition-colors">
                     <IoSettingsOutline size={16} />
                     <span>Manage</span>
                   </button>
-                  <button className="w-full sm:w-auto flex items-center justify-center text-xs text-gray-900 font-semibold bg-white group-hover:bg-[#15A395] group-hover:text-white px-4 py-2 rounded-full border border-gray-400 group-hover:border-[#15A395] transition-colors duration-200 cursor-pointer">
+                  <button
+                    onClick={handleConnectCalendar}
+                    className={`w-full sm:w-auto flex items-center justify-center text-xs font-semibold px-4 py-2 rounded-full border transition-colors duration-200 cursor-pointer ${
+                      highlightCalendarIntegration
+                        ? "bg-teal-500 text-white border-teal-500 hover:bg-teal-600"
+                        : "text-gray-900 bg-white group-hover:bg-[#15A395] group-hover:text-white border-gray-400 group-hover:border-[#15A395]"
+                    }`}
+                  >
                     Connect
                   </button>
                 </div>
@@ -1334,7 +1434,7 @@ const Settings = () => {
                   and personalization.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
-                  <button className="flex items-center justify-center text-sm gap-1 text-gray-500 px-3 py-1.5 rounded-full hover:bg-gray-100 transition-colors">
+                  <button className="w-full sm:w-auto cursor-pointer flex items-center justify-center text-sm gap-1 text-gray-500 px-3 py-1.5 rounded-full hover:bg-gray-100 transition-colors">
                     <IoSettingsOutline size={16} />
                     <span>Manage</span>
                   </button>
@@ -1374,7 +1474,7 @@ const Settings = () => {
                   sales workflow.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
-                  <button className="flex items-center justify-center text-sm gap-1 text-gray-500 px-3 py-1.5 rounded-full hover:bg-gray-100 transition-colors">
+                  <button className="w-full sm:w-auto cursor-pointer flex items-center justify-center text-sm gap-1 text-gray-500 px-3 py-1.5 rounded-full hover:bg-gray-100 transition-colors">
                     <IoSettingsOutline size={16} />
                     <span>Manage</span>
                   </button>
@@ -1410,7 +1510,7 @@ const Settings = () => {
                   insights without leaving the app.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
-                  <button className="flex items-center justify-center text-sm gap-1 text-gray-500 px-3 py-1.5 rounded-full hover:bg-gray-100 transition-colors">
+                  <button className="w-full sm:w-auto cursor-pointer flex items-center justify-center text-sm gap-1 text-gray-500 px-3 py-1.5 rounded-full hover:bg-gray-100 transition-colors">
                     <IoSettingsOutline size={16} />
                     <span>Manage</span>
                   </button>
