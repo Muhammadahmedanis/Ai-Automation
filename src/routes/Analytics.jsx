@@ -1,55 +1,112 @@
-import { Share2, ChevronDown, Zap, Eye, Hand, CircleCheck, CircleDollarSign, Play, Pause } from "lucide-react";
 import { useState } from "react";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from "recharts";
+import { useAnalyticsQuery } from "../reactQuery/hooks/useAnalyticsQuery";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { Share2, ChevronDown, Zap, Eye, Hand, CircleCheck, CircleDollarSign, Play, Pause, Calendar1 } from "lucide-react";
 
-const data = [
-    { name: "SEP", sent: 250, opens: 200, clicks: 150, opportunities: 100, conversions: 50 },
-    { name: "OCT", sent: 150, opens: 120, clicks: 90, opportunities: 60, conversions: 30 },
-    { name: "NOV", sent: 180, opens: 140, clicks: 100, opportunities: 80, conversions: 40 },
-    { name: "DEC", sent: 220, opens: 170, clicks: 130, opportunities: 90, conversions: 60 },
-];
+
 
 const listItems = [
-    { name: "All Statuses", icon: "⚡" },
-    { name: "Play", icon: <Play size={20} className="text-blue-400" /> },
-    { name: "Paused", icon: <Pause size={20} className="text-orange-400" /> },
-    { name: "Completed", icon: <CircleCheck size={20} className="text-green-400" /> }
+  { name: "All Statuses", icon: "⚡" },
+  { name: "Play", icon: <Play size={20} className="text-blue-400" /> },
+  { name: "Paused", icon: <Pause size={20} className="text-orange-400" /> },
+  { name: "Completed", icon: <CircleCheck size={20} className="text-green-400" /> }
 ];
 
-const box = [
-    { amount: '214', icon: <Zap size={24} className="text-blue-500" />, text: "Sequence started", bg: "bg-blue-100" },
-    { amount: '45%', icon: <Eye size={24} className="text-purple-500" />, text: "Open rate", bg: "bg-purple-100" },
-    { amount: '67%', icon: <Hand size={24} className="text-pink-500" />, text: "Click rate", bg: "bg-pink-100" },
-    { amount: '145', icon: <CircleDollarSign size={24} className="text-red-500" />, text: "Opportunities", bg: "bg-red-100" },
-    { amount: '26', icon: <CircleDollarSign size={24} className="text-yellow-500" />, text: "Conversion", bg: "bg-yellow-100" },
-];
 
 function Analytics() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [selectedView, setSelectedView] = useState("month");
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedView, setSelectedView] = useState("week");
+  
+  const { AnalyticsMonthly, AnalyticsQuaterly, AnalyticsYearly } = useAnalyticsQuery()
+
+  const box = [
+    { amount: `${Math.round( AnalyticsYearly?.Statistics?.OpenRate) || Math.round(AnalyticsQuaterly?.Statistics?.OpenRate) || Math.round(AnalyticsMonthly?.Statistics?.OpenRate) || 0 }%`, icon: <Eye size={24} className="text-purple-500" />, text: "Open rate", bg: "bg-purple-100" },
+    { amount: `${AnalyticsYearly?.Statistics?.ClickRate || AnalyticsYearly?.Statistics?.ClickRate || AnalyticsYearly?.Statistics?.ClickRate || 0 }%`, icon: <Hand size={24} className="text-pink-500" />, text: "Click rate", bg: "bg-pink-100" },
+    { amount: AnalyticsYearly?.Statistics?.SequenceStarted || AnalyticsMonthly?.Statistics?.SequenceStarted || AnalyticsQuaterly?.Statistics?.SequenceStarted || 0, icon: <Zap size={24} className="text-blue-500" />, text: "Sequence started", bg: "bg-blue-100" },
+    { amount: AnalyticsYearly?.Statistics?.Opportunities || AnalyticsMonthly?.Statistics?.Opportunities || AnalyticsQuaterly?.Statistics?.Opportunities || 0, icon: <CircleDollarSign size={24} className="text-red-500" />, text: "Opportunities", bg: "bg-red-100" },
+    { amount: AnalyticsYearly?.Statistics?.Conversions || AnalyticsMonthly?.Statistics?.Conversions || AnalyticsQuaterly?.Statistics?.Conversions || 0, icon: <CircleDollarSign size={24} className="text-yellow-500" />, text: "Conversion", bg: "bg-yellow-100" },
+  ];
+
+    const monthMap = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    const yearlyChartData = AnalyticsYearly?.Statistics?.Graph?.map((item) => ({
+      name: monthMap[item.Month-1],
+      sent: item?.Delivered,
+      opens: item?.Opens,
+      clicks: item?.Clicks,
+    })) || []
+
+
+    const quarterMap = ["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"];
+    const quarterlyChartData = AnalyticsQuaterly?.Statistics?.Graph.map((item) => ({
+      name: quarterMap[item.Quarter-1],
+      sent: item?.Delivered,
+      opens: item?.Opens,
+      clicks: item?.Clicks,
+    })) || []
+
+
+    const monthlyData = AnalyticsMonthly?.Statistics?.Graph || [];
+    const getWeeklyGroupedData = () => {
+      const weeks = [[], [], [], [], []]; // 5 weeks max
+      monthlyData.forEach((item) => {
+        const weekIndex = Math.floor((item.Date - 1) / 7);
+        if (weekIndex < weeks.length) weeks[weekIndex].push(item);
+      });
+
+      const monthName = new Date().toLocaleString("default", { month: "short" }); // E.g., "Jul"
+
+      return weeks.map((week, index) => {
+        if (week.length === 0) return null;
+
+        const startDate = week[0].Date;
+        const endDate = week[week.length - 1].Date;
+        const name = `${monthName} ${startDate}–${endDate}`;
+
+        const sent = week.reduce((sum, i) => sum + i.Delivered, 0);
+        const opens = week.reduce((sum, i) => sum + i.Opens, 0);
+        const clicks = week.reduce((sum, i) => sum + i.Clicks, 0);
+
+        return { name, sent, opens, clicks };
+      }).filter(Boolean);
+    };
+
+
 
     return (
         <div className="p-6 space-y-8 bg-gray-50 min-h-screen sm:px-8 md:px-16 lg:px-32 ">
             {/* Filter Buttons */}
-            <div className="flex flex-wrap justify-center md:justify-between items-center gap-4">
-                <div className="flex rounded-full bg-gray-200 p-1">
-                    <button
-                        className={`px-4 py-2 rounded-full text-sm transition-all duration-300 ${
-                            selectedView === "month" ? "bg-gray-500 text-white" : "bg-gray-200 text-gray-400"
-                        }`}
-                        onClick={() => setSelectedView("month")}
-                    >
-                        Month view
-                    </button>
-                    <button
-                        className={`px-4 py-2 rounded-full text-sm transition-all duration-300 ${
-                            selectedView === "week" ? "bg-gray-500 text-white" : "bg-gray-200 text-gray-400"
-                        }`}
-                        onClick={() => setSelectedView("week")}
-                    >
-                        Week view
-                    </button>
-                </div>
+            <div className="flex justify-center md:justify-between items-center gap-4">
+                <div className="flex rounded-xl bg-gray-100 p-1 mb-6">
+                <button
+                  className={`flex items-center gap-1 px-3 sm:px-4 py-2 text-xs sm:text-sm rounded-lg cursor-pointer transition-all duration-300 font-medium ${
+                    selectedView === "week"
+                      ? "bg-white text-gray-800 shadow-sm"
+                      : "bg-transparent text-gray-500 hover:text-gray-700"
+                  }`}
+                  onClick={() => setSelectedView("week")}>
+                  Weekly <Calendar1 />
+                </button>
+                <button
+                  className={`flex items-center gap-1 px-3 sm:px-4 py-2 text-xs sm:text-sm rounded-lg cursor-pointer transition-all duration-300 font-medium ${
+                    selectedView === "year"
+                      ? "bg-white text-gray-800 shadow-sm"
+                      : "bg-transparent text-gray-500 hover:text-gray-700"
+                  }`}
+                  onClick={() => setSelectedView("year")}
+                >
+                  Yearly <Calendar1 />
+                </button>
+                 <button
+                  className={`flex items-center gap-1 px-3 sm:px-4 py-2 text-xs sm:text-sm rounded-lg cursor-pointer transition-all duration-300 font-medium ${
+                    selectedView === "quarter"
+                      ? "bg-white text-gray-800 shadow-sm"
+                      : "bg-transparent text-gray-500 hover:text-gray-700"
+                  }`}
+                  onClick={() => setSelectedView("quarter")}
+                >
+                  Quarterly <Calendar1 />
+                </button>
+              </div>
 
                 <div className="flex items-center gap-2 md:gap-4">
                     <button className="flex items-center gap-2 text-gray-600 border border-gray-300 py-2 px-4 rounded-full md:text-md text-sm">
@@ -92,24 +149,85 @@ function Analytics() {
             </div>
 
             {/* Chart Section */}
-            <div className="p-0 md:p-6 rounded-lg">
-                <div className="h-[300px] md:h-[400px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={data} margin={{ top: 30, right: 20, left: 0, bottom: 5 }}>
-                            <CartesianGrid stroke="#E5E7EB" strokeDasharray="0" />
-                            <XAxis dataKey="name" stroke="#4A5568" tick={{ fontSize: 12 }} />
-                            <YAxis stroke="#4A5568" tick={{ fontSize: 12 }} />
-                            <Tooltip contentStyle={{ backgroundColor: "#fff", borderRadius: "5px", padding: "10px" }} />
-                            <Legend />
-                            <Bar dataKey="conversions" stackId="a" fill="#6c6cf0" barSize={40} />
-                            <Bar dataKey="opportunities" stackId="a" fill="#a16ff2" barSize={40} />
-                            <Bar dataKey="clicks" stackId="a" fill="#e271db" barSize={40} />
-                            <Bar dataKey="opens" stackId="a" fill="#f19888" barSize={40} />
-                            <Bar dataKey="sent" stackId="a" fill="#ffc195" barSize={40} />
-                        </BarChart>
-                    </ResponsiveContainer>
-                </div>
+          <div className="bg-white shadow-xl rounded-xl p-4 md:p-6">
+            <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Campaign Performance</h2>
+
+            <div className="h-[320px] md:h-[420px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={
+                    selectedView === "week" ? 
+                    getWeeklyGroupedData() : 
+                    selectedView === "quarter" ? 
+                    quarterlyChartData : 
+                    yearlyChartData
+                  }
+                  margin={{ top: 10, right: 30, left: 0, bottom: 5 }}
+                >
+                  <CartesianGrid vertical={false} strokeDasharray="0" stroke="#cbd5e1" />
+                  <XAxis
+                    dataKey="name"
+                    stroke="#94a3b8"
+                    tick={{ fontSize: 13 }}
+                    tickLine={false}
+                    axisLine={{ stroke: "#cbd5e1" }}
+                  />
+                  <YAxis
+                    interval={0}
+                    tickCount={8}
+                    stroke="#94a3b8"
+                    tick={{ fontSize: 13 }}
+                    tickLine={false}
+                    axisLine={{ stroke: "#cbd5e1" }}
+                  />
+                  <Tooltip
+                    cursor={{ stroke: "#cbd5e1", strokeWidth: 1 }}
+                    contentStyle={{
+                      backgroundColor: "#fff",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: "10px",
+                      boxShadow: "0px 3px 10px rgba(0,0,0,0.08)",
+                      padding: "10px 12px",
+                    }}
+                    labelStyle={{ fontWeight: 600 }}
+                    itemStyle={{ fontSize: 13 }}
+                  />
+                  <Legend
+                    verticalAlign="top"
+                    align="right"
+                    iconType="circle"
+                    wrapperStyle={{ top: 0, right: 0, fontSize: "13px" }}
+                  />
+
+                  {/* Chart Lines */}
+                  <Line
+                    type="monotone"
+                    dataKey="clicks"
+                    stroke="#ec4899"
+                    strokeWidth={2.5}
+                    dot={{ r: 3 }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="opens"
+                    stroke="#f87171"
+                    strokeWidth={2.5}
+                    dot={{ r: 3 }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="sent"
+                    stroke="#fbbf24"
+                    strokeWidth={2.5}
+                    dot={{ r: 3 }}
+                    activeDot={{ r: 6 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
+          </div>
         </div>
     );
 }

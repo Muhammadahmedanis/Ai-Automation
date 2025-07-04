@@ -8,7 +8,7 @@ function Layout() {
   const navigate = useNavigate();
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("Token"));
-    console.log(token);
+    // console.log(token);
     const token1 = token?.token || token 
     if(!token1){
       navigate('/login');
