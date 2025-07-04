@@ -350,8 +350,10 @@ const Settings = () => {
     });
 
     const keepFiles = existingDocuments.map((doc) => doc.name);
+    console.log(keepFiles[0]);
+    console.log(typeof(keepFiles))
 
-    formData.append("keepFiles", JSON.stringify(keepFiles));
+    formData.append("KeepFiles", JSON.stringify(keepFiles));
 
     addDocumentMutation.mutate(formData);
   };
