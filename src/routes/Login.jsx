@@ -1,27 +1,28 @@
-import React, { useState } from 'react';
-import { CircleDot } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuthQuery } from '../reactQuery/hooks/useAuthQuery';
+import React, { useState } from "react";
+import { CircleDot, Eye, EyeOff } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthQuery } from "../reactQuery/hooks/useAuthQuery";
 import { BiLoaderCircle } from "react-icons/bi";
 
 const Login = () => {
-  const [Email, setEmail] = useState('');
-  const [Password, setPassword] = useState('');
+  const [Email, setEmail] = useState("");
+  const [Password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { signinMutation } = useAuthQuery(navigate);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const payload = { Email, Password};
+    const payload = { Email, Password };
     // console.log(payload, "payload");
     signinMutation.mutate(payload, {
       onError: (error) => {
         console.error("Login error:", error);
-      }
+      },
     });
   };
 
-  return (  
+  return (
     <div className="min-h-screen flex">
       {/* Left side - Login Form */}
       <div className="w-full lg:w-1/2 flex flex-col items-center justify-center px-6 lg:px-16 xl:px-24">
@@ -50,38 +51,50 @@ const Login = () => {
               />
             </div>
 
-            <div>
+            <div className="relative">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={Password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 pr-12 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+              >
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5 cursor-pointer" />
+                ) : (
+                  <Eye className="w-5 h-5 cursor-pointer" />
+                )}
+              </button>
             </div>
 
             <div className="flex items-center justify-between">
               <button
                 type="submit"
-                className="px-8 py-3 bg-teal-500 text-white rounded-lg cursor-pointer hover:bg-teal-600 focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition">
-                {signinMutation?.isPending ? 
-                ( <BiLoaderCircle className="size-7 animate-spin" /> ) : 
-                ( "Login" ) 
-                }
+                className="px-8 py-3 bg-teal-500 text-white rounded-lg cursor-pointer hover:bg-teal-600 focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition"
+              >
+                {signinMutation?.isPending ? (
+                  <BiLoaderCircle className="size-7 animate-spin" />
+                ) : (
+                  "Login"
+                )}
               </button>
               <p className="text-sm text-gray-600 hover:text-teal-500">
-                <Link to='/forgot'>
-                  Forgot password?
-                </Link>
+                <Link to="/forgot">Forgot password?</Link>
               </p>
             </div>
           </form>
 
           <p className="mt-8 text-center text-sm text-gray-600">
-            Don't have an account?{' '}
-             <span className="text-teal-500 hover:text-teal-600 font-medium"><Link to="/signup">
-             Sign up</Link></span>
+            Don't have an account?{" "}
+            <span className="text-teal-500 hover:text-teal-600 font-medium">
+              <Link to="/signup">Sign up</Link>
+            </span>
           </p>
         </div>
       </div>
@@ -95,8 +108,9 @@ const Login = () => {
           <div className="text-white max-w-md">
             <h2 className="text-4xl font-bold mb-6">Welcome Back!</h2>
             <p className="text-lg text-teal-50">
-              Unlock the power of effective outreach with our cutting-edge platform, 
-              and experience a surge in responses and engagement rates like never before.
+              Unlock the power of effective outreach with our cutting-edge
+              platform, and experience a surge in responses and engagement rates
+              like never before.
             </p>
           </div>
         </div>
