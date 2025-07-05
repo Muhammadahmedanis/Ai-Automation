@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, Eye, Share2, Plus, X } from "lucide-react";
-import RichTextEditor from './RichTextEditor';
+import RichTextEditor from "./RichTextEditor";
 import { useCampaignQuery } from "../reactQuery/hooks/useCampaignQuery";
 
 export default function EmailTemplateBuilder({ campaignId }) {
@@ -17,20 +17,22 @@ export default function EmailTemplateBuilder({ campaignId }) {
     error: sequenceError,
   } = getCampaignSequenceQuery(campaignId);
 
-
-
   // Fetch and populate steps when campaign sequence is available
   useEffect(() => {
     if (campaignSequence?.sequence?.Emails) {
-      const emailSteps = campaignSequence.sequence.Emails.map((email, index, arr) => {
-        const isFollowUp = !email.Subject && index > 0; // No subject and not first email
-        return {
-          id: index + 1,
-          value: isFollowUp ? `Follow-up to "${arr[index - 1]?.Name || 'Previous Email'}"` : email.Name,
-          subject: email.Subject,
-          body: email.Body,
-        };
-      });
+      const emailSteps = campaignSequence.sequence.Emails.map(
+        (email, index, arr) => {
+          const isFollowUp = !email.Subject && index > 0; // No subject and not first email
+          return {
+            id: index + 1,
+            value: isFollowUp
+              ? `Follow-up to "${arr[index - 1]?.Name || "Previous Email"}"`
+              : email.Name,
+            subject: email.Subject,
+            body: email.Body,
+          };
+        }
+      );
 
       setSteps(emailSteps);
       setSelectStep(emailSteps[0]?.id);
@@ -42,8 +44,8 @@ export default function EmailTemplateBuilder({ campaignId }) {
   // Update step data when subject/content changes
   useEffect(() => {
     if (selectStep !== null) {
-      setSteps(prevSteps => 
-        prevSteps.map(step =>
+      setSteps((prevSteps) =>
+        prevSteps.map((step) =>
           step.id === selectStep ? { ...step, subject, body: content } : step
         )
       );
@@ -52,42 +54,42 @@ export default function EmailTemplateBuilder({ campaignId }) {
 
   const addSeqStep = () => {
     if (steps.length < 3) {
-      setSteps([...steps, { id: steps.length + 1, value: "", subject: "", body: "" }]);
+      setSteps([
+        ...steps,
+        { id: steps.length + 1, value: "", subject: "", body: "" },
+      ]);
     }
   };
 
   const deleteSeqStep = (id) => {
-    setSteps(steps.filter(step => step.id !== id));
+    setSteps(steps.filter((step) => step.id !== id));
     if (selectStep === id) {
       setSelectStep(null);
     }
   };
 
   const handleEmailSubjectChange = (id, subject) => {
-    setSteps(prevSteps => 
-      prevSteps.map(step => 
-        step.id === id ? { ...step, subject } : step
-      )
+    setSteps((prevSteps) =>
+      prevSteps.map((step) => (step.id === id ? { ...step, subject } : step))
     );
 
     if (id === selectStep) {
       setSubject(subject); // Also update subject displayed above editor
     }
   };
-  
 
   const handleSelectSeqStep = (id) => {
-    const selectedStep = steps.find(step => step.id === id);
+    const selectedStep = steps.find((step) => step.id === id);
     if (selectedStep) {
       setSelectStep(id);
       setSubject(selectedStep.subject);
       setContent(selectedStep.body);
     }
   };
-  
+
   const handleWriteEmailWithAI = () => {
     const emailIndex = selectStep - 1;
-  
+
     const emailObject = {
       Emails: campaignSequence.sequence.Emails.map((email) => ({
         Name: email.Name,
@@ -96,20 +98,20 @@ export default function EmailTemplateBuilder({ campaignId }) {
       })),
       EmailIndex: emailIndex,
     };
-  
+
     console.log("Generated Object to Send:", emailObject);
-  
+
     // Use the mutation hook to generate the email with AI
     generateEmailWithAI(
       { campaignId, emailData: emailObject },
       {
         onSuccess: (response) => {
           console.log("AI Email generated successfully:", response);
-    
+
           if (response?.content) {
             const { Subject, Body } = response.content;
-    
-            setSteps(prevSteps =>
+
+            setSteps((prevSteps) =>
               prevSteps.map((step, idx) =>
                 idx === emailIndex
                   ? {
@@ -120,7 +122,7 @@ export default function EmailTemplateBuilder({ campaignId }) {
                   : step
               )
             );
-    
+
             if (selectStep - 1 === emailIndex) {
               if (Subject) setSubject(Subject);
               if (Body) setContent(Body);
@@ -130,7 +132,6 @@ export default function EmailTemplateBuilder({ campaignId }) {
       }
     );
   };
-  
 
   // --- LOADING & ERROR UI Improvements ---
 
@@ -164,7 +165,11 @@ export default function EmailTemplateBuilder({ campaignId }) {
             key={step.id}
             onClick={() => handleSelectStep(step.id)}
             className={`p-4 border rounded-lg cursor-pointer 
-              ${selectStep === step.id ? 'border-green-500 bg-green-50' : 'border-gray-300 bg-white'}`}
+              ${
+                selectStep === step.id
+                  ? "border-green-500 bg-green-50"
+                  : "border-gray-300 bg-white"
+              }`}
           >
             <div className="flex justify-between items-center my-2">
               <p className="font-semibold">{step.value}</p>

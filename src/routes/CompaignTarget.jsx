@@ -38,7 +38,7 @@ import ScheduleForm from "../components/SheduleForm";
 import EmailTemplateBuilder from "../components/EmailTemplate";
 import { IoClose } from "react-icons/io5";
 import { FcGoogle } from "react-icons/fc";
-import RichTextEditor from '../components/RichTextEditor';
+import RichTextEditor from "../components/RichTextEditor";
 import { CircleX, Mail } from "lucide-react";
 
 export default function CompaignTarget() {
@@ -154,7 +154,7 @@ export default function CompaignTarget() {
 
   const addSeqStep = () => {
     setSteps([
-       ...steps,
+      ...steps,
       { id: steps.length + 1, value: "", subject: "", body: "" },
     ]);
   };
@@ -1325,13 +1325,10 @@ export default function CompaignTarget() {
 
                     <button
                       onClick={addSeqStep}
-                      
-                      className='w-full py-3 border-2 border-dashed rounded-xl flex items-center justify-center gap-2 text-sm font-medium transition-all duration-200 border-gray-300 text-gray-600 hover:bg-gray-50 hover:border-gray-400 cursor-pointer'
+                      className="w-full py-3 border-2 border-dashed rounded-xl flex items-center justify-center gap-2 text-sm font-medium transition-all duration-200 border-gray-300 text-gray-600 hover:bg-gray-50 hover:border-gray-400 cursor-pointer"
                     >
                       <Plus size={16} />
-                      <span>
-                        Add step
-                      </span>
+                      <span>Add step</span>
                     </button>
                   </div>
 
@@ -1362,7 +1359,7 @@ export default function CompaignTarget() {
                         <RichTextEditor
                           value={content}
                           onChange={setContent}
-                          height={window.innerWidth < 768 ? '350px' : '450px'}
+                          height={window.innerWidth < 768 ? "350px" : "450px"}
                           placeholder="Start writing your email content..."
                           mobile={window.innerWidth < 768}
                           showAiButton={true}

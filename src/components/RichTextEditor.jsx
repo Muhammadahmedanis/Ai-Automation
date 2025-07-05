@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from "react";
 import {
   Bold,
   Italic,
@@ -10,18 +10,18 @@ import {
   ListOrdered,
   Link,
   Undo,
-  Redo
-} from 'lucide-react';
+  Redo,
+} from "lucide-react";
 
 const RichTextEditor = ({
-  value = '',
+  value = "",
   onChange,
-  placeholder = 'Start writing...',
-  height = '400px',
+  placeholder = "Start writing...",
+  height = "400px",
   showAiButton = false,
   onAiButtonClick,
-  className = '',
-  mobile = false
+  className = "",
+  mobile = false,
 }) => {
   const editorRef = useRef(null);
   const [isEditorFocused, setIsEditorFocused] = useState(false);
@@ -45,33 +45,41 @@ const RichTextEditor = ({
   };
 
   const insertLink = () => {
-    const url = prompt('Enter URL:');
+    const url = prompt("Enter URL:");
     if (url) {
-      executeCommand('createLink', url);
+      executeCommand("createLink", url);
     }
   };
 
-  const toolbarButtons = mobile ? [
-    { icon: Bold, command: 'bold', title: 'Bold' },
-    { icon: Italic, command: 'italic', title: 'Italic' },
-    { icon: List, command: 'insertUnorderedList', title: 'Bullet List' },
-    { icon: Link, command: insertLink, title: 'Insert Link' }
-  ] : [
-    { icon: Undo, command: 'undo', title: 'Undo' },
-    { icon: Redo, command: 'redo', title: 'Redo' },
-    { icon: Bold, command: 'bold', title: 'Bold' },
-    { icon: Italic, command: 'italic', title: 'Italic' },
-    { icon: Underline, command: 'underline', title: 'Underline' },
-    { icon: AlignLeft, command: 'justifyLeft', title: 'Align Left' },
-    { icon: AlignCenter, command: 'justifyCenter', title: 'Align Center' },
-    { icon: AlignRight, command: 'justifyRight', title: 'Align Right' },
-    { icon: List, command: 'insertUnorderedList', title: 'Bullet List' },
-    { icon: ListOrdered, command: 'insertOrderedList', title: 'Numbered List' },
-    { icon: Link, command: insertLink, title: 'Insert Link' }
-  ];
+  const toolbarButtons = mobile
+    ? [
+        { icon: Bold, command: "bold", title: "Bold" },
+        { icon: Italic, command: "italic", title: "Italic" },
+        { icon: List, command: "insertUnorderedList", title: "Bullet List" },
+        { icon: Link, command: insertLink, title: "Insert Link" },
+      ]
+    : [
+        { icon: Undo, command: "undo", title: "Undo" },
+        { icon: Redo, command: "redo", title: "Redo" },
+        { icon: Bold, command: "bold", title: "Bold" },
+        { icon: Italic, command: "italic", title: "Italic" },
+        { icon: Underline, command: "underline", title: "Underline" },
+        { icon: AlignLeft, command: "justifyLeft", title: "Align Left" },
+        { icon: AlignCenter, command: "justifyCenter", title: "Align Center" },
+        { icon: AlignRight, command: "justifyRight", title: "Align Right" },
+        { icon: List, command: "insertUnorderedList", title: "Bullet List" },
+        {
+          icon: ListOrdered,
+          command: "insertOrderedList",
+          title: "Numbered List",
+        },
+        { icon: Link, command: insertLink, title: "Insert Link" },
+      ];
 
   return (
-    <div className={`rich-text-editor border border-gray-200 rounded-xl overflow-hidden bg-white relative ${className}`}>
+    <div
+      className={`rich-text-editor border border-gray-200 rounded-xl overflow-hidden bg-white relative ${className}`}
+    >
       {/* Toolbar */}
       <div className="border-b border-gray-200 bg-gray-50 p-3">
         <div className="flex flex-wrap gap-1">
@@ -83,7 +91,7 @@ const RichTextEditor = ({
                 type="button"
                 className="p-2 rounded hover:bg-gray-200 transition-colors duration-200 text-gray-600 hover:text-gray-800"
                 onClick={() => {
-                  if (typeof button.command === 'function') {
+                  if (typeof button.command === "function") {
                     button.command();
                   } else {
                     executeCommand(button.command);
@@ -106,10 +114,10 @@ const RichTextEditor = ({
           className="w-full h-full p-4 outline-none overflow-y-auto focus:ring-0"
           style={{
             minHeight: height,
-            fontFamily: 'Inter, Arial, sans-serif',
-            fontSize: '14px',
-            lineHeight: '1.6',
-            paddingBottom: showAiButton ? '60px' : '16px' // Add padding if AI button is shown
+            fontFamily: "Inter, Arial, sans-serif",
+            fontSize: "14px",
+            lineHeight: "1.6",
+            paddingBottom: showAiButton ? "60px" : "16px", // Add padding if AI button is shown
           }}
           onInput={handleInput}
           onFocus={() => setIsEditorFocused(true)}
@@ -122,7 +130,7 @@ const RichTextEditor = ({
         {!value && !isEditorFocused && (
           <div
             className="absolute top-4 left-4 text-gray-400 pointer-events-none"
-            style={{ fontStyle: 'italic' }}
+            style={{ fontStyle: "italic" }}
           >
             {placeholder}
           </div>
