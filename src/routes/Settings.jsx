@@ -350,8 +350,6 @@ const Settings = () => {
     });
 
     const keepFiles = existingDocuments.map((doc) => doc.name);
-    console.log(keepFiles[0]);
-    console.log(typeof(keepFiles))
 
     formData.append("KeepFiles", JSON.stringify(keepFiles));
 
@@ -368,8 +366,8 @@ const Settings = () => {
               <button
                 className={`py-2 sm:py-3 px-1 sm:px-2 text-xs sm:text-sm cursor-pointer font-medium rounded-md transition-all duration-200 ${
                   activeTab === "profile"
-                    ? "bg-gray-300  shadow-sm"
-                    : "text-gray-600 hover:text-gray-600 hover:bg-gray-100"
+                    ? "bg-[#16C47F] text-white  shadow-sm"
+                    : "text-gray-600 hover:bg-[#FF9D23]"
                 }`}
                 onClick={() => setActiveTab("profile")}
               >
@@ -381,8 +379,8 @@ const Settings = () => {
               <button
                 className={`py-2 sm:py-3 px-1 sm:px-2 text-xs sm:text-sm cursor-pointer font-medium rounded-md transition-all duration-200 ${
                   activeTab === "workspace"
-                    ? "bg-gray-300  shadow-sm"
-                    : "text-gray-600 hover:text-gray-600 hover:bg-gray-100"
+                    ? "bg-[#16C47F] text-white  shadow-sm"
+                    : "text-gray-600 hover:bg-[#FF9D23]"
                 }`}
                 onClick={() => setActiveTab("workspace")}
               >
@@ -411,8 +409,8 @@ const Settings = () => {
               <button
                 className={`py-2 sm:py-3 px-1 sm:px-2 text-xs sm:text-sm cursor-pointer font-medium rounded-md transition-all duration-200 ${
                   activeTab === "integrations"
-                    ? "bg-gray-300  shadow-sm"
-                    : "text-gray-600 hover:text-gray-600 hover:bg-gray-100"
+                    ? "bg-[#16C47F] text-white   shadow-sm"
+                    : "text-gray-600 hover:bg-[#FF9D23]"
                 }`}
                 onClick={() => setActiveTab("integrations")}
               >
@@ -436,8 +434,8 @@ const Settings = () => {
               <button
                 className={`py-2 sm:py-3 px-1 sm:px-2 text-xs cursor-pointer sm:text-sm font-medium rounded-md transition-all duration-200 ${
                   activeTab === "businessDetails"
-                    ? "bg-gray-300  shadow-sm"
-                    : "text-gray-600 hover:text-gray-600 hover:bg-gray-100"
+                    ? "bg-[#16C47F] text-white  shadow-sm"
+                    : "text-gray-600 hover:bg-[#FF9D23]"
                 }`}
                 onClick={() => setActiveTab("businessDetails")}
               >
@@ -488,7 +486,7 @@ const Settings = () => {
                 </div>
                 <div className="text-center sm:text-left">
                   <input type="file" className="hidden" accept="image/*" />
-                  <button className="text-sm font-medium text-teal-600 hover:text-teal-700 block">
+                  <button className="text-sm font-medium cursor-pointer text-[#16C47F] hover:text-[#FF9D23] block">
                     Change picture
                   </button>
                   <p className="text-xs text-gray-500 mt-1">
@@ -555,8 +553,7 @@ const Settings = () => {
               <div className="flex justify-stretch sm:justify-end pt-6">
                 <button
                   onClick={updateProfile}
-                  className="w-full sm:w-auto bg-teal-500 hover:bg-teal-600 text-white cursor-pointer px-6 py-3 rounded-full text-sm font-medium transition-colors"
-                >
+                  className="w-full sm:w-auto bg-[#16C47F] hover:bg-[#FF9D23] text-white cursor-pointer px-6 py-3 rounded-full text-sm font-medium transition-colors">
                   Update Profile
                 </button>
               </div>
@@ -612,7 +609,7 @@ const Settings = () => {
               </div>
             </div>
             {isModalOpen && (
-              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
+              <div className="fixed inset-0 flex items-center justify-center bg-[#00000091] bg-opacity-50 z-50 p-4">
                 <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md max-h-[90vh] overflow-y-auto">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-semibold">Update Password</h3>
@@ -678,14 +675,12 @@ const Settings = () => {
                   <div className="flex flex-col-reverse sm:flex-row justify-end mt-6 gap-3">
                     <button
                       onClick={() => setIsModalOpen(false)}
-                      className="w-full sm:w-auto text-black cursor-pointer border border-gray-300 rounded-full px-4 py-2 text-sm hover:bg-gray-50 transition-colors"
-                    >
+                      className="w-full sm:w-auto bg-[#16C47F] hover:bg-[#FF9D23] text-white cursor-pointer border border-gray-300 rounded-full px-4 py-2 text-sm transition-colors">
                       Cancel
                     </button>
                     <button
                       onClick={handleUpdatePassword}
-                      className="w-full sm:w-auto bg-teal-500 cursor-pointer text-white px-4 py-2 rounded-full text-sm hover:bg-teal-600 transition-colors"
-                    >
+                      className="w-full sm:w-auto bg-[#16C47F] hover:bg-[#FF9D23] cursor-pointer text-white px-4 py-2 rounded-full text-sm transition-colors">
                       Update Password
                     </button>
                   </div>

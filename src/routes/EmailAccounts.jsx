@@ -11,6 +11,7 @@ import {
   CircleCheckBig,
   Pause,
   Play,
+  Plus,
   ShieldX,
   SquarePen,
   Zap,
@@ -446,7 +447,7 @@ const EmailAccounts = () => {
             {/* First Card - Ready-to-send accounts */}
             <div className="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-[#15A395]/30 overflow-hidden">
               {/* Card Header with Icon */}
-              <div className="bg-gradient-to-r from-[#15A395] to-[#12B886] p-6 text-center">
+              <div className="bg-[#16C47F] p-6 text-center">
                 <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
                   <Zap size={32} className="text-white" />
                 </div>
@@ -461,7 +462,7 @@ const EmailAccounts = () => {
               {/* Card Body */}
               <div className="p-6">
                 <Link to="/email-domain" className="block mb-6">
-                  <button className="w-full bg-[#15A395] hover:bg-[#138a7d] text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                  <button className="w-full bg-[#16C47F] text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
                     Get Started Now
                   </button>
                 </Link>
@@ -476,7 +477,7 @@ const EmailAccounts = () => {
                   ].map((feature, index) => (
                     <div key={index} className="flex items-start gap-3">
                       <div className="flex-shrink-0 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-                        <CircleCheckBig size={14} className="text-green-600" />
+                        <CircleCheckBig size={14} className="text -[#16C47F]" />
                       </div>
                       <span className="text-sm text-gray-700 leading-relaxed">
                         {feature}
@@ -546,7 +547,7 @@ const EmailAccounts = () => {
             {/* Third Card - Microsoft Setup */}
             <div className="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-orange-300 overflow-hidden">
               {/* Card Header with Icon */}
-              <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-6 text-center">
+              <div className="bg-[#FF9D23] p-6 text-center">
                 <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
                   <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zm12.6 0H12.6V0H24v11.4z"/>
@@ -566,7 +567,7 @@ const EmailAccounts = () => {
                   onClick={handleMicrosoftAuth}
                   className="w-full bg-white hover:bg-gray-50 border-2 border-gray-200 hover:border-orange-300 text-gray-800 font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg mb-4 flex items-center justify-center gap-3"
                 >
-                  <svg className="w-5 h-5 text-orange-500" viewBox="0 0 24 24" fill="currentColor">
+                  <svg className="w-5 h-5 text-[#FF9D23]" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zm12.6 0H12.6V0H24v11.4z"/>
                   </svg>
                   Connect Microsoft Office 365
@@ -709,22 +710,9 @@ const EmailAccounts = () => {
 
                   {/* Add New Button */}
                   <button
-                    className="inline-flex items-center px-4 py-2.5 bg-[#15A395] text-white rounded-lg hover:bg-[#138a7d] focus:ring-2 focus:ring-[#15A395] focus:ring-offset-2 transition-all duration-200 font-medium"
-                    onClick={() => setShowAccountsPage(true)}
-                  >
-                    <svg
-                      className="w-4 h-4 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                      />
-                    </svg>
+                    className="inline-flex items-center px-4 py-2.5  text-white rounded-lg bg-[#16C47F] hover:bg-[#FF9D23] cursor-pointer transition-all duration-200 font-medium"
+                    onClick={() => setShowAccountsPage(true)}>
+                      <Plus size={16} />
                     Add New
                   </button>
                 </div>

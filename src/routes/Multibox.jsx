@@ -66,7 +66,7 @@ const Inbox = () => {
           onClick={() => setSelectedTab(tab)}
           className={`cursor-pointer px-4 py-2 mx-1 rounded-full text-sm md:text-base transition-all font-medium ${
             selectedTab === tab
-              ? "bg-[#15A395] text-white shadow-sm"
+              ? "bg-[#16C47F] text-white shadow-sm"
               : "text-gray-600 hover:bg-gray-100 hover:text-gray-800"
           }`}
         >
@@ -135,7 +135,7 @@ const Inbox = () => {
                   {email.time}
                 </span>
                 {email.unread && (
-                  <div className="w-2 h-2 bg-[#15A395] rounded-full mt-1 sm:hidden"></div>
+                  <div className="w-2 h-2 bg-[#16C47F] rounded-full mt-1 sm:hidden"></div>
                 )}
               </div>
             </div>
@@ -243,7 +243,7 @@ const Inbox = () => {
               <div className="flex justify-center sm:justify-end mt-8">
                 <button
                   onClick={() => setShowReplyBox(true)}
-                  className="px-6 py-2.5 flex items-center gap-2 bg-[#15A395] text-white text-sm font-medium rounded-full shadow-md hover:bg-teal-600 hover:shadow-lg transition-all duration-200"
+                  className="px-6 py-2.5 flex items-center gap-2 bg-[#16C47F] text-white text-sm font-medium rounded-full shadow-md hover:bg-[#FF9D23] cursor-pointer hover:shadow-lg transition-all duration-200"
                 >
                   <CornerDownLeft className="w-4 h-4" /> Reply
                 </button>

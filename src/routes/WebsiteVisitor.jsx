@@ -73,7 +73,7 @@ export default function ContactList() {
           <button
             type="button"
             onClick={() => setIsModal2(true)}
-            className="inline-flex items-center px-4 py-2 cursor-pointer border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-gradient-to-r from-[rgb(224,140,23)] to-[rgb(84,156,110)]">
+            className="inline-flex items-center px-4 py-2 cursor-pointer border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-[#16C47F] hover:bg-[#FF9D23]">
             <User size={18} />
             Get Contacts
           </button>
@@ -103,12 +103,12 @@ export default function ContactList() {
 
                   <div className="flex justify-end gap-2 p-4">
                     <button onClick={() => setIsModal(false)} className="py-2 px-5 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-full hover:bg-gray-100 cursor-pointer">Add to campaign</button>
-                    <button className="py-2 px-5 text-sm font-medium text-white bg-teal-600 rounded-full cursor-pointer">Add to CRM</button>
+                    <button className="py-2 px-5 text-sm font-medium text-white bg-[#16C47F] hover:bg-[#FF9D23] rounded-full cursor-pointer">Add to CRM</button>
                   </div>
                 </div>
               </div>
             )}
-          <button onClick={() => setIsModal(true)} className="px-3 flex items-center gap-1 cursor-pointer text-[13px] md:px-6 py-1.5 md:py-3 rounded-full text-white" style={{ backgroundColor: "#15A395" }}>
+          <button onClick={() => setIsModal(true)} className="px-3 flex items-center gap-1 cursor-pointer text-[13px] md:px-6 py-1.5 md:py-3 rounded-full text-white bg-[#16C47F] hover:bg-[#FF9D23]">
             Add to campaign
             <MousePointer2 size={17} />
           </button>

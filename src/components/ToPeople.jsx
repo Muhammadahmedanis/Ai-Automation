@@ -161,8 +161,7 @@ export default function ToPeople() {
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 bg-gradient-to-r from-[#15a395] to-[#128a7e] text-white px-4 py-3 rounded-xl hover:shadow-lg transition-all transform hover:scale-105 text-sm font-medium"
-          >
+            className="flex items-center gap-2 bg-[#16C47F] hover:bg-[#FF9D23] cursor-pointer text-white px-4 py-3 rounded-xl hover:shadow-lg transition-all transform hover:scale-105 text-sm font-medium">
             <FiPlus className="h-4 w-4" />
             <span>Add Lead</span>
           </button>

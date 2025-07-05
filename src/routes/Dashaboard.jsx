@@ -107,14 +107,13 @@ export default function DashboardPage() {
               </button>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="flex items-center gap-2 bg-gradient-to-r from-[rgb(21,163,149)] to-[rgb(18,140,128)] rounded-full px-4 sm:px-6 py-2.5 text-white cursor-pointer text-sm sm:text-base whitespace-nowrap shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              >
+                className="flex items-center gap-2 bg-[#16C47F] hover:bg-[#FF9D23] rounded-full px-4 sm:px-6 py-2.5 text-white cursor-pointer text-sm sm:text-base whitespace-nowrap shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                 <Ratio className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden sm:inline font-medium">Add widget</span>
-                <span className="sm:hidden font-medium">Add</span>
+                {/* <span className="sm:hidden font-medium">Add</span> */}
               </button>
             </div>
-          </div>
+          </div>Add
 
           {/* Enhanced Add Widget Modal */}
           {isModalOpen && (

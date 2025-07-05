@@ -80,8 +80,8 @@ function Analytics() {
                 <button
                   className={`flex items-center gap-1 px-3 sm:px-4 py-2 text-xs sm:text-sm rounded-lg cursor-pointer transition-all duration-300 font-medium ${
                     selectedView === "week"
-                      ? "bg-white text-gray-800 shadow-sm"
-                      : "bg-transparent text-gray-500 hover:text-gray-700"
+                      ? "bg-[#16C47F] text-white  shadow-sm"
+                      : "text-gray-600 hover:bg-[#FF9D23]"
                   }`}
                   onClick={() => setSelectedView("week")}>
                   Weekly <Calendar1 />
@@ -89,8 +89,8 @@ function Analytics() {
                 <button
                   className={`flex items-center gap-1 px-3 sm:px-4 py-2 text-xs sm:text-sm rounded-lg cursor-pointer transition-all duration-300 font-medium ${
                     selectedView === "year"
-                      ? "bg-white text-gray-800 shadow-sm"
-                      : "bg-transparent text-gray-500 hover:text-gray-700"
+                      ? "bg-[#16C47F] text-white shadow-sm"
+                      : "text-gray-600 hover:bg-[#FF9D23]"
                   }`}
                   onClick={() => setSelectedView("year")}
                 >
@@ -99,8 +99,8 @@ function Analytics() {
                  <button
                   className={`flex items-center gap-1 px-3 sm:px-4 py-2 text-xs sm:text-sm rounded-lg cursor-pointer transition-all duration-300 font-medium ${
                     selectedView === "quarter"
-                      ? "bg-white text-gray-800 shadow-sm"
-                      : "bg-transparent text-gray-500 hover:text-gray-700"
+                      ? "bg-[#16C47F] text-white shadow-sm"
+                      : "text-gray-600 hover:bg-[#FF9D23]"
                   }`}
                   onClick={() => setSelectedView("quarter")}
                 >

@@ -129,8 +129,8 @@ const Support = () => {
       <div className="bg-white rounded-2xl shadow-lg border border-gray-100 w-full max-w-2xl p-8 mt-2">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-teal-100 rounded-full mb-4">
-            <MessageSquare className="w-8 h-8 text-teal-600" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#16C47F] rounded-full mb-4">
+            <MessageSquare className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Help Desk</h1>
           <p className="text-gray-600 text-lg">
@@ -309,8 +309,7 @@ const Support = () => {
           <button
             type="submit"
             disabled={helpDeskMutation?.isPending}
-            className="w-full flex items-center justify-center bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:hover:scale-100 shadow-lg hover:shadow-xl disabled:shadow-none"
-          >
+            className="w-full flex items-center justify-center cursor-pointer bg-[#16C47F] hover:bg-[#FF9D23] disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:hover:scale-100 shadow-lg hover:shadow-xl disabled:shadow-none">
             {helpDeskMutation?.isPending ? (
               <div className="flex items-center">
                 <BiLoaderCircle className="w-6 h-6 animate-spin mr-2" />
@@ -328,7 +327,7 @@ const Support = () => {
             Need immediate assistance? Contact us at{" "}
             <a
               href="mailto:support@example.com"
-              className="text-teal-600 font-medium hover:underline"
+              className="text-[#16C47F] font-medium hover:underline"
             >
               support@example.com
             </a>
