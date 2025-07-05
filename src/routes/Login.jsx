@@ -29,10 +29,10 @@ const Login = () => {
         <div className="w-full max-w-sm">
           {/* Logo */}
           <div className="flex items-center gap-2 mb-8">
-            <CircleDot className="w-8 h-8 text-teal-500" />
+            <CircleDot className="w-8 h-8 text-[#16C47F]" />
             <span className="text-xl font-semibold">
               <span className="text-gray-900">Quick</span>
-              <span className="text-teal-500">Pipe</span>
+              <span className="text-[#16C47F]">Pipe</span>
               <span className="text-gray-900">.Ai</span>
             </span>
           </div>
@@ -46,7 +46,7 @@ const Login = () => {
                 value={Email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#16C47F] focus:border-transparent outline-none transition"
                 required
               />
             </div>
@@ -57,7 +57,7 @@ const Login = () => {
                 value={Password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                className="w-full px-4 py-3 pr-12 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 pr-12 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#16C47F] focus:border-transparent outline-none transition"
                 required
               />
               <button
@@ -76,7 +76,7 @@ const Login = () => {
             <div className="flex items-center justify-between">
               <button
                 type="submit"
-                className="px-8 py-3 bg-teal-500 text-white rounded-lg cursor-pointer hover:bg-teal-600 focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition"
+                className="px-8 py-3 bg-[#16C47F] hover:bg-[#FF9D23] text-white rounded-lg cursor-pointer transition"
               >
                 {signinMutation?.isPending ? (
                   <BiLoaderCircle className="size-7 animate-spin" />
@@ -92,7 +92,7 @@ const Login = () => {
 
           <p className="mt-8 text-center text-sm text-gray-600">
             Don't have an account?{" "}
-            <span className="text-teal-500 hover:text-teal-600 font-medium">
+            <span className="text-[#16C47F] hover:text-teal-600 font-medium">
               <Link to="/signup">Sign up</Link>
             </span>
           </p>
@@ -101,7 +101,7 @@ const Login = () => {
 
       {/* Right side - Welcome Message */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-600 to-teal-900">
+        <div className="absolute inset-0 bg-[#16C47F]">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1557683311-eac922347aa1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1080&q=80')] opacity-20 mix-blend-overlay"></div>
         </div>
         <div className="relative w-full flex items-center justify-center p-16">

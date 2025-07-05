@@ -53,10 +53,10 @@ const handleKeyDown = (e, index) => {
       <header className="mb-4">
         <div className="text-center flex flex-col items-center text-xl font-bold">
         <div className="flex items-center gap-2 mb-4">
-            <CircleDot className="w-8 h-8 text-teal-500" />
+            <CircleDot className="w-8 h-8 text-[#16C47F]" />
             <span className="text-xl font-semibold">
             <span className="text-gray-900">Quick</span>
-            <span className="text-teal-500">Pipe</span>
+            <span className="text-[#16C47F]">Pipe</span>
             <span className="text-gray-900">.Ai</span>
             </span>
         </div>
@@ -78,7 +78,7 @@ const handleKeyDown = (e, index) => {
               onKeyDown={(e) => handleKeyDown(e, index)}
               maxLength="1"
               inputMode="numeric"
-              className="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+              className="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-[#16C47F] focus:ring-2 focus:ring-indigo-100"
             />
           ))}
         </div>
@@ -86,7 +86,7 @@ const handleKeyDown = (e, index) => {
           <button
             type='submit'
             disabled={verifyOtpMutation.isPending}  
-            className={`w-full inline-flex gap-2 items-center cursor-pointer justify-center whitespace-nowrap rounded-lg ${!disable ? 'bg-gray-300 hover:bg-gray-300 cursor-not-allowed' : 'bg-teal-500 hover:bg-teal-400'} px-3.5 py-2.5 text-sm font-medium text-white shadow-sm shadow-indigo-950/10 focus:outline-none focus:ring focus:ring-indigo-300 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300 transition-colors duration-150`}>
+            className={`w-full inline-flex gap-2 items-center cursor-pointer justify-center whitespace-nowrap rounded-lg ${!disable ? 'bg-gray-300 hover:bg-gray-300 cursor-not-allowed' : 'bg-[#16C47F] hover:bg-[#FF9D23] '} px-3.5 py-2.5 text-sm font-medium text-white shadow-sm shadow-indigo-950/10 focus:outline-none focus:ring focus:ring-indigo-300 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300 transition-colors duration-150`}>
                 <div className='text-[17px]'> 
                 {verifyOtpMutation?.isPending ? 
                 ( <BiLoaderCircle className="size-7 animate-spin" /> ) : 

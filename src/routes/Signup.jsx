@@ -46,10 +46,10 @@ const SignUp = () => {
         <div className="w-full max-w-sm">
           {/* Logo */}
           <div className="flex items-center gap-2 mb-8">
-            <CircleDot className="w-8 h-8 text-teal-500" />
+            <CircleDot className="w-8 h-8 text-[#16C47F]" />
             <span className="text-xl font-semibold">
               <span className="text-gray-900">Quick</span>
-              <span className="text-teal-500">Pipe</span>
+              <span className="text-[#16C47F]">Pipe</span>
               <span className="text-gray-900">.Ai</span>
             </span>
           </div>
@@ -66,7 +66,7 @@ const SignUp = () => {
                   value={formData.FirstName}
                   onChange={handleChange}
                   placeholder="First Name"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#16C47F] focus:border-transparent outline-none transition"
                   required
                 />
               </div>
@@ -78,7 +78,7 @@ const SignUp = () => {
                   value={formData.LastName}
                   onChange={handleChange}
                   placeholder="Last Name"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#16C47F] focus:border-transparent outline-none transition"
                   required
                 />
               </div>
@@ -91,7 +91,7 @@ const SignUp = () => {
                 value={formData.Email}
                 onChange={handleChange}
                 placeholder="Email"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#16C47F] focus:border-transparent outline-none transition"
                 required
               />
             </div>
@@ -103,7 +103,7 @@ const SignUp = () => {
                 value={formData.PhoneNumber}
                 onChange={handleChange}
                 placeholder="Contact Number"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#16C47F] focus:border-transparent outline-none transition"
                 required
               />
             </div>
@@ -117,7 +117,7 @@ const SignUp = () => {
                 placeholder="Password"
                 className={`w-full px-4 py-3 rounded-lg border ${
                   passwordError ? 'border-red-500' : 'border-gray-300'
-                } focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition`}
+                } focus:ring-2 focus:ring-[#16C47F] focus:border-transparent outline-none transition`}
                 required
               />
               {passwordError && (
@@ -136,11 +136,11 @@ const SignUp = () => {
               />
               <label className="text-sm text-gray-600">
                 I agree to the QuickPipe{' '}
-                <a href="#" className="text-teal-500 hover:text-teal-600">
+                <a href="#" className="text-[#16C47F] hover:text-[#FF9D23]">
                   Terms of Use
                 </a>{' '}
                 and{' '}
-                <a href="#" className="text-teal-500 hover:text-teal-600">
+                <a href="#" className="text-[#16C47F] hover:text-[#FF9D23]">
                   Privacy Policy
                 </a>
               </label>
@@ -148,7 +148,7 @@ const SignUp = () => {
 
             <button
               type="submit"
-              className="w-full px-8 py-3 flex justify-center cursor-pointer bg-teal-500 text-white rounded-lg hover:bg-teal-600 focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition mt-6"
+              className="w-full px-8 py-3 flex justify-center cursor-pointer bg-[#16C47F] hover:bg-[#FF9D23] text-white rounded-lg transition mt-6"
             >
               {signupMutation?.isPending ? 
                 ( <BiLoaderCircle className="size-7 animate-spin" /> ) : 
@@ -159,7 +159,7 @@ const SignUp = () => {
 
           <p className="mt-8 text-center text-sm text-gray-600">
             Already have an account?{' '}
-           <span className="text-teal-500 hover:text-teal-600 font-medium"><Link to="/login"> Log in</Link>
+           <span className="text-teal-500 hover:text-[#16C47F] font-medium"><Link to="/login"> Log in</Link>
            </span> 
           </p>
         </div>
@@ -167,7 +167,7 @@ const SignUp = () => {
 
       {/* Right side - Welcome Message */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-600 to-teal-900">
+        <div className="absolute inset-0 bg-[#16C47F]">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1557683311-eac922347aa1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1080&q=80')] opacity-20 mix-blend-overlay"></div>
         </div>
         <div className="relative w-full flex items-center justify-center p-16">

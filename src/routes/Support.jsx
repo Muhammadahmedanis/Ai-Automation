@@ -192,7 +192,7 @@ const Support = () => {
                     </div>
                     {isSelected && (
                       <div className="absolute top-2 right-2">
-                        <CheckCircle className="w-5 h-5 text-teal-500" />
+                        <CheckCircle className="w-5 h-5 text-[#16C47F]" />
                       </div>
                     )}
                   </label>
@@ -297,7 +297,7 @@ const Support = () => {
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, Attachment: null })}
-                  className="ml-auto text-teal-600 hover:text-teal-800 text-sm font-medium"
+                  className="ml-auto text-[#16C47F] hover:bg-[#FF9D23] text-sm font-medium"
                 >
                   Remove
                 </button>
