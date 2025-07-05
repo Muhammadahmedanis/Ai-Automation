@@ -1,5 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAnalyticsByMonth, getAnalyticsByQuater, getAnalyticsByYear, getDashboardSummary } from "../services/analyticsService.js";
+import { 
+    getAnalyticsByMonth, 
+    getAnalyticsByQuater, 
+    getAnalyticsByYear, 
+    getDashboardSummary,
+    getStatsMonthly,
+    getStatsWeekly
+} from "../services/analyticsService.js";
 
 export const useAnalyticsQuery = () => {
     const token = JSON.parse(localStorage.getItem("Token"));
@@ -31,6 +38,20 @@ export const useAnalyticsQuery = () => {
         enabled: !!token,
     })
 
+    const { data: statsMonthly, isLoading: isStatsMonthlyLoading, error: statsMonthlyError, refetch: refetchStatsMonthly } = useQuery({
+        queryKey: ["statsMonthly"],
+        queryFn: getStatsMonthly,
+        enabled: !!token,
+        refetchInterval: 60000, // Refetch every minute
+    });
+
+    const { data: statsWeekly, isLoading: isStatsWeeklyLoading, error: statsWeeklyError, refetch: refetchStatsWeekly } = useQuery({
+        queryKey: ["statsWeekly"],
+        queryFn: getStatsWeekly,
+        enabled: !!token,
+        refetchInterval: 60000, // Refetch every minute
+    });
+
 
     return {
         dashboardSummary,
@@ -39,6 +60,14 @@ export const useAnalyticsQuery = () => {
         AnalyticsMonthly,
         AnalyticsQuaterly,
         AnalyticsYearly,
+        statsMonthly,
+        isStatsMonthlyLoading,
+        statsMonthlyError,
+        refetchStatsMonthly,
+        statsWeekly,
+        isStatsWeeklyLoading,
+        statsWeeklyError,
+        refetchStatsWeekly,
     }
 
 }

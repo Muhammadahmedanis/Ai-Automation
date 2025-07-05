@@ -178,10 +178,10 @@ export const useCampaignQuery = () => {
       queryKey: ["allTemplate"],
       queryFn: getAllTemplate,
       onSuccess: (data) => {
-        console.log("All campaigns fetched:", data);
+        console.log("All templates fetched:", data);
       },
       onError: (error) => {
-        toast.error(`Failed to fetch campaigns: ${error.message}`);
+        toast.error(`Failed to fetch templates: ${error.message}`);
       },
     });
   };  

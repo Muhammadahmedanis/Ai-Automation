@@ -21,7 +21,7 @@ import {
 import MetricCard from "../components/MetricCard";
 import LiveFeed from "../components/LiveFeed";
 import TaskList from "../components/TaskList";
-import StatsChart from "../components/StartChart";
+import StatsChart from "../components/StatChart";
 import TopPeople from "../components/ToPeople";
 import { RiEditCircleLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
@@ -317,7 +317,7 @@ export default function DashboardPage() {
             <div className="p-4 sm:p-6 border-none rounded-xl shadow-lg bg-white hover:shadow-xl transition-all duration-300">
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="font-bold text-base sm:text-lg text-gray-800">
-                  Analytics Overview
+                  Stats
                 </h3>
                 <Link
                   to="/analytics"
@@ -350,7 +350,7 @@ export default function DashboardPage() {
                   Weekly
                 </button>
               </div>
-              <StatsChart />
+              <StatsChart selectedView={selectedView} />
             </div>
 
             {/* Tasks Section */}

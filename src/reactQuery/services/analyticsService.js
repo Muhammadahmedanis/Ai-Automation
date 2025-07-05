@@ -15,3 +15,25 @@ export const getDashboardSummary = () => {
     }
   }).then(res => res.data);
 };
+
+export const getStatsMonthly = () => {
+  const token = JSON.parse(localStorage.getItem("Token"));
+  const token1 = token?.token || token;
+  
+  return axios.get("https://quick-pipe-backend.vercel.app/Dashboard/StatsMonthlyWidget", {
+    headers: {
+      Authorization: `Bearer ${token1}`
+    }
+  }).then(res => res.data);
+};
+
+export const getStatsWeekly = () => {
+  const token = JSON.parse(localStorage.getItem("Token"));
+  const token1 = token?.token || token;
+  
+  return axios.get("https://quick-pipe-backend.vercel.app/Dashboard/StatsWeeklyWidget", {
+    headers: {
+      Authorization: `Bearer ${token1}`
+    }
+  }).then(res => res.data);
+};
