@@ -15,6 +15,8 @@ import {
   TrendingUp,
   Activity,
   Target,
+  Loader2,
+  AlertCircle,
 } from "lucide-react";
 import MetricCard from "../components/MetricCard";
 import LiveFeed from "../components/LiveFeed";
@@ -24,18 +26,17 @@ import TopPeople from "../components/ToPeople";
 import { RiEditCircleLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import widget from "../assets/widget.png";
+import { useAnalyticsQuery } from "../reactQuery/hooks/useAnalyticsQuery";
 
 export default function DashboardPage() {
   const [selectedView, setSelectedView] = useState("month");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPlusModalOpen, setIsPlusModalOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [metrics, setMetrics] = useState({
-    activeEmails: 12,
-    peopleReached: 1264,
-    meetingsBooked: 156,
-    opportunities: 156,
-  });
+
+  // Fetch dashboard summary data
+  const { dashboardSummary, isDashboardLoading, dashboardError } =
+    useAnalyticsQuery();
 
   // Update time every minute
   useEffect(() => {
@@ -43,19 +44,6 @@ export default function DashboardPage() {
       setCurrentTime(new Date());
     }, 60000);
     return () => clearInterval(timer);
-  }, []);
-
-  // Simulate real-time metric updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setMetrics((prev) => ({
-        activeEmails: prev.activeEmails + Math.floor(Math.random() * 2),
-        peopleReached: prev.peopleReached + Math.floor(Math.random() * 10),
-        meetingsBooked: prev.meetingsBooked + Math.floor(Math.random() * 2),
-        opportunities: prev.opportunities + Math.floor(Math.random() * 3),
-      }));
-    }, 30000);
-    return () => clearInterval(interval);
   }, []);
 
   const getGreeting = () => {
@@ -107,13 +95,14 @@ export default function DashboardPage() {
               </button>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="flex items-center gap-2 bg-[#16C47F] hover:bg-[#FF9D23] rounded-full px-4 sm:px-6 py-2.5 text-white cursor-pointer text-sm sm:text-base whitespace-nowrap shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                className="flex items-center gap-2 bg-[#16C47F] hover:bg-[#FF9D23] rounded-full px-4 sm:px-6 py-2.5 text-white cursor-pointer text-sm sm:text-base whitespace-nowrap shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              >
                 <Ratio className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden sm:inline font-medium">Add widget</span>
                 {/* <span className="sm:hidden font-medium">Add</span> */}
               </button>
             </div>
-          </div>Add
+          </div>
 
           {/* Enhanced Add Widget Modal */}
           {isModalOpen && (
@@ -234,42 +223,78 @@ export default function DashboardPage() {
 
           {/* Enhanced Metrics Section */}
           <div className="mb-6 sm:mb-8 grid gap-4 sm:gap-6 p-2 sm:p-4 md:p-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-            <MetricCard
-              icon="mail"
-              label="Active emails"
-              value={metrics.activeEmails.toString()}
-              iconColor="text-[#6ca1f7]"
-              bgColor="bg-[#ecf3fe]"
-              trend="+8%"
-              trendDirection="up"
-            />
-            <MetricCard
-              icon="users"
-              label="People Reached"
-              value={metrics.peopleReached.toLocaleString()}
-              iconColor="text-[#fcbd75]"
-              bgColor="bg-[#fff3e6]"
-              trend="+12%"
-              trendDirection="up"
-            />
-            <MetricCard
-              icon="calendar"
-              label="Meetings Booked"
-              value={metrics.meetingsBooked.toString()}
-              iconColor="text-[#34a853]"
-              bgColor="bg-[#ebf6ee]"
-              trend="+24%"
-              trendDirection="up"
-            />
-            <MetricCard
-              icon="briefcase"
-              label="Opportunities"
-              value={metrics.opportunities.toString()}
-              iconColor="text-[#ae70ff]"
-              bgColor="bg-[#f5edff]"
-              trend="+15%"
-              trendDirection="up"
-            />
+            {isDashboardLoading ? (
+              // Loading state for metrics
+              Array.from({ length: 4 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="p-4 sm:p-6 border rounded-xl shadow-lg bg-white"
+                >
+                  <div className="flex items-center justify-center h-20">
+                    <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                  </div>
+                </div>
+              ))
+            ) : dashboardError ? (
+              // Error state for metrics
+              <div className="col-span-full p-4 sm:p-6 border border-red-200 rounded-xl shadow-lg bg-red-50">
+                <div className="flex items-center justify-center gap-2 text-red-600">
+                  <AlertCircle className="h-5 w-5" />
+                  <span className="text-sm font-medium">
+                    Failed to load metrics
+                  </span>
+                </div>
+              </div>
+            ) : (
+              // Success state with actual data
+              <>
+                <MetricCard
+                  icon="mail"
+                  label="Active emails"
+                  value={
+                    dashboardSummary?.Details?.ActiveEmails?.toString() || "0"
+                  }
+                  iconColor="text-[#6ca1f7]"
+                  bgColor="bg-[#ecf3fe]"
+                  trend="+8%"
+                  trendDirection="up"
+                />
+                <MetricCard
+                  icon="users"
+                  label="People Reached"
+                  value={
+                    dashboardSummary?.Details?.PeopleReached?.toLocaleString() ||
+                    "0"
+                  }
+                  iconColor="text-[#fcbd75]"
+                  bgColor="bg-[#fff3e6]"
+                  trend="+12%"
+                  trendDirection="up"
+                />
+                <MetricCard
+                  icon="calendar"
+                  label="Conversions"
+                  value={
+                    dashboardSummary?.Details?.Conversions?.toString() || "0"
+                  }
+                  iconColor="text-[#34a853]"
+                  bgColor="bg-[#ebf6ee]"
+                  trend="+24%"
+                  trendDirection="up"
+                />
+                <MetricCard
+                  icon="briefcase"
+                  label="Opportunities"
+                  value={
+                    dashboardSummary?.Details?.Opportunities?.toString() || "0"
+                  }
+                  iconColor="text-[#ae70ff]"
+                  bgColor="bg-[#f5edff]"
+                  trend="+15%"
+                  trendDirection="up"
+                />
+              </>
+            )}
           </div>
 
           {/* Enhanced Dashboard Grid */}

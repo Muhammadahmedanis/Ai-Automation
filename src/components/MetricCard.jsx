@@ -91,15 +91,6 @@ function MetricCard({
             )}
           </div>
         </div>
-        <div className="flex gap-1 group hover:cursor-pointer flex-shrink-0">
-          {[...Array(3)].map((_, i) => (
-            <div
-              key={i}
-              className="w-1.5 sm:w-2 h-5 sm:h-6 border border-gray-300 bg-gray-100 rounded-full transition-all duration-300 group-hover:bg-gradient-to-t group-hover:from-green-500 group-hover:to-green-300"
-              style={{ transitionDelay: `${i * 100}ms` }}
-            />
-          ))}
-        </div>
       </div>
 
       <div className="relative">

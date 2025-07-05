@@ -14,56 +14,97 @@ import {
   Filter,
   Download,
   MoreVertical,
+  RefreshCw,
+  Loader2,
+  AlertCircle,
 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 
-const initialPeople = [
-  {
-    id: 1,
-    email: "xmitchell@hotmail.com",
-    contact: "Lynn Tanner",
-    provider: "Microsoft",
-    status: "Verified",
-    score: 95,
-    avatar: "https://i.pravatar.cc/40?img=1",
-    lastActivity: "2 hours ago",
-    engagement: "high",
-  },
-  {
-    id: 2,
-    email: "tbaker@outlook.com",
-    contact: "Capt. Trunk",
-    provider: "Google",
-    status: "Not yet contacted",
-    score: 78,
-    avatar: "https://i.pravatar.cc/40?img=2",
-    lastActivity: "1 day ago",
-    engagement: "medium",
-  },
-  {
-    id: 3,
-    email: "mgonzalez@aol.com",
-    contact: "Thomas Anum",
-    provider: "Google",
-    status: "Not yet contacted",
-    score: 62,
-    avatar: "https://i.pravatar.cc/40?img=3",
-    lastActivity: "3 days ago",
-    engagement: "low",
-  },
-];
-
 export default function ToPeople() {
-  const [people, setPeople] = useState(initialPeople);
+  const [people, setPeople] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [visiblePeople, setVisiblePeople] = useState([]);
 
+  // Function to fetch data from API
+  const fetchTopPeople = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Get token from localStorage and remove quotes
+      const token = localStorage.getItem("Token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const cleanToken = token.replace(/"/g, "");
+
+      const response = await fetch(
+        "https://quick-pipe-backend.vercel.app/Dashboard/TopPeopleWidget",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${cleanToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.success && data.TopPeople) {
+        // Transform API data to match component structure
+        const transformedPeople = data.TopPeople.map((person, index) => ({
+          id: person.details.id,
+          email: person.details.Email,
+          contact: person.details.Name,
+          company: person.details.Company || "No Company",
+          title: person.details.Title || "No Title",
+          status: person.details.Status,
+          opens: person.opens,
+          clicks: person.clicks,
+          total: person.total,
+          avatar: `https://i.pravatar.cc/40?img=${index + 1}`,
+          lastActivity: person.details.LastInteraction
+            ? new Date(person.details.LastInteraction).toLocaleDateString()
+            : "No recent activity",
+          engagement:
+            person.opens > 7 ? "high" : person.opens > 3 ? "medium" : "low",
+          score: Math.min(
+            Math.round(person.opens * 10 + person.clicks * 20),
+            100
+          ),
+        }));
+
+        setPeople(transformedPeople);
+      } else {
+        throw new Error(data.message || "Failed to fetch data");
+      }
+    } catch (err) {
+      setError(err.message);
+      console.error("Error fetching top people:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTopPeople();
+  }, []);
+
   useEffect(() => {
     // Animate people appearing
+    setVisiblePeople([]);
     people.forEach((person, index) => {
       setTimeout(() => {
         setVisiblePeople((prev) => [...prev, person.id]);
@@ -122,6 +163,18 @@ export default function ToPeople() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <button
+            onClick={fetchTopPeople}
+            disabled={loading}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
+            title="Refresh data"
+          >
+            <RefreshCw
+              className={`h-4 w-4 text-gray-600 ${
+                loading ? "animate-spin" : ""
+              }`}
+            />
+          </button>
           <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
             <Download className="h-4 w-4 text-gray-600" />
           </button>
@@ -161,140 +214,194 @@ export default function ToPeople() {
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 bg-[#16C47F] hover:bg-[#FF9D23] cursor-pointer text-white px-4 py-3 rounded-xl hover:shadow-lg transition-all transform hover:scale-105 text-sm font-medium">
+            className="flex items-center gap-2 bg-[#16C47F] hover:bg-[#FF9D23] cursor-pointer text-white px-4 py-3 rounded-xl hover:shadow-lg transition-all transform hover:scale-105 text-sm font-medium"
+          >
             <FiPlus className="h-4 w-4" />
             <span>Add Lead</span>
           </button>
         </div>
       </div>
 
+      {/* Loading State */}
+      {loading && (
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <Loader2 className="h-8 w-8 animate-spin text-green-500 mx-auto mb-4" />
+            <p className="text-gray-600">Loading top leads...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && !loading && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-red-500" />
+            <div>
+              <h4 className="text-red-800 font-medium">Error loading data</h4>
+              <p className="text-red-600 text-sm">{error}</p>
+            </div>
+            <button
+              onClick={fetchTopPeople}
+              className="ml-auto px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 transition-colors text-sm"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Enhanced Cards View for Mobile and Desktop */}
-      <div className="space-y-4">
-        {filteredPeople.map((person, index) => (
-          <div
-            key={person.id}
-            className={`bg-white border border-gray-200 rounded-xl p-4 sm:p-5 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 ${
-              visiblePeople.includes(person.id)
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-4"
-            }`}
-            style={{ transitionDelay: `${index * 100}ms` }}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4 flex-1 min-w-0">
-                <div className="relative">
-                  <img
-                    src={person.avatar}
-                    alt={person.contact}
-                    className="w-12 h-12 rounded-full border-2 border-gray-200 shadow-sm"
-                  />
-                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h4 className="font-semibold text-gray-900 truncate">
-                      {person.contact}
-                    </h4>
-                    <div className="flex items-center gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-3 w-3 ${
-                            i < Math.floor(person.score / 20)
-                              ? "text-yellow-400 fill-current"
-                              : "text-gray-300"
-                          }`}
-                        />
-                      ))}
-                    </div>
+      {!loading && !error && (
+        <div className="space-y-4">
+          {filteredPeople.map((person, index) => (
+            <div
+              key={person.id}
+              className={`bg-white border border-gray-200 rounded-xl p-3 sm:p-4 md:p-5 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 ${
+                visiblePeople.includes(person.id)
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-4"
+              }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
+            >
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+                <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0 w-full sm:w-auto">
+                  <div className="relative flex-shrink-0">
+                    <img
+                      src={person.avatar}
+                      alt={person.contact}
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-gray-200 shadow-sm"
+                    />
+                    <div className="absolute -bottom-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full border-2 border-white"></div>
                   </div>
-                  <p className="text-sm text-gray-600 truncate mb-2">
-                    {person.email}
-                  </p>
 
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <div
-                      className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(
-                        person.status
-                      )}`}
-                    >
-                      {person.status === "Verified" ? (
-                        <CircleCheck className="inline h-3 w-3 mr-1" />
-                      ) : (
-                        <Clock className="inline h-3 w-3 mr-1" />
-                      )}
-                      {person.status}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1">
+                      <h4 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
+                        {person.contact}
+                      </h4>
+                      {/* Star rating - commented out */}
+                      {/* <div className="flex items-center gap-1">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`h-3 w-3 ${
+                              i < Math.floor(person.score / 20)
+                                ? "text-yellow-400 fill-current"
+                                : "text-gray-300"
+                            }`}
+                          />
+                        ))}
+                      </div> */}
                     </div>
+                    <p className="text-xs sm:text-sm text-gray-600 truncate mb-2">
+                      {person.email}
+                    </p>
 
-                    <div
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${getEngagementColor(
-                        person.engagement
-                      )}`}
-                    >
-                      {person.engagement.charAt(0).toUpperCase() +
-                        person.engagement.slice(1)}{" "}
-                      Engagement
-                    </div>
+                    <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                      {/* Status badge - commented out */}
+                      {/* <div
+                        className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(
+                          person.status
+                        )}`}
+                      >
+                        {person.status === "Verified" ? (
+                          <CircleCheck className="inline h-3 w-3 mr-1" />
+                        ) : (
+                          <Clock className="inline h-3 w-3 mr-1" />
+                        )}
+                        {person.status}
+                      </div> */}
 
-                    <div className="flex items-center gap-1 text-xs text-gray-500">
-                      {person.provider === "Google" ? (
-                        <FcGoogle className="h-4 w-4" />
-                      ) : (
-                        <div className="h-4 w-4 bg-blue-500 rounded text-white text-xs flex items-center justify-center">
-                          M
+                      {/* Engagement badge - commented out */}
+                      {/* <div
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${getEngagementColor(
+                          person.engagement
+                        )}`}
+                      >
+                        {person.engagement.charAt(0).toUpperCase() +
+                          person.engagement.slice(1)}{" "}
+                        Engagement
+                      </div> */}
+
+                      <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-700 font-medium">
+                        <span>{person.company}</span>
+                      </div>
+
+                      {person.title !== "No Title" && (
+                        <div className="flex items-center gap-1 text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+                          <span>{person.title}</span>
                         </div>
                       )}
-                      <span>{person.provider}</span>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex items-center gap-3">
-                <div className="text-right">
-                  <div className="text-lg font-bold text-gray-800">
-                    {person.score}
-                  </div>
-                  <div className="text-xs text-gray-500">Lead Score</div>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+                  {/* Lead Score - commented out */}
+                  {/* <div className="text-right">
+                    <div className="text-lg font-bold text-gray-800">
+                      {person.score}
+                    </div>
+                    <div className="text-xs text-gray-500">Lead Score</div>
+                  </div> */}
+
+                  {/* More options button - commented out */}
+                  {/* <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                    <MoreVertical className="h-4 w-4 text-gray-600" />
+                  </button> */}
                 </div>
+              </div>
 
-                <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <MoreVertical className="h-4 w-4 text-gray-600" />
-                </button>
+              <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 mb-3">
+                  {/* Last activity - commented out */}
+                  {/* <div className="text-xs text-gray-500">
+                    Last activity: {person.lastActivity}
+                  </div> */}
+                  <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm">
+                    <div className="flex items-center gap-1">
+                      <MailOpen className="h-3 w-3 sm:h-4 sm:w-4 text-green-600" />
+                      <span className="text-green-600 font-medium">
+                        {person.opens} opens
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="h-3 w-3 sm:h-4 sm:w-4 bg-blue-600 rounded-full"></div>
+                      <span className="text-blue-600 font-medium">
+                        {person.clicks} clicks
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                {/* Action buttons - commented out */}
+                {/* <div className="flex items-center gap-2">
+                  <button className="px-3 py-1 text-xs font-medium text-blue-600 bg-blue-100 rounded-full hover:bg-blue-200 transition-colors">
+                    View Profile
+                  </button>
+                  <button className="px-3 py-1 text-xs font-medium text-green-600 bg-green-100 rounded-full hover:bg-green-200 transition-colors">
+                    Send Email
+                  </button>
+                </div> */}
               </div>
             </div>
+          ))}
 
-            <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
-              <div className="text-xs text-gray-500">
-                Last activity: {person.lastActivity}
+          {filteredPeople.length === 0 && !loading && (
+            <div className="text-center py-12">
+              <div className="text-gray-400 mb-2">
+                <User className="h-12 w-12 mx-auto mb-4" />
               </div>
-              <div className="flex items-center gap-2">
-                <button className="px-3 py-1 text-xs font-medium text-blue-600 bg-blue-100 rounded-full hover:bg-blue-200 transition-colors">
-                  View Profile
-                </button>
-                <button className="px-3 py-1 text-xs font-medium text-green-600 bg-green-100 rounded-full hover:bg-green-200 transition-colors">
-                  Send Email
-                </button>
-              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No leads found
+              </h3>
+              <p className="text-gray-500">
+                Try adjusting your search or filter criteria.
+              </p>
             </div>
-          </div>
-        ))}
-
-        {filteredPeople.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-gray-400 mb-2">
-              <User className="h-12 w-12 mx-auto mb-4" />
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No leads found
-            </h3>
-            <p className="text-gray-500">
-              Try adjusting your search or filter criteria.
-            </p>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
       {/* Modal */}
       {isModalOpen && (
