@@ -229,7 +229,7 @@ const Settings = () => {
   };
 
   const handleToggle = () => {
-    console.log(userInfo?.User?.TFA);
+    // console.log(userInfo?.User?.TFA);
     if (userInfo?.User?.TFA !== undefined) {
       TFAMutation.mutate();
       setProfileData((prev) => ({
@@ -243,7 +243,6 @@ const Settings = () => {
     navigator.clipboard.writeText(workspaceData.id);
   };
 
-  //
 
   const {
     businessDetails,
@@ -596,7 +595,7 @@ const Settings = () => {
                   <button
                     onClick={handleToggle}
                     className={`relative inline-flex items-center cursor-pointer h-6 rounded-full w-11 transition-colors focus:outline-none ${
-                      userInfo?.User.TFA ? "bg-teal-500" : "bg-gray-200"
+                      userInfo?.User.TFA ? "bg-[#16C47F]" : "bg-gray-200"
                     }`}
                   >
                     <span
@@ -742,7 +741,7 @@ const Settings = () => {
                       />
                       <button
                         onClick={handleUpdateWorkspace}
-                        className={`absolute right-2 top-1/2 transform -translate-y-1/2 bg-teal-500 hover:bg-teal-600 text-white py-1.5 px-3 sm:px-4 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 ${
+                        className={`absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#16C47F] hover:bg-[#FF9D23] cursor-pointer text-white py-2 px-3 sm:px-5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 ${
                           workspaceData.WorkspaceName?.trim()
                             ? "opacity-100 scale-100"
                             : "opacity-0 scale-95"
@@ -880,7 +879,7 @@ const Settings = () => {
                   </div>
                   <button
                     onClick={() => setIsModalOpen2(true)}
-                    className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white py-2.5 px-4 sm:px-5 rounded-lg flex items-center gap-2 text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md w-full sm:w-auto justify-center"
+                    className="bg-[#16C47F] hover:bg-[#FF9D23] text-white py-2.5 px-4 sm:px-5 rounded-lg flex items-center gap-2 text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md w-full sm:w-auto justify-center"
                     aria-label="Add New Member"
                   >
                     <svg
@@ -1555,7 +1554,7 @@ const Settings = () => {
               />
               <button
                 onClick={handleBusinessNameSubmit}
-                className="bg-teal-500 w-full hover:bg-teal-600 text-white py-3 px-4 rounded-md flex items-center justify-center gap-2 transition duration-200 text-sm font-medium"
+                className="bg-[#16C47F] hover:bg-[#FF9D23] w-full text-white py-3 px-4 rounded-md flex items-center justify-center gap-2 transition duration-200 text-sm font-medium"
                 disabled={isLoadingBusinessName}
               >
                 {isLoadingBusinessName ? (
@@ -1649,7 +1648,7 @@ const Settings = () => {
               </div>
               <button
                 onClick={handleWebUrlSubmit}
-                className="bg-teal-500 w-full hover:bg-teal-600 text-white py-3 px-4 rounded-md flex items-center justify-center gap-2 transition duration-200 text-sm font-medium"
+                className="bg-[#16C47F] hover:bg-[#FF9D23] w-full text-white py-3 px-4 rounded-md flex items-center justify-center gap-2 transition duration-200 text-sm font-medium"
                 disabled={isLoadingWebUrl}
               >
                 {isLoadingWebUrl ? (
@@ -1799,7 +1798,7 @@ const Settings = () => {
             {/* Submit Button */}
             <button
               onClick={handleDocSubmit}
-              className="bg-teal-500 w-full hover:bg-teal-600 text-white py-3 px-4 rounded-md flex items-center justify-center gap-2 transition duration-200 text-sm font-medium"
+              className="bg-[#16C47F] hover:bg-[#FF9D23] w-full  text-white py-3 px-4 rounded-md flex items-center justify-center gap-2 transition duration-200 text-sm font-medium"
               disabled={isLoadingAddDoc}
             >
               {isLoadingAddDoc ? (

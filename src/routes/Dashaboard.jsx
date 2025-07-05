@@ -117,7 +117,7 @@ export default function DashboardPage() {
 
           {/* Enhanced Add Widget Modal */}
           {isModalOpen && (
-            <div className="fixed inset-0 top-0 flex items-center justify-center bg-black bg-opacity-60 z-50 p-4 backdrop-blur-sm">
+            <div className="fixed inset-0 top-0 flex items-center justify-center bg-[#3231318f] bg-opacity-60 z-50 p-4 backdrop-blur-sm">
               <div className="relative bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-[95vw] sm:max-w-[700px] max-h-[90vh] overflow-hidden">
                 <div className="flex items-center justify-between pb-4 border-b border-gray-200">
                   <div>
@@ -354,7 +354,7 @@ export default function DashboardPage() {
 
           {/* Enhanced Add Task Modal */}
           {isPlusModalOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50 p-4 backdrop-blur-sm">
+            <div className="fixed inset-0 flex items-center justify-center bg-[#3231318f] bg-opacity-60 z-50 p-4 backdrop-blur-sm">
               <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-[95vw] sm:max-w-[600px] p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
                 <div className="flex items-center justify-between pb-4 border-b border-gray-200">
                   <div>
@@ -367,7 +367,7 @@ export default function DashboardPage() {
                   </div>
                   <button
                     onClick={() => setIsPlusModalOpen(false)}
-                    className="text-gray-400 hover:text-gray-600 cursor-pointer p-2 hover:bg-gray-100 rounded-full transition-all duration-200"
+                    className="text-gray-400 curaor-pointer hover:text-gray-600 cursor-pointer p-2 hover:bg-gray-100 rounded-full transition-all duration-200"
                   >
                     <X className="h-6 w-6" />
                   </button>
