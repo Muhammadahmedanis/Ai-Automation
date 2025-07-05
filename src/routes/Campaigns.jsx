@@ -23,6 +23,7 @@ import { toast } from "react-hot-toast";
 function Campaigns() {
   const {
     campaignsObject,
+    isCampaignsLoading,
     createCampaignMutation,
     activePauseMutation,
     updateCampaignMutation,
@@ -281,6 +282,25 @@ function Campaigns() {
     },
     [activePauseMutation]
   );
+
+  // Show loading state while campaigns are being fetched
+  if (isCampaignsLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="mb-4">
+            <Loader2 size={48} className="animate-spin text-teal-600 mx-auto" />
+          </div>
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">
+            Loading Campaigns
+          </h2>
+          <p className="text-gray-600">
+            Please wait while we fetch your campaigns...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

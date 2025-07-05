@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, Eye, Share2, Plus, X } from "lucide-react";
-import { Editor } from '@tinymce/tinymce-react';
+import RichTextEditor from './RichTextEditor';
 import { useCampaignQuery } from "../reactQuery/hooks/useCampaignQuery";
 
 export default function EmailTemplateBuilder({ campaignId }) {
@@ -216,42 +216,16 @@ export default function EmailTemplateBuilder({ campaignId }) {
             </div>
           </div>
 
-          {/* TinyMCE Editor */}
-          <div className="mb-6 relative">
-            <Editor
-              apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
+          {/* Rich Text Editor */}
+          <div className="mb-6">
+            <RichTextEditor
               value={content}
-              onEditorChange={(newContent) => setContent(newContent)}
-              init={{
-                height: 400,
-                menubar: false,
-                plugins: [
-                  "advlist autolink lists link image charmap print preview anchor",
-                  "searchreplace visualblocks code fullscreen",
-                  "insertdatetime media table paste code help wordcount",
-                ],
-                toolbar:
-                  "undo redo | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-                statusbar: false,
-                branding: false,
-                inline: false,
-              }}
+              onChange={setContent}
+              height="400px"
+              placeholder="Start writing your email content..."
+              showAiButton={true}
+              onAiButtonClick={handleWriteWithAI}
             />
-
-            {/* Write with AI Button */}
-            <div className="bg-gray-100 bottom-8 right-8 absolute mr-2 mb-2 rounded-full z-10">
-              <button
-                onClick={handleWriteWithAI}
-                className="cursor-pointer transform px-6 py-2 rounded-full font-semibold"
-                style={{
-                  color: 'transparent',
-                  background: 'linear-gradient(90deg, #FB8805 0%, #15A395 100%)',
-                  WebkitBackgroundClip: 'text',
-                }}
-              >
-                Write with AI
-              </button>
-            </div>
           </div>
 
           <div className="mt-6">
