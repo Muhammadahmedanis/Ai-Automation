@@ -1,5 +1,5 @@
 import  { useState } from 'react';
-import { CircleDot } from 'lucide-react';
+import { CircleDot, Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthQuery } from '../reactQuery/hooks/useAuthQuery';
 import { BiLoaderCircle } from "react-icons/bi";
@@ -15,6 +15,7 @@ const SignUp = () => {
     agreeToTerms: false
   });
   const [passwordError, setPasswordError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const { signupMutation } = useAuthQuery(navigate);
 
   const handleChange = (e) => {
@@ -109,17 +110,30 @@ const SignUp = () => {
             </div>
 
             <div>
-              <input
-                type="password"
-                name="Password"
-                value={formData.Password}
-                onChange={handleChange}
-                placeholder="Password"
-                className={`w-full px-4 py-3 rounded-lg border ${
-                  passwordError ? 'border-red-500' : 'border-gray-300'
-                } focus:ring-2 focus:ring-[#16C47F] focus:border-transparent outline-none transition`}
-                required
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="Password"
+                  value={formData.Password}
+                  onChange={handleChange}
+                  placeholder="Password"
+                  className={`w-full px-4 py-3 pr-12 rounded-lg border ${
+                    passwordError ? 'border-red-500' : 'border-gray-300'
+                  } focus:ring-2 focus:ring-[#16C47F] focus:border-transparent outline-none transition`}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5 cursor-pointer" />
+                  ) : (
+                    <Eye className="w-5 h-5 cursor-pointer" />
+                  )}
+                </button>
+              </div>
               {passwordError && (
                 <p className="mt-1 text-sm text-red-500">{passwordError}</p>
               )}
