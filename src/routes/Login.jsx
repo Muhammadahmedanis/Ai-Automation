@@ -107,7 +107,7 @@ const Login = () => {
         <div className="relative w-full flex items-center justify-center p-16">
           <div className="text-white max-w-md">
             <h2 className="text-4xl font-bold mb-6">Welcome Back!</h2>
-            <p className="text-lg text-[#16C47F]">
+            <p className="text-lg text-white">
               Unlock the power of effective outreach with our cutting-edge
               platform, and experience a surge in responses and engagement rates
               like never before.

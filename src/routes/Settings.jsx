@@ -508,7 +508,6 @@ const Settings = () => {
                     onChange={handleProfileChange}
                     className="w-full p-3 border border-gray-200 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-[#16C47F] text-sm"
                   />
-                  bg-[#16C47F] hover:bg-[#FF9D23]
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-700 mb-2 flex items-center">
