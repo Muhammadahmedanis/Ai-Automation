@@ -135,7 +135,7 @@ function Filters() {
                     <button
                     key={option.value}
                     className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center ${
-                        sortOrder === option.value ? 'text-teal-600 font-medium' : 'text-gray-700'
+                        sortOrder === option.value ? 'text-[#16C47F] font-medium' : 'text-gray-700'
                     }`}
                     onClick={() => handleSortChange(option.value)}
                     >

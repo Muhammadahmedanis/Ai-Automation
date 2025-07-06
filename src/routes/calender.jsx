@@ -246,7 +246,7 @@ function Calendar() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-teal-500" />
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-[#16C47F]" />
           <p className="text-gray-500">Loading calendar...</p>
         </div>
       </div>
@@ -281,8 +281,8 @@ function Calendar() {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-teal-100 rounded-lg">
-                  <Calendar1 className="h-6 w-6 text-teal-600" />
+                <div className="p-2 bg-[#16C47F] rounded-lg">
+                  <Calendar1 className="h-6 w-6 text-[#16C47F]" />
                 </div>
                 <div>
                   <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
@@ -348,7 +348,7 @@ function Calendar() {
               {/* New Event Button */}
               <button
                 onClick={() => setIsOpen(true)}
-                className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg transition-all duration-200 font-medium shadow-sm"
+                className="flex items-center gap-2  bg-[#16C47F] hover:bg-[#FF9D23] text-white px-4 py-2 rounded-lg transition-all duration-200 font-medium shadow-sm"
               >
                 <Plus className="h-4 w-4" />
                 <span className="hidden sm:inline">New Event</span>
@@ -400,9 +400,9 @@ function Calendar() {
                         }`
                       : ""
                   }`}
-                  className={`min-h-[80px] sm:min-h-[120px] p-2 sm:p-3 border-r border-b border-gray-100 cursor-pointer transition-all duration-200 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-inset ${
+                  className={`min-h-[80px] sm:min-h-[120px] p-2 sm:p-3 border-r border-b border-gray-100 cursor-pointer transition-all duration-200 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#16C47F] focus:ring-inset ${
                     !day.isCurrentMonth ? "bg-gray-50/50" : "bg-white"
-                  } ${isCurrentDay ? "bg-teal-50 border-teal-200" : ""}`}
+                  } ${isCurrentDay ? "bg-text-[#16C47F] border-[#16C47F]" : ""}`}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span
@@ -410,7 +410,7 @@ function Calendar() {
                         !day.isCurrentMonth
                           ? "text-gray-400"
                           : isCurrentDay
-                          ? "text-teal-700 bg-teal-100 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+                          ? "text-text-[#16C47F] bg-text-[#16C47F] w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
                           : "text-gray-700"
                       }`}
                     >
@@ -422,7 +422,7 @@ function Calendar() {
                     {day.events.slice(0, 3).map((event, eventIndex) => (
                       <div
                         key={eventIndex}
-                        className="text-xs px-2 py-1 bg-teal-100 text-teal-700 rounded-md font-medium flex items-center gap-1 truncate"
+                        className="text-xs px-2 py-1 bg-[#16C47F] text-[#16C47F] rounded-md font-medium flex items-center gap-1 truncate"
                       >
                         <CircleCheckBig className="h-3 w-3 flex-shrink-0" />
                         <span className="truncate">{event}</span>

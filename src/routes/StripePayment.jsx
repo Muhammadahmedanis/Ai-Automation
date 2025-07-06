@@ -310,7 +310,7 @@ for (const domainName of data.Purchased || []) {
           <button
             type="submit"
             disabled={!stripe}
-            className="w-full bg-teal-500 text-white py-2 rounded hover:bg-teal-600 cursor-pointer"
+            className="w-full bg-[#16C47F] hover:bg-[#FF9D23] text-white py-2 rounded  cursor-pointer"
           >
             Pay Now
           </button>
@@ -354,7 +354,7 @@ for (const domainName of data.Purchased || []) {
 ))}
           <button
             onClick={handleFinalSubmit}
-            className="w-full bg-teal-600 text-white py-2 rounded hover:bg-teal-700 cursor-pointer"
+            className="w-full bg-[#16C47F] hover:bg-[#FF9D23] text-white py-2 rounded cursor-pointer"
           >
             Complete Purchase
           </button>
@@ -399,7 +399,7 @@ for (const domainName of data.Purchased || []) {
 
     <button
       onClick={() => navigate("/email-domain")}
-      className="bg-teal-500 text-white py-2 px-4 rounded hover:bg-teal-600 mt-4 cursor-pointer"
+      className="bg-[#16C47F] hover:bg-[#FF9D23] text-white py-2 px-4 rounded mt-4 cursor-pointer"
     >
       Back to Domain Search
     </button>

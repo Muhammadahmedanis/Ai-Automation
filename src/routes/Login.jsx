@@ -84,7 +84,7 @@ const Login = () => {
                   "Login"
                 )}
               </button>
-              <p className="text-sm text-gray-600 hover:text-teal-500">
+              <p className="text-sm text-gray-600 hover:text-[#FF9D23]">
                 <Link to="/forgot">Forgot password?</Link>
               </p>
             </div>
@@ -92,7 +92,7 @@ const Login = () => {
 
           <p className="mt-8 text-center text-sm text-gray-600">
             Don't have an account?{" "}
-            <span className="text-[#16C47F] hover:text-teal-600 font-medium">
+            <span className="text-[#16C47F] hover:text-[#FF9D23] font-medium">
               <Link to="/signup">Sign up</Link>
             </span>
           </p>
@@ -107,7 +107,7 @@ const Login = () => {
         <div className="relative w-full flex items-center justify-center p-16">
           <div className="text-white max-w-md">
             <h2 className="text-4xl font-bold mb-6">Welcome Back!</h2>
-            <p className="text-lg text-teal-50">
+            <p className="text-lg text-[#16C47F]">
               Unlock the power of effective outreach with our cutting-edge
               platform, and experience a surge in responses and engagement rates
               like never before.

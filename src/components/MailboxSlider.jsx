@@ -166,7 +166,7 @@ const filteredActivities = activeTab === "all"
                   )}
                 </React.Fragment>
               ))}
-              <div className="px-3 py-3 rounded-full flex gap-1 items-center border border-gray-300 bg-teal-500 text-white text-xs font-medium">
+              <div className="px-3 py-3 rounded-full flex gap-1 items-center border border-gray-300 bg-[#16C47F] text-white text-xs font-medium">
                 <CircleCheck size={15} /> Mark status as completed 
               </div>
             </div>
@@ -216,7 +216,7 @@ const filteredActivities = activeTab === "all"
                   onClick={() => label === "New Task" && setIsPlusModalOpen(true)}
                   className="flex flex-col items-center justify-center p-3"
                 >
-                  <Icon className="w-12 h-12 text-teal-600 mb-1 p-3 rounded-full bg-green-50" />
+                  <Icon className="w-12 h-12 text-[#16C47F] mb-1 p-3 rounded-full bg-green-50" />
                   <span className="text-xs font-medium text-black">{label}</span>
                 </button>
               ))}
@@ -243,7 +243,7 @@ const filteredActivities = activeTab === "all"
                           </div>
                           <input
                             type="text"
-                            className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm sm:text-base"
+                            className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-[#16C47F] text-sm sm:text-base"
                           />
                         </div>
 
@@ -255,7 +255,7 @@ const filteredActivities = activeTab === "all"
                           </div>
                           <textarea
                             rows="3"
-                            className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm sm:text-base resize-none"
+                            className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-[#16C47F] text-sm sm:text-base resize-none"
                           ></textarea>
                         </div>
 
@@ -268,7 +268,7 @@ const filteredActivities = activeTab === "all"
                             </div>
                             <input
                               type="date"
-                              className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm sm:text-base"
+                              className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-[#16C47F] text-sm sm:text-base"
                             />
                           </div>
                           <div className="w-full sm:w-1/2">
@@ -278,7 +278,7 @@ const filteredActivities = activeTab === "all"
                             </div>
                             <input
                               type="time"
-                              className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm sm:text-base"
+                              className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-[#16C47F] text-sm sm:text-base"
                             />
                           </div>
                         </div>
@@ -290,7 +290,7 @@ const filteredActivities = activeTab === "all"
                           </label>
                           <input
                             type="text"
-                            className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm sm:text-base"
+                            className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-[#16C47F] text-sm sm:text-base"
                           />
                         </div>
 
@@ -343,7 +343,7 @@ const filteredActivities = activeTab === "all"
                         onClick={() => setActiveTab(tab.value)}
                         className={`px-4 py-2 text-sm font-medium cursor-pointer transition-all
                         ${activeTab === tab.value
-                            ? "bg-white  border-b-2 border-teal-600 text-teal-600"
+                            ? "bg-white  border-b-2 border-[#16C47F] text-[#16C47F]"
                             : "text-gray-500 hover:text-black"}`}
                     >
                         {tab.label}
@@ -384,7 +384,7 @@ const filteredActivities = activeTab === "all"
                     </button>
                     <button
                       onClick={() => setShowNotesModal(false)}
-                      className="w-full sm:w-auto flex gap-1 items-center text-white cursor-pointer bg-teal-600 border border-gray-300 rounded-full px-4 py-2 text-sm hover:bg-gray-50 transition-colors">
+                      className="w-full sm:w-auto flex gap-1 items-center text-white cursor-pointer bg-[#16C47F] hover:bg-[#FF9D23] border border-gray-300 rounded-full px-4 py-2 text-sm transition-colors">
                       <BookCopy size={18} /> Save
                     </button>
                   </div>
@@ -500,7 +500,7 @@ const filteredActivities = activeTab === "all"
         {/* Toggle button */}
         <button
           onClick={() => setShowMore(!showMore)}
-          className="text-teal-600 cursor-pointer hover:text-teal-700 p-2 mx-auto flex items-center"
+          className="text-[#16C47F] cursor-pointer hover:text-[#FF9D23] p-2 mx-auto flex items-center"
         >
           {showMore ? "View less" : "View more"}
           {showMore ? (

@@ -44,7 +44,7 @@ function Layout() {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-50">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-[#16C47F] border-t-transparent rounded-full animate-spin"></div>
           <div className="text-lg text-gray-600">
             Checking authentication...
           </div>

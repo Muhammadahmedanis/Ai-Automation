@@ -193,7 +193,7 @@ const EmailConfiguration = () => {
         return (
             <div className="p-4 sm:p-6 text-red-600">
                 {error}
-                <button onClick={() => navigate("/email-domain")} className="block mt-4 bg-teal-600 p-4 text-white rounded-md">
+                <button onClick={() => navigate("/email-domain")} className="block mt-4 bg-[#16C47F] p-4 text-white rounded-md">
                     Go to Existing Domains
                 </button>
             </div>
@@ -203,7 +203,7 @@ const EmailConfiguration = () => {
     return (
         <div className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-5 bg-white rounded-lg max-w-3xl mx-auto">
             <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 break-words">
-                Domain Configuration: <span className="text-teal-700">{domain.DomainName}</span>
+                Domain Configuration: <span className="text-[#16C47F]">{domain.DomainName}</span>
             </h1>
 
             {/* Mail Hosting Section */}
@@ -215,7 +215,7 @@ const EmailConfiguration = () => {
                         disabled={status.MailHostingConfiguration || configuring}
                         onChange={handleEnableMailHosting}
                         className={`${
-                            status.MailHostingConfiguration ? "bg-teal-600" : "bg-gray-300"
+                            status.MailHostingConfiguration ? "bg-[#16C47F]" : "bg-gray-300"
                         } relative inline-flex h-6 w-11 items-center rounded-full transition shrink-0 cursor-pointer`}
                     >
                         <span
@@ -237,13 +237,13 @@ const EmailConfiguration = () => {
                                 className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded text-white text-sm sm:text-base ${
                                     status.Verification || verificationResult === "success"
                                         ? "bg-gray-400 cursor-not-allowed"
-                                        : "bg-teal-600 hover:bg-teal-700 cursor-pointer"
+                                        : "bg-[#16C47F] hover:bg-[#FF9D23] cursor-pointer"
                                 }`}
                             >
                                 {verifying ? "Verifying..." : status.Verification || verificationResult === "success" ? "Already Verified" : "Verify"}
                             </button>
 
-            {verificationResult === "success" && <span className="text-green-700 font-medium">Domain Verified</span>}
+            {verificationResult === "success" && <span className="text-[#16C47F] font-medium">Domain Verified</span>}
             {verificationResult === "failed" && <span className="text-red-600 font-medium">Domain Verification Failed</span>}
             </div>
 
@@ -275,7 +275,7 @@ const EmailConfiguration = () => {
               }))
             }
             className={`${
-              status.WebForwardingConfiguration ? "bg-teal-600" : "bg-gray-300"
+              status.WebForwardingConfiguration ? "bg-[#16C47F]" : "bg-gray-300"
             } relative inline-flex h-6 w-11 items-center rounded-full transition cursor-pointer`}
           >
             <span
@@ -299,7 +299,7 @@ const EmailConfiguration = () => {
             <button
               onClick={handleConfigureWebForwarding}
               disabled={forwardingSubmitting || !webForwardingUrl}
-              className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 w-fit whitespace-nowrap cursor-pointer rounded disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-[#16C47F] hover:bg-[#FF9D23] text-white px-4 py-2 w-fit whitespace-nowrap cursor-pointer rounded disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {forwardingSubmitting ? "Submitting..." : status.WebForwardingUrl ? "Update Forwarding" : "Submit"}
             </button>

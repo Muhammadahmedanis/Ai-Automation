@@ -289,7 +289,7 @@ function Campaigns() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="mb-4">
-            <Loader2 size={48} className="animate-spin text-teal-600 mx-auto" />
+            <Loader2 size={48} className="animate-spin text-[#16C47F] mx-auto" />
           </div>
           <h2 className="text-lg font-semibold text-gray-900 mb-2">
             Loading Campaigns
@@ -322,7 +322,7 @@ function Campaigns() {
               <Search size={20} className="absolute left-3 text-gray-400" />
               <input
                 type="text"
-                className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 outline-none text-gray-700 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm sm:text-base"
+                className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 outline-none text-gray-700 focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F] text-sm sm:text-base"
                 placeholder="Search campaigns..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -335,7 +335,7 @@ function Campaigns() {
             <div className="relative w-full sm:w-auto">
               <button
                 type="button"
-                className="inline-flex items-center justify-center w-full rounded-full border border-gray-300 px-3 sm:px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer min-w-[120px] sm:min-w-[140px]"
+                className="inline-flex items-center justify-center w-full rounded-full border border-gray-300 px-3 sm:px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#16C47F] cursor-pointer min-w-[120px] sm:min-w-[140px]"
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowStatusDropdown(!showStatusDropdown);
@@ -357,7 +357,7 @@ function Campaigns() {
                     {statusOptions.map((option) => (
                       <button
                         key={option.value}
-                        className="w-full text-left px-4 py-2 text-sm hover:bg-teal-50 hover:text-teal-800 flex items-center gap-2 cursor-pointer"
+                        className="w-full text-left px-4 py-2 text-sm hover:bg-[#16C47F] hover:text-[#16C47F] flex items-center gap-2 cursor-pointer"
                         onClick={() => handleStatusChange(option.value)}
                       >
                         {option.icon}
@@ -373,7 +373,7 @@ function Campaigns() {
             <div className="relative w-full sm:w-auto">
               <button
                 type="button"
-                className="inline-flex justify-center items-center w-full rounded-full border border-gray-300 px-3 sm:px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer min-w-[120px] sm:min-w-[140px]"
+                className="inline-flex justify-center items-center w-full rounded-full border border-gray-300 px-3 sm:px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#16C47F] cursor-pointer min-w-[120px] sm:min-w-[140px]"
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowSortDropdown(!showSortDropdown);
@@ -396,7 +396,7 @@ function Campaigns() {
                         key={option.value}
                         className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center cursor-pointer ${
                           sortOrder === option.value
-                            ? "text-teal-600 bg-teal-50 font-medium"
+                            ? "text-[#16C47F]  bg-[#16C47F] font-medium"
                             : "text-gray-700"
                         }`}
                         onClick={() => handleSortChange(option.value)}
@@ -413,7 +413,7 @@ function Campaigns() {
             <button
               onClick={() => setShowNewCampaignModal(true)}
               type="button"
-              className="inline-flex items-center justify-center px-4 sm:px-5 py-2 text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer disabled:opacity-50 w-full sm:w-auto"
+              className="inline-flex items-center justify-center px-4 sm:px-5 py-2 text-sm font-medium text-white bg-[#16C47F] hover:bg-[#FF9D23]  rounded-full focus:outline-none focus:ring-2 focus:ring-[#16C47F] cursor-pointer disabled:opacity-50 w-full sm:w-auto"
               disabled={isCreateLoading}
             >
               {isCreateLoading ? (
@@ -428,14 +428,14 @@ function Campaigns() {
 
         {/* Bulk Actions */}
         {selectedCampaigns.size > 0 && (
-          <div className="mb-3 sm:mb-4 p-3 bg-teal-50 border border-teal-200 rounded-lg">
+          <div className="mb-3 sm:mb-4 p-3 bg-[#16C47F] border border-[#16C47F] rounded-lg">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <span className="text-sm font-medium text-teal-800">
+              <span className="text-sm font-medium text-[#16C47F]">
                 {selectedCampaigns.size} campaign
                 {selectedCampaigns.size > 1 ? "s" : ""} selected
               </span>
               <div className="flex gap-2">
-                <button className="px-3 py-1 text-sm text-teal-700 hover:text-teal-900 cursor-pointer">
+                <button className="px-3 py-1 text-sm bg-[#16C47F] hover:bg-[#FF9D23] text-white cursor-pointer">
                   Bulk Actions
                 </button>
                 <button
@@ -469,7 +469,7 @@ function Campaigns() {
               {!searchQuery && statusFilter === "All statuses" && (
                 <button
                   onClick={() => setShowNewCampaignModal(true)}
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 rounded-md cursor-pointer"
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-[#16C47F] hover:bg-[#FF9D23] rounded-md cursor-pointer"
                 >
                   <Plus size={16} className="mr-2" />
                   Create Campaign
@@ -484,7 +484,7 @@ function Campaigns() {
                     <th scope="col" className="px-6 py-3 text-left">
                       <input
                         type="checkbox"
-                        className="focus:ring-teal-500 h-4 w-4 text-teal-600 border-gray-300 rounded cursor-pointer"
+                        className="focus:ring-text-[#16C47F] h-4 w-4 text-text-[#16C47F] border-gray-300 rounded cursor-pointer"
                         checked={selectAll}
                         onChange={handleSelectAll}
                       />
@@ -550,13 +550,13 @@ function Campaigns() {
                     <tr
                       key={campaign.id}
                       className={`hover:bg-gray-50 transition-colors ${
-                        selectedCampaigns.has(campaign.id) ? "bg-teal-50" : ""
+                        selectedCampaigns.has(campaign.id) ? "bg-text-[#16C47F]" : ""
                       }`}
                     >
                       <td className="px-6 py-4 whitespace-nowrap">
                         <input
                           type="checkbox"
-                          className="focus:ring-teal-500 h-4 w-4 text-teal-600 border-gray-300 rounded cursor-pointer"
+                          className="focus:ring-text-[#16C47F] h-4 w-4 text-text-[#16C47F] border-gray-300 rounded cursor-pointer"
                           checked={selectedCampaigns.has(campaign.id)}
                           onChange={() => handleSelectCampaign(campaign.id)}
                         />
@@ -564,7 +564,7 @@ function Campaigns() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Link
                           to={`/campaigns/target/${campaign.id}`}
-                          className="text-sm font-medium text-gray-900 hover:text-teal-600 transition-colors"
+                          className="text-sm font-medium text-gray-900 hover:text-[#16C47F] transition-colors"
                         >
                           {campaign.Name || "Unnamed Campaign"}
                         </Link>
@@ -580,7 +580,7 @@ function Campaigns() {
                               ? "bg-yellow-100 text-yellow-800"
                               : campaign.Status === "Draft"
                               ? "bg-gray-100 text-gray-800"
-                              : "bg-green-100 text-green-800"
+                              : "bg-green-100 text-[#16C47F]"
                           }`}
                         >
                           {campaign.Status || "Draft"}
@@ -596,7 +596,7 @@ function Campaigns() {
                                   : campaign.Status === "Error"
                                   ? "bg-red-500"
                                   : campaign.Status === "Completed"
-                                  ? "bg-green-500"
+                                  ? "bg-[#16C47F]"
                                   : "bg-yellow-500"
                               }`}
                               style={{ width: `${campaign.progress || 0}%` }}
@@ -652,7 +652,7 @@ function Campaigns() {
                           ) : campaign.Status === "Active" ? (
                             <Pause size={16} className="text-yellow-600" />
                           ) : (
-                            <Play size={16} className="text-green-600" />
+                            <Play size={16} className="text-[#16C47F]" />
                           )}
                         </button>
                       </td>
@@ -730,7 +730,7 @@ function Campaigns() {
               {!searchQuery && statusFilter === "All statuses" && (
                 <button
                   onClick={() => setShowNewCampaignModal(true)}
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 rounded-md cursor-pointer"
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white  bg-[#16C47F] hover:bg-[#FF9D23] rounded-md cursor-pointer"
                 >
                   <Plus size={16} className="mr-2" />
                   Create Campaign
@@ -743,7 +743,7 @@ function Campaigns() {
                 key={campaign.id}
                 className={`bg-white shadow rounded-lg p-4 sm:p-6 transition-all hover:shadow-md ${
                   selectedCampaigns.has(campaign.id)
-                    ? "ring-2 ring-teal-500 ring-opacity-50 bg-teal-50"
+                    ? "ring-2 ring-[#16C47F] ring-opacity-50 bg-[#16C47F] "
                     : ""
                 }`}
               >
@@ -752,14 +752,14 @@ function Campaigns() {
                   <div className="flex items-start gap-3 flex-1 min-w-0">
                     <input
                       type="checkbox"
-                      className="focus:ring-teal-500 h-4 w-4 text-teal-600 border-gray-300 rounded cursor-pointer mt-1"
+                      className="focus:ring-[#16C47F] h-4 w-4 text-[#16C47F] border-gray-300 rounded cursor-pointer mt-1"
                       checked={selectedCampaigns.has(campaign.id)}
                       onChange={() => handleSelectCampaign(campaign.id)}
                     />
                     <div className="flex-1 min-w-0">
                       <Link
                         to={`/campaigns/target/${campaign.id}`}
-                        className="text-lg font-medium text-gray-900 hover:text-teal-600 transition-colors block truncate"
+                        className="text-lg font-medium text-gray-900 hover:text-[#16C47F] transition-colors block truncate"
                       >
                         {campaign.Name || "Unnamed Campaign"}
                       </Link>
@@ -869,7 +869,7 @@ function Campaigns() {
                           : campaign.Status === "Error"
                           ? "bg-red-500"
                           : campaign.Status === "Completed"
-                          ? "bg-green-500"
+                          ? "bg-[#16C47F]"
                           : "bg-yellow-500"
                       }`}
                       style={{ width: `${campaign.progress || 0}%` }}
@@ -962,7 +962,7 @@ function Campaigns() {
               <input
                 type="text"
                 id="campaign-name"
-                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-sm sm:text-base"
+                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F] transition-colors text-sm sm:text-base"
                 placeholder="e.g., Q1 Lead Generation"
                 value={newCampaignName}
                 onChange={(e) => setNewCampaignName(e.target.value)}
@@ -983,7 +983,7 @@ function Campaigns() {
             <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
               <button
                 type="button"
-                className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50"
+                className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#16C47F] transition-colors disabled:opacity-50"
                 onClick={() => setShowNewCampaignModal(false)}
                 disabled={isCreateLoading}
               >
@@ -991,7 +991,7 @@ function Campaigns() {
               </button>
               <button
                 type="button"
-                className="w-full sm:w-auto px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-w-[100px]"
+                className="w-full sm:w-auto px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#16C47F] hover:bg-[#FF9D23] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#16C47F] transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-w-[100px]"
                 onClick={handleCreateCampaign}
                 disabled={!newCampaignName.trim() || isCreateLoading}
               >
@@ -1050,7 +1050,7 @@ function Campaigns() {
               <input
                 type="text"
                 id="campaign-update-name"
-                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-sm sm:text-base"
+                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F] transition-colors text-sm sm:text-base"
                 placeholder="Enter new campaign name"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
@@ -1069,7 +1069,7 @@ function Campaigns() {
             <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
               <button
                 type="button"
-                className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50"
+                className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#16C47F] transition-colors disabled:opacity-50"
                 onClick={() => setShowUpdateNameModal(false)}
                 disabled={isUpdateLoading}
               >
@@ -1077,7 +1077,7 @@ function Campaigns() {
               </button>
               <button
                 type="button"
-                className="w-full sm:w-auto px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-w-[100px]"
+                className="w-full sm:w-auto px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#16C47F] hover:bg-[#FF9D23] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#16C47F] transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-w-[100px]"
                 onClick={handleUpdateName}
                 disabled={!newName.trim() || isUpdateLoading}
               >

@@ -173,7 +173,7 @@ const SignUp = () => {
 
           <p className="mt-8 text-center text-sm text-gray-600">
             Already have an account?{' '}
-           <span className="text-teal-500 hover:text-[#16C47F] font-medium"><Link to="/login"> Log in</Link>
+           <span className="text-[#16C47F] hover:text-[#16C47F] font-medium"><Link to="/login"> Log in</Link>
            </span> 
           </p>
         </div>
@@ -187,7 +187,7 @@ const SignUp = () => {
         <div className="relative w-full flex items-center justify-center p-16">
           <div className="text-white max-w-md">
             <h2 className="text-4xl font-bold mb-6">10,000+ clients are getting more replies!</h2>
-            <p className="text-lg text-teal-50">
+            <p className="text-lg text-[#16C47F]">
               Unlock the power of effective outreach with our cutting-edge platform, 
               and experience a surge in responses and engagement rates like never before.
             </p>

@@ -224,7 +224,7 @@ export default function EmailDomain() {
           <button
             key={tab}
             className={`py-2 px-4 font-medium cursor-pointer ${
-              activeTab === tab ? "text-teal-500 border-b-2 border-teal-500" : "text-gray-500"
+              activeTab === tab ? "text-[#16C47F] border-b-2 border-[#16C47F]" : "text-gray-500"
             }`}
             onClick={() => setActiveTab(tab)}
           >
@@ -240,7 +240,7 @@ export default function EmailDomain() {
             placeholder="Type your domain name to start"
             value={domainName}
             onChange={(e) => setDomainName(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-teal-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#16C47F]"
           />
 
           {/* Domain extensions */}
@@ -249,7 +249,7 @@ export default function EmailDomain() {
               <label key={ext} className="flex items-center gap-2 cursor-pointer">
                 <div
                   className={`w-4 h-4 border rounded flex items-center justify-center ${
-                    domainExtensions[ext] ? "bg-teal-500 border-teal-500" : "border-gray-300"
+                    domainExtensions[ext] ? "bg-[#16C47F] hover:bg-[#FF9D23] border-[#16C47F]" : "border-gray-300"
                   }`}
                 >
                   {domainExtensions[ext] && <Check className="w-4 h-4 text-white" />}
@@ -275,7 +275,7 @@ export default function EmailDomain() {
                   return (
                     <p
                       key={idx}
-                      className="flex items-center gap-2 mt-2 bg-teal-50 border w-fit text-[13px] border-teal-300 p-2 rounded-full cursor-pointer"
+                      className="flex items-center gap-2 mt-2 bg-[#16C47F] border w-fit text-[13px] border-[#16C47F] p-2 rounded-full cursor-pointer"
                       onClick={() => handleDomainSelection(domain)}
                     >
                       <span>{domain}</span>
@@ -300,7 +300,7 @@ export default function EmailDomain() {
               <div className="space-y-2">
                 {selectedDomains.map((domain, idx) => (
                   <div key={idx} className="flex gap-4">
-                    <div className="flex justify-between items-center border-2 border-teal-500 p-4 w-full rounded-2xl">
+                    <div className="flex justify-between items-center border-2 border-[#16C47F] p-4 w-full rounded-2xl">
                       <span className="text-sm">{domain.name}</span>
                     </div>
                     <button
@@ -343,10 +343,10 @@ export default function EmailDomain() {
           <div
             key={d.id || idx}
             onClick={() => navigate("/configure-domain", { state: d })}
-            className="border border-teal-300 p-4 rounded-lg shadow-sm flex justify-between items-center hover:bg-teal-50 transition-colors cursor-pointer"
+            className="border border-[#16C47F] p-4 rounded-lg shadow-sm flex justify-between items-center hover:bg-[#16C47F] transition-colors cursor-pointer"
           >
             <p>{d.DomainName}</p>
-            <SlidersHorizontal size={18} className="cursor-pointer hover:text-teal-600" />
+            <SlidersHorizontal size={18} className="cursor-pointer hover:text-[#16C47F]" />
           </div>
         ))}
       </div>
@@ -398,18 +398,18 @@ const DomainConfirmModal = ({ isOpen, categorizedDomains, onClose, onNext, loadi
         {loading ? (
           <div className="flex flex-col items-center justify-center space-y-4">
             <p className="text-gray-700">Loading pricing information...</p>
-            <div className="animate-spin rounded-full border-4 border-teal-500 border-t-transparent w-10 h-10"></div>
+            <div className="animate-spin rounded-full border-4 border-[#16C47F] border-t-transparent w-10 h-10"></div>
           </div>
         ) : (
           <>
             {/* Conditional rendering of categories */}
             {categorizedDomains?.premiumAvailable?.length > 0 && (
               <div className="mb-4">
-                <h3 className="text-xl font-medium text-teal-600 mb-2">Premium Available</h3>
+                <h3 className="text-xl font-medium text-[#16C47F] mb-2">Premium Available</h3>
                 {categorizedDomains.premiumAvailable.map((domain, idx) => (
                   <div key={idx} className="flex justify-between py-2 border-b border-gray-200">
                     <span className="text-gray-800">{domain.domain}</span>
-                    <span className="text-teal-500">${domain.price}</span>
+                    <span className="text-[#16C47F]">${domain.price}</span>
                   </div>
                 ))}
               </div>
@@ -417,11 +417,11 @@ const DomainConfirmModal = ({ isOpen, categorizedDomains, onClose, onNext, loadi
 
             {categorizedDomains?.nonPremiumAvailable?.length > 0 && (
               <div className="mb-4">
-                <h3 className="text-xl font-medium text-teal-600 mb-2">Non-Premium Available</h3>
+                <h3 className="text-xl font-medium text-[#16C47F] mb-2">Non-Premium Available</h3>
                 {categorizedDomains.nonPremiumAvailable.map((domain, idx) => (
                   <div key={idx} className="flex justify-between py-2 border-gray-200">
                     <span className="text-gray-800">{domain.domain}</span>
-                    <span className="text-teal-500">${domain.registerPrice}</span>
+                    <span className="text-[#16C47F]">${domain.registerPrice}</span>
                   </div>
                 ))}
               </div>
@@ -429,7 +429,7 @@ const DomainConfirmModal = ({ isOpen, categorizedDomains, onClose, onNext, loadi
 
             {categorizedDomains?.unavailablePremium?.length > 0 && (
               <div className="mb-4">
-                <h3 className="text-xl font-medium text-teal-600 mb-2">Unavailable Premium</h3>
+                <h3 className="text-xl font-medium text-[#16C47F] mb-2">Unavailable Premium</h3>
                 {categorizedDomains.unavailablePremium.map((domain, idx) => (
                   <div key={idx} className="flex justify-between py-2 border-b border-gray-200">
                     <span className="text-gray-800">{domain}</span>
@@ -441,7 +441,7 @@ const DomainConfirmModal = ({ isOpen, categorizedDomains, onClose, onNext, loadi
 
             {categorizedDomains?.unavailableNonPremium?.length > 0 && (
               <div className="mb-4">
-                <h3 className="text-xl font-medium text-teal-600 mb-2">Unavailable Non-Premium</h3>
+                <h3 className="text-xl font-medium text-[#16C47F] mb-2">Unavailable Non-Premium</h3>
                 {categorizedDomains.unavailableNonPremium.map((domain, idx) => (
                   <div key={idx} className="flex justify-between py-2 border-b border-gray-200">
                     <span className="text-gray-800">{domain}</span>
@@ -454,7 +454,7 @@ const DomainConfirmModal = ({ isOpen, categorizedDomains, onClose, onNext, loadi
             {/* Display Total Price */}
             <div className="flex justify-between items-center mt-4 border-t pt-4">
               <p className="text-lg font-semibold">Total Price:</p>
-              <span className="text-teal-500 text-lg">$ {totalPrice}</span>
+              <span className="text-[#16C47F] text-lg">$ {totalPrice}</span>
             </div>
           </>
         )}
@@ -476,13 +476,13 @@ const DomainConfirmModal = ({ isOpen, categorizedDomains, onClose, onNext, loadi
           <div className="flex justify-between mt-6">
             <button
               onClick={onClose}
-              className="bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-[#16C47F]"
             >
               Back
             </button>
             <button
               onClick={onNext}
-              className="bg-teal-500 text-white py-2 px-4 rounded-lg hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="bg-[#16C47F] hover:bg-[#FF9D23] text-white py-2 px-4 rounded-lgfocus:outline-none focus:ring-2 focus:ring-[#16C47F]"
             >
               Next
             </button>

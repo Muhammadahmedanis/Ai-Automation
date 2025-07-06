@@ -38,10 +38,10 @@ const ResetPass = () => {
                     <div className="p-4 sm:p-7">
                             <div className="flex flex-col items-center justify-center mb-4 text-2xl font-bold">
                             <div className="flex items-center gap-2 mb-8">
-                                <CircleDot className="w-8 h-8 text-teal-500" />
+                                <CircleDot className="w-8 h-8 text-[#16C47F]" />
                                 <span className="text-xl font-semibold">
                                 <span className="text-gray-900">Quick</span>
-                                <span className="text-teal-500">Pipe</span>
+                                <span className="text-[#16C47F]">Pipe</span>
                                 <span className="text-gray-900">.Ai</span>
                                 </span>
                             </div>
@@ -91,7 +91,7 @@ const ResetPass = () => {
                                     </div>
                                     <button
                                         type="submit"
-                                        className="inline-flex items-center cursor-pointer justify-center gap-2 px-4 py-3 text-sm font-semibold text-white transition-all bg-teal-500 hover:bg-teal-400 border border-transparent rounded-md  focus:outline-none focus:ring-2">
+                                        className="inline-flex items-center cursor-pointer justify-center gap-2 px-4 py-3 text-sm font-semibold text-white transition-all bg-[#16C47F] hover:bg-[#FF9D23] border border-transparent rounded-md  focus:outline-none focus:ring-2">
                                         Change my password
                                         {isPending && <div className="w-7 h-7 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>}
                                     </button>

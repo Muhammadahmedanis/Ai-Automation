@@ -506,8 +506,9 @@ const Settings = () => {
                     name="FirstName"
                     value={profileData.FirstName}
                     onChange={handleProfileChange}
-                    className="w-full p-3 border border-gray-200 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm"
+                    className="w-full p-3 border border-gray-200 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-[#16C47F] text-sm"
                   />
+                  bg-[#16C47F] hover:bg-[#FF9D23]
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-700 mb-2 flex items-center">
@@ -519,7 +520,7 @@ const Settings = () => {
                     name="LastName"
                     value={profileData.LastName}
                     onChange={handleProfileChange}
-                    className="w-full p-3 border border-gray-200 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm"
+                    className="w-full p-3 border border-gray-200 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-[#16C47F] text-sm"
                   />
                 </div>
                 <div className="lg:col-span-2">
@@ -532,7 +533,7 @@ const Settings = () => {
                     name="Email"
                     value={profileData.Email}
                     onChange={handleProfileChange}
-                    className="w-full p-3 border border-gray-200 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm"
+                    className="w-full p-3 border border-gray-200 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-[#16C47F] text-sm"
                   />
                 </div>
                 <div className="lg:col-span-2">
@@ -545,7 +546,7 @@ const Settings = () => {
                     name="PhoneNumber"
                     value={profileData.PhoneNumber}
                     onChange={handleProfileChange}
-                    className="w-full p-3 border border-gray-200 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm"
+                    className="w-full p-3 border border-gray-200 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-[#16C47F] text-sm"
                   />
                 </div>
               </div>
@@ -576,7 +577,7 @@ const Settings = () => {
                   </div>
                   <button
                     onClick={() => setIsModalOpen(true)}
-                    className="w-full sm:w-auto text-sm cursor-pointer text-teal-500 hover:text-teal-600 font-medium border border-gray-300 px-4 py-2 rounded-full hover:bg-gray-50 transition-all"
+                    className="w-full sm:w-auto text-sm cursor-pointer text-[#16C47F] hover:text-[#16C47F] font-medium border border-gray-300 px-4 py-2 rounded-full hover:bg-gray-50 transition-all"
                   >
                     Update password
                   </button>
@@ -642,7 +643,7 @@ const Settings = () => {
                         name="OldPassword"
                         value={passwords.OldPassword}
                         onChange={handlePasswordChange}
-                        className="w-full p-3 border border-gray-200 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm"
+                        className="w-full p-3 border border-gray-200 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-[#16C47F] text-sm"
                       />
                     </div>
                     <div>
@@ -654,7 +655,7 @@ const Settings = () => {
                         name="NewPassword"
                         value={passwords.NewPassword}
                         onChange={handlePasswordChange}
-                        className="w-full p-3 border border-gray-200 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm"
+                        className="w-full p-3 border border-gray-200 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-[#16C47F] text-sm"
                       />
                     </div>
                     <div>
@@ -666,10 +667,13 @@ const Settings = () => {
                         name="RetypePassword"
                         value={passwords.RetypePassword}
                         onChange={handlePasswordChange}
-                        className="w-full p-3 border border-gray-200 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-teal-500 text-sm"
+                        className="w-full p-3 border border-gray-200 rounded-md focus:bg-[#f3faf9] focus:ring focus:outline-none focus:ring-[#16C47F] text-sm"
                       />
                     </div>
                   </div>
+
+                  {/* bg-[#16C47F] hover:bg-[#FF9D23] */}
+                  {/* text-[#16C47F] */}
 
                   <div className="flex flex-col-reverse sm:flex-row justify-end mt-6 gap-3">
                     <button
@@ -694,7 +698,7 @@ const Settings = () => {
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
                 <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-gray-800 flex items-center">
                   <svg
-                    className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-teal-500"
+                    className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-[#16C47F]"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -735,7 +739,7 @@ const Settings = () => {
                         name="WorkspaceName"
                         value={workspaceData.WorkspaceName}
                         onChange={handleWorkspaceChange}
-                        className="w-full p-3 pr-16 sm:pr-20 border border-gray-200 rounded-lg focus:bg-[#f3faf9] focus:ring-2 focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-sm transition-all duration-200"
+                        className="w-full p-3 pr-16 sm:pr-20 border border-gray-200 rounded-lg focus:bg-[#f3faf9] focus:ring-2 focus:outline-none focus:ring-[#16C47F] focus:border-[#16C47F] text-sm transition-all duration-200"
                         placeholder="Enter workspace name"
                         aria-label="Workspace Name"
                       />
@@ -769,7 +773,7 @@ const Settings = () => {
                       />
                       <button
                         onClick={copyToClipboard}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-teal-600 hover:bg-teal-50 p-1 rounded transition-all duration-200"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-[#16C47F] hover:bg-[#16C47F] p-1 rounded transition-all duration-200"
                         title="Copy Workspace ID"
                         aria-label="Copy Workspace ID to clipboard"
                       >
@@ -794,7 +798,7 @@ const Settings = () => {
                     <div className="flex-1">
                       <h2 className="text-lg sm:text-xl font-semibold text-gray-800 flex items-center">
                         <svg
-                          className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-teal-500"
+                          className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-[#16C47F]"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -828,7 +832,7 @@ const Settings = () => {
                       onClick={() => setActiveTab2("team")}
                       className={`py-2 px-1 font-medium border-b-2 transition-all duration-200 flex items-center gap-2 whitespace-nowrap ${
                         activeTab2 === "team"
-                          ? "text-teal-600 border-teal-600"
+                          ? "text-[#16C47F] border-[#16C47F]"
                           : "text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300"
                       }`}
                       aria-label="View Team Members"
@@ -854,7 +858,7 @@ const Settings = () => {
                       onClick={() => setActiveTab2("pending")}
                       className={`py-2 px-1 font-medium border-b-2 transition-all duration-200 flex items-center gap-2 whitespace-nowrap ${
                         activeTab2 === "pending"
-                          ? "text-teal-600 border-teal-600"
+                          ? "text-[#16C47F] border-[#16C47F]"
                           : "text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300"
                       }`}
                       aria-label="View Pending Invitations"
@@ -904,7 +908,7 @@ const Settings = () => {
                         <div className="flex justify-between items-center mb-4 sm:mb-6">
                           <h3 className="text-lg sm:text-xl font-semibold text-gray-800 flex items-center">
                             <svg
-                              className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-teal-500"
+                              className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-[#16C47F]"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -947,7 +951,7 @@ const Settings = () => {
                             <label className="text-sm font-medium text-gray-700 flex items-center mb-2 sm:mb-3">
                               <Mail
                                 size={16}
-                                className="sm:w-5 sm:h-5 text-teal-500 mr-2"
+                                className="sm:w-5 sm:h-5 text-[#16C47F] mr-2"
                               />
                               Email Address
                             </label>
@@ -957,7 +961,7 @@ const Settings = () => {
                               placeholder="colleague@company.com"
                               value={newMember.Email}
                               onChange={handlenewMemeber}
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm transition-all duration-200"
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F] text-sm transition-all duration-200"
                               aria-label="Member Email Address"
                             />
                           </div>
@@ -965,7 +969,7 @@ const Settings = () => {
                             <label className="text-sm font-medium text-gray-700 flex items-center mb-2 sm:mb-3">
                               <Lock
                                 size={16}
-                                className="sm:w-5 sm:h-5 text-teal-500 mr-2"
+                                className="sm:w-5 sm:h-5 text-[#16C47F] mr-2"
                               />
                               Role & Permissions
                             </label>
@@ -973,7 +977,7 @@ const Settings = () => {
                               onChange={handlenewMemeber}
                               name="Role"
                               value={newMember.Role}
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm transition-all duration-200"
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F] text-sm transition-all duration-200"
                               aria-label="Member Role"
                             >
                               <option value="Admin">Admin - Full access</option>
@@ -1002,7 +1006,7 @@ const Settings = () => {
                             disabled={
                               !newMember.Email || addMemeberMutation?.isPending
                             }
-                            className="w-full sm:w-auto bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white px-4 sm:px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2"
+                            className="w-full sm:w-auto bg-gradient-to-r from-[#16C47F] to-[#16C47F] hover:from-[#16C47F] hover:to-[#16C47F] disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white px-4 sm:px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2"
                             aria-label="Send Member Invite"
                           >
                             {addMemeberMutation?.isPending ? (
@@ -1059,7 +1063,7 @@ const Settings = () => {
                         <input
                           type="text"
                           placeholder="Search team members..."
-                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm"
+                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F] text-sm"
                           aria-label="Search Members"
                           onChange={(e) => setSearchQuery?.(e.target.value)}
                         />
@@ -1074,7 +1078,7 @@ const Settings = () => {
                               className="flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200"
                             >
                               <div className="flex items-center flex-1 min-w-0">
-                                <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full flex items-center justify-center mr-4 flex-shrink-0 shadow-sm">
+                                <div className="w-12 h-12 bg-gradient-to-br from-[#16C47F] to-[#16C47F] rounded-full flex items-center justify-center mr-4 flex-shrink-0 shadow-sm">
                                   <span className="text-white font-semibold text-lg">
                                     {member?.FullName?.charAt(
                                       0
@@ -1233,11 +1237,11 @@ const Settings = () => {
         ) : activeTab === "integrations" ? (
           <div className="px-2 sm:px-4 md:px-6 lg:px-8">
             {highlightCalendarIntegration && (
-              <div className="mb-6 bg-gradient-to-r from-teal-50 to-blue-50 border border-teal-200 rounded-lg p-4">
+              <div className="mb-6 bg-gradient-to-r from-[#16C47F]to-blue-50 border border-[#16C47F] rounded-lg p-4">
                 <div className="flex items-center gap-3">
                   <div className="flex-shrink-0">
                     <svg
-                      className="w-5 h-5 text-teal-600"
+                      className="w-5 h-5 text-[#16C47F]"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -1249,17 +1253,17 @@ const Settings = () => {
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-sm font-medium text-teal-800">
+                    <h3 className="text-sm font-medium text-[#16C47F]">
                       Calendar Integration Required
                     </h3>
-                    <p className="text-sm text-teal-700 mt-1">
+                    <p className="text-sm text-[#16C47F] mt-1">
                       To use the Calendar features, please connect your Google
                       Calendar below.
                     </p>
                   </div>
                   <button
                     onClick={() => setHighlightCalendarIntegration(false)}
-                    className="flex-shrink-0 text-teal-400 hover:text-teal-600"
+                    className="flex-shrink-0 text-[#16C47F] hover:text-[#16C47F]"
                   >
                     <svg
                       className="w-4 h-4"
@@ -1282,7 +1286,7 @@ const Settings = () => {
               </div>
               <input
                 type="search"
-                className="block w-full sm:w-80 p-3 pl-10 text-sm text-gray-700 border border-gray-200 rounded-full bg-gray-50 focus:ring focus:outline-none focus:ring-teal-500"
+                className="block w-full sm:w-80 p-3 pl-10 text-sm text-gray-700 border border-gray-200 rounded-full bg-gray-50 focus:ring focus:outline-none focus:ring-[#16C47F]"
                 placeholder="Search integrations..."
               />
             </div>
@@ -1340,13 +1344,13 @@ const Settings = () => {
               <div
                 className={`bg-white p-4 sm:p-5 lg:p-6 rounded-lg border shadow-sm group transition-all duration-300 ${
                   highlightCalendarIntegration
-                    ? "border-teal-500 ring-2 ring-teal-200 shadow-teal-100"
+                    ? "border-[#16C47F] ring-2 ring-[#16C47F] shadow-[#16C47F]"
                     : "border-gray-100 hover:border-[#15A395]"
                 }`}
               >
                 {highlightCalendarIntegration && (
-                  <div className="mb-3 flex items-center gap-2 text-teal-600 text-sm font-medium">
-                    <div className="w-2 h-2 bg-teal-500 rounded-full animate-pulse"></div>
+                  <div className="mb-3 flex items-center gap-2 text-[#16C47F] text-sm font-medium">
+                    <div className="w-2 h-2 bg-[#16C47F] rounded-full animate-pulse"></div>
                     Connect here to use Calendar features
                   </div>
                 )}
@@ -1389,8 +1393,8 @@ const Settings = () => {
                     onClick={handleConnectCalendar}
                     className={`w-full sm:w-auto flex items-center justify-center text-xs font-semibold px-4 py-2 rounded-full border transition-colors duration-200 cursor-pointer ${
                       highlightCalendarIntegration
-                        ? "bg-teal-500 text-white border-teal-500 hover:bg-teal-600"
-                        : "text-gray-900 bg-white group-hover:bg-[#15A395] group-hover:text-white border-gray-400 group-hover:border-[#15A395]"
+                        ? "bg-[#16C47F] hover:bg-[#FF9D23] text-white border-[#16C47F]"
+                        : "text-gray-900 bg-white group-hover:bg-[#FF9D23] group-hover:text-white border-gray-400 group-hover:border-[#15A395]"
                     }`}
                   >
                     Connect
@@ -1549,7 +1553,7 @@ const Settings = () => {
                 type="text"
                 value={businessName}
                 onChange={(e) => setBusinessName(e.target.value)}
-                className="border border-gray-300 rounded-md w-full outline-none px-3 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                className="border border-gray-300 rounded-md w-full outline-none px-3 py-3 text-sm focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F] transition-all"
                 placeholder="Enter Business Name"
               />
               <button
@@ -1611,7 +1615,7 @@ const Settings = () => {
                         onChange={(e) =>
                           handleChangeField("url", index, e.target.value)
                         }
-                        className="border border-gray-300 rounded-md w-full outline-none px-3 py-3 pr-10 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                        className="border border-gray-300 rounded-md w-full outline-none px-3 py-3 pr-10 text-sm focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F] transition-all"
                         placeholder="https://example.com"
                       />
                       {websiteUrls.length > 1 && (
@@ -1628,7 +1632,7 @@ const Settings = () => {
                 <button
                   type="button"
                   onClick={() => handleAddField("url")}
-                  className="text-teal-500 text-sm underline hover:text-teal-600 transition-colors flex items-center gap-1"
+                  className="text-[#16C47F] text-sm underline hover:text-[#16C47F] transition-colors flex items-center gap-1"
                 >
                   <svg
                     className="w-4 h-4"
@@ -1753,7 +1757,7 @@ const Settings = () => {
                         key={index}
                         className="relative flex flex-col items-center p-2 bg-white rounded-lg border border-gray-200 min-w-0 shadow-sm hover:shadow-md transition-shadow"
                       >
-                        <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-teal-600 mb-1" />
+                        <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-[#16C47F] mb-1" />
                         <span className="text-xs text-center max-w-20 truncate">
                           {doc.name}
                         </span>

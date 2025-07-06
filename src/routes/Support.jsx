@@ -164,7 +164,7 @@ const Support = () => {
                     key={type.value}
                     className={`relative cursor-pointer rounded-xl border-2 p-4 transition-all duration-200 hover:shadow-md ${
                       isSelected
-                        ? `border-teal-500 ${type.bgColor} shadow-md`
+                        ? `border-[#16C47F] ${type.bgColor} shadow-md`
                         : "border-gray-200 bg-white hover:border-gray-300"
                     }`}
                   >
@@ -218,7 +218,7 @@ const Support = () => {
               value={formData.Subject}
               onChange={handleInputChange}
               placeholder="Brief description of your issue or request"
-              className={`w-full px-4 py-3 border rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent ${
+              className={`w-full px-4 py-3 border rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#16C47F] focus:border-transparent ${
                 errors.Subject
                   ? "border-red-300 bg-red-50"
                   : "border-gray-300 focus:bg-white"
@@ -243,7 +243,7 @@ const Support = () => {
               onChange={handleInputChange}
               placeholder="Please provide detailed information about your request..."
               rows="6"
-              className={`w-full px-4 py-3 border rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none ${
+              className={`w-full px-4 py-3 border rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#16C47F] focus:border-transparent resize-none ${
                 errors.Message
                   ? "border-red-300 bg-red-50"
                   : "border-gray-300 focus:bg-white"
@@ -270,7 +270,7 @@ const Support = () => {
               Attachment (Optional)
             </label>
             <div
-              className="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer transition-colors duration-200 hover:border-teal-400 hover:bg-teal-50"
+              className="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer transition-colors duration-200 hover:border-[#16C47F] hover:bg-[#16C47F]"
               onClick={handleFileClick}
             >
               <div className="flex flex-col items-center">
@@ -289,9 +289,9 @@ const Support = () => {
               accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.txt"
             />
             {formData.Attachment && (
-              <div className="mt-3 p-3 bg-teal-50 border border-teal-200 rounded-lg flex items-center">
-                <CheckCircle className="w-5 h-5 text-teal-600 mr-2" />
-                <span className="text-teal-700 font-medium">
+              <div className="mt-3 p-3 bg-[#16C47F] border border-[#16C47F] rounded-lg flex items-center">
+                <CheckCircle className="w-5 h-5 text-[#16C47F] mr-2" />
+                <span className="text-[#16C47F] font-medium">
                   Selected: {formData.Attachment.name}
                 </span>
                 <button

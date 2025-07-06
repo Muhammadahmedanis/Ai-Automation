@@ -320,7 +320,7 @@ const Navbar = () => {
                                   checked={selectedId === val?.id}
                                 />
                                 <span className='mx-2'>{val?.WorkspaceName}</span>
-                                <hr className='text-teal-500' />
+                                <hr className='text-[#16C47F]' />
                               </div>
                             ))}
                           </ul>

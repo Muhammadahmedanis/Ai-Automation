@@ -405,7 +405,7 @@ export default function CompaignTarget() {
                       onClick={() => setActiveTab(tab)}
                       className={`mr-6 lg:mr-8 py-3 lg:py-4 px-1 border-b-2 cursor-pointer font-medium text-sm lg:text-base whitespace-nowrap transition-colors duration-200 ${
                         activeTab === tab
-                          ? "border-teal-500 text-teal-600"
+                          ? "border-[#16C47F] text-[#16C47F]"
                           : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                       }`}
                     >
@@ -462,7 +462,7 @@ export default function CompaignTarget() {
                         templates?.Templates.map((template) => (
                           <div
                             key={template.id}
-                            className="border hover:border-teal-300 bg-white p-3 rounded-xl mb-3"
+                            className="border hover:border-[#16C47F]0 bg-white p-3 rounded-xl mb-3"
                           >
                             <div className="flex items-center gap-1">
                               <Mail size={17} />
@@ -481,7 +481,7 @@ export default function CompaignTarget() {
                             <hr className="text-gray-200 py-2" />
                             <button
                               onClick={AddTemplateToStep(template)}
-                              className="px-3 py-1 cursor-pointer hover:text-white hover:bg-teal-600 rounded-full border border-gray-500"
+                              className="px-3 py-1 cursor-pointer hover:text-white hover:bg-[#16C47F] rounded-full border border-gray-500"
                             >
                               Use template
                             </button>
@@ -633,7 +633,7 @@ export default function CompaignTarget() {
                 </div>
                 <input
                   type="text"
-                  className="block w-full pl-9 lg:pl-11 pr-4 py-2.5 lg:py-3 border border-gray-300 rounded-full leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm lg:text-base transition-all duration-200"
+                  className="block w-full pl-9 lg:pl-11 pr-4 py-2.5 lg:py-3 border border-gray-300 rounded-full leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F] text-sm lg:text-base transition-all duration-200"
                   placeholder="Search leads..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -671,7 +671,7 @@ export default function CompaignTarget() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(true)}
-                  className="inline-flex items-center cursor-pointer px-4 lg:px-5 py-2 lg:py-2.5 border border-transparent text-sm lg:text-base font-medium rounded-full shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-200"
+                  className="inline-flex items-center cursor-pointer px-4 lg:px-5 py-2 lg:py-2.5 border border-transparent text-sm lg:text-base font-medium rounded-full shadow-sm text-white bg-[#16C47F] hover:bg-[#FF9D23] focus:outline-none focus:ring-2 focus:ring-[#16C47F] focus:ring-offset-2 transition-all duration-200"
                 >
                   <User className="mr-2 h-4 w-4 lg:h-5 lg:w-5" />
                   <span className="hidden sm:inline">Add lead</span>
@@ -1304,7 +1304,7 @@ export default function CompaignTarget() {
                           onChange={(e) =>
                             handleEmailSubjectChange(step.id, e.target.value)
                           }
-                          className="w-full px-3 py-2 rounded-xl border border-gray-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                          className="w-full px-3 py-2 rounded-xl border border-gray-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F] transition-all duration-200"
                           placeholder={`Step ${step.id} Subject`}
                         />
                         <div className="mt-3 flex items-center space-x-2 text-sm text-gray-600">
@@ -1315,7 +1315,7 @@ export default function CompaignTarget() {
                             onChange={(e) =>
                               handleEmailDelayChange(step.id, e.target.value)
                             }
-                            className="w-16 px-2 py-1 rounded-md border border-gray-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                            className="w-16 px-2 py-1 rounded-md border border-gray-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F]"
                             min="0"
                           />
                           <span>days</span>
@@ -1344,7 +1344,7 @@ export default function CompaignTarget() {
                           </span>
                         </div>
                         <div className="flex gap-3 shrink-0">
-                          <button className="px-4 py-2 border border-teal-500 text-teal-500 hover:bg-teal-50 text-sm rounded-lg flex items-center gap-2 transition-colors duration-200">
+                          <button className="px-4 py-2 border border-[#16C47F] text-[#16C47F] hover:bg-[#16C47F] text-sm rounded-lg flex items-center gap-2 transition-colors duration-200">
                             <Eye size={16} />
                             <span className="hidden sm:inline">Preview</span>
                           </button>
@@ -1370,7 +1370,7 @@ export default function CompaignTarget() {
                       <div className="flex justify-end">
                         <button
                           onClick={handleSaveSequence}
-                          className="flex items-center bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg"
+                          className="flex items-center bg-[#16C47F] hover:bg-[#FF9D23]  text-white px-6 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#16C47F] focus:ring-offset-2 text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                         >
                           💾 Save Sequence
                         </button>

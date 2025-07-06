@@ -50,7 +50,7 @@ function Accounts() {
         </div>
         <input
         type="text"
-        className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-full leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
+        className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-full leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-[#16C47F] focus:border-[#16C47F] sm:text-sm"
         placeholder='Search emails...'
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}

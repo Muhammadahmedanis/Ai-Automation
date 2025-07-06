@@ -163,7 +163,7 @@ export default function EmailTemplateBuilder({ campaignId }) {
         {steps.map((step) => (
           <div
             key={step.id}
-            onClick={() => handleSelectStep(step.id)}
+            onClick={() => handleSelectSeqStep(step.id)}
             className={`p-4 border rounded-lg cursor-pointer 
               ${
                 selectStep === step.id
@@ -184,8 +184,8 @@ export default function EmailTemplateBuilder({ campaignId }) {
             <input
               type="text"
               value={step.subject}
-              onChange={(e) => handleSubjectChange(step.id, e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-gray-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              onChange={(e) => handleEmailSubjectChange(step.id, e.target.value)}
+              className="w-full px-3 py-2 rounded-xl border border-gray-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#16C47F]"
               placeholder={`Step ${step.id}`}
             />
           </div>
@@ -211,7 +211,7 @@ export default function EmailTemplateBuilder({ campaignId }) {
               {subject || "No Subject"}
             </div>
             <div className="flex gap-2">
-              <button className="px-3 py-2 border border-teal-500 text-teal-500 hover:bg-teal-50 text-sm rounded flex items-center gap-1">
+              <button className="px-3 py-2 border border-[#16C47F] text-[#16C47F]  hover:bg-[#FF9D23] text-sm rounded flex items-center gap-1">
                 <Eye size={16} />
                 <span>Preview</span>
               </button>
@@ -229,12 +229,12 @@ export default function EmailTemplateBuilder({ campaignId }) {
               height="400px"
               placeholder="Start writing your email content..."
               showAiButton={true}
-              onAiButtonClick={handleWriteWithAI}
+              onAiButtonClick={handleWriteEmailWithAI}
             />
           </div>
 
           <div className="mt-6">
-            <button className="bg-teal-600 hover:bg-teal-600 text-white px-6 py-1.5 rounded-full text-[15px]">
+            <button className="bg-[#16C47F] hover:bg-[#FF9D23] text-white px-6 py-1.5 rounded-full text-[15px]">
               Save
             </button>
           </div>

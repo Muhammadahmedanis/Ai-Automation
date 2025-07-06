@@ -107,7 +107,7 @@ function StatsChart({ selectedView = "month" }) {
       <div className="space-y-4 sm:space-y-6">
         <div className="h-48 sm:h-56 w-full flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
-            <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
+            <Loader2 className="h-8 w-8 animate-spin text-[#16C47F]" />
             <p className="text-sm text-gray-500 font-medium">
               Loading {selectedView === "month" ? "monthly" : "weekly"} stats...
             </p>

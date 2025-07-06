@@ -81,7 +81,7 @@ export default function ContactList() {
           {isModal2 && (
               <div onClick={() => setIsModal2(false)} className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-30">
                 <div className="bg-white rounded-xl shadow-lg w-full max-w-2xl mx-4 animate-fade-in-up transition-all duration-300">
-                  <div className="flex items-center bg-teal-50 justify-between p-5 border-b border-gray-200">
+                  <div className="flex items-center bg-[#16C47F]  justify-between p-5 border-b border-gray-200">
                     <div>
                       <h3 className="text-lg font-bold text-gray-900">23 Contacts found</h3>
                       <p className="text-sm text-gray-500">AI has found 23 contact from website  visitors Select the contacts you want to add to your campaign or CRM.</p>
@@ -143,14 +143,14 @@ export default function ContactList() {
 
                   <label className="inline-flex items-center cursor-pointer">
                     <input type="checkbox" className="sr-only peer" />
-                    <div className="relative w-11 h-6 bg-gray-200 rounded-full peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-5 after:w-5 after:rounded-full after:transition-all peer-checked:bg-teal-600"></div>
+                    <div className="relative w-11 h-6 bg-gray-200 rounded-full peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-5 after:w-5 after:rounded-full after:transition-all peer-checked:bg-[#16C47F]"></div>
                     <span className="ml-3 text-sm font-medium text-gray-900">Skip already in campaign</span>
                   </label>
                 </div>
 
                 <div className="flex justify-end gap-2 p-4">
                   <button onClick={() => setIsModal(false)} className="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-full hover:bg-gray-100 hover:text-blue-700 cursor-pointer">Cancel</button>
-                  <button className="py-2.5 px-5 text-sm font-medium text-white bg-teal-600 rounded-full cursor-pointer">Add to campaign</button>
+                  <button className="py-2.5 px-5 text-sm font-medium text-white bbg-[#16C47F] hover:bg-[#FF9D23] rounded-full cursor-pointer">Add to campaign</button>
                 </div>
               </div>
             </div>

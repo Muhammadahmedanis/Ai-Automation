@@ -88,7 +88,7 @@ export default function DashboardPage() {
             </div>
             <div className="flex items-center gap-3">
               <button className="relative p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 group">
-                <Bell className="h-5 w-5 text-gray-600 group-hover:text-teal-600" />
+                <Bell className="h-5 w-5 text-gray-600 group-hover:text-[#FF9D23]" />
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs flex items-center justify-center">
                   <span className="w-1.5 h-1.5 bg-white rounded-full"></span>
                 </span>
@@ -143,7 +143,7 @@ export default function DashboardPage() {
                     {[
                       {
                         icon: (
-                          <ChartSpline className="text-teal-600" size={24} />
+                          <ChartSpline className="text-[#16C47F]" size={24} />
                         ),
                         title: "Analytics Dashboard",
                         description:
@@ -321,7 +321,7 @@ export default function DashboardPage() {
                 </h3>
                 <Link
                   to="/analytics"
-                  className="group flex items-center gap-1 text-sm text-gray-500 hover:text-teal-600 transition-colors"
+                  className="group flex items-center gap-1 text-sm text-gray-500 hover:text-[#FF9D23] transition-colors"
                 >
                   <span>View All</span>
                   <MoveUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -366,9 +366,9 @@ export default function DashboardPage() {
                 </div>
                 <button
                   onClick={() => setIsPlusModalOpen(true)}
-                  className="bg-gradient-to-r from-gray-100 to-gray-200 hover:from-teal-100 hover:to-teal-200 rounded-xl p-2 cursor-pointer transition-all duration-300 hover:scale-110 group"
+                  className="bg-[#16C47F] hover:bg-[#FF9D23] rounded-xl p-2 cursor-pointer transition-all duration-300 hover:scale-110 group"
                 >
-                  <Plus className="h-5 w-5 text-gray-600 group-hover:text-teal-600 transition-colors" />
+                  <Plus className="h-5 w-5 text-gray-600 group-hover:text-[#FF9D23] transition-colors" />
                 </button>
               </div>
               <div className="min-h-[300px] sm:min-h-[400px] overflow-y-auto">
@@ -401,28 +401,28 @@ export default function DashboardPage() {
                 <form className="space-y-6 mt-6">
                   <div>
                     <div className="flex gap-2 items-center mb-3">
-                      <RiEditCircleLine size={20} className="text-teal-600" />
+                      <RiEditCircleLine size={20} className="text-[#16C47F]" />
                       <label className="block text-sm font-semibold text-gray-700">
                         Task Title
                       </label>
                     </div>
                     <input
                       type="text"
-                      className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all text-sm"
+                      className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F] outline-none transition-all text-sm"
                       placeholder="Enter task title..."
                     />
                   </div>
 
                   <div>
                     <div className="flex gap-2 items-center mb-3">
-                      <FileText size={20} className="text-teal-600" />
+                      <FileText size={20} className="text-[#16C47F]" />
                       <label className="block text-sm font-semibold text-gray-700">
                         Description
                       </label>
                     </div>
                     <textarea
                       rows="4"
-                      className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all text-sm resize-none"
+                      className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F] outline-none transition-all text-sm resize-none"
                       placeholder="Describe the task in detail..."
                     ></textarea>
                   </div>
@@ -430,26 +430,26 @@ export default function DashboardPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <div className="flex gap-2 items-center mb-3">
-                        <Calendar size={20} className="text-teal-600" />
+                        <Calendar size={20} className="text-[#16C47F]" />
                         <label className="block text-sm font-semibold text-gray-700">
                           Due Date
                         </label>
                       </div>
                       <input
                         type="date"
-                        className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all text-sm"
+                        className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F] outline-none transition-all text-sm"
                       />
                     </div>
                     <div>
                       <div className="flex gap-2 items-center mb-3">
-                        <Clock3 size={20} className="text-teal-600" />
+                        <Clock3 size={20} className="text-[#16C47F]" />
                         <label className="block text-sm font-semibold text-gray-700">
                           Time
                         </label>
                       </div>
                       <input
                         type="time"
-                        className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all text-sm"
+                        className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F] outline-none transition-all text-sm"
                       />
                     </div>
                   </div>
@@ -459,7 +459,7 @@ export default function DashboardPage() {
                       <label className="block text-sm font-semibold text-gray-700 mb-3">
                         Priority Level
                       </label>
-                      <select className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all text-sm">
+                      <select className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F] outline-none transition-all text-sm">
                         <option value="low">Low Priority</option>
                         <option value="medium">Medium Priority</option>
                         <option value="high">High Priority</option>
@@ -471,7 +471,7 @@ export default function DashboardPage() {
                       </label>
                       <input
                         type="text"
-                        className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all text-sm"
+                        className="w-full p-3 border border-gray-300 rounded-xl focus:bg-[#f8fffe] focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F] outline-none transition-all text-sm"
                         placeholder="Enter assignee name..."
                       />
                     </div>
@@ -488,7 +488,7 @@ export default function DashboardPage() {
                     <button
                       onClick={() => setIsPlusModalOpen(false)}
                       type="button"
-                      className="w-full sm:w-auto px-6 py-3 text-white bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 focus:outline-none font-medium rounded-xl text-sm transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                      className="w-full sm:w-auto px-6 py-3 text-white bg-gradient-to-r from-[#16C47F] to-[#16C47F] hover:from-[#16C47F] hover:to-[#16C47F] focus:outline-none font-medium rounded-xl text-sm transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                     >
                       <FileText size={16} />
                       Create Task

@@ -157,7 +157,7 @@ const Inbox = () => {
           <div className="md:hidden px-4 mb-4">
             <button
               onClick={() => setSelectedEmail(null)}
-              className="flex items-center text-sm text-[#15A395] gap-2 hover:text-teal-700 transition-colors font-medium"
+              className="flex items-center text-sm text-[#16C47F] gap-2 hover:text-[#FF9D23]  transition-colors font-medium"
             >
               <ArrowLeft className="w-4 h-4" /> Back to Inbox
             </button>
@@ -166,7 +166,7 @@ const Inbox = () => {
 
         <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-3 mb-4 px-2 sm:px-4">
           <div className="bg-white p-2 sm:p-3 rounded-xl sm:rounded-2xl shadow-sm flex flex-wrap gap-2 items-center justify-center lg:justify-start">
-            <button className="flex items-center gap-2 px-3 py-2 rounded-full text-xs sm:text-sm bg-teal-50 hover:bg-teal-100 text-teal-600 font-medium transition-colors">
+            <button className="flex items-center gap-2 px-3 py-2 rounded-full text-xs sm:text-sm bg-[#16C47F] hover:bg-[#FF9D23] text-[#16C47F] font-medium transition-colors">
               <ArchiveRestore className="h-4 w-4" />
               <span className="hidden xs:inline">Archive</span>
             </button>
@@ -306,7 +306,7 @@ const Inbox = () => {
                       setShowReplyBox(false);
                       setText("");
                     }}
-                    className="flex-1 sm:flex-none bg-[#15A395] hover:bg-teal-600 text-white px-6 py-2 rounded-full flex items-center justify-center gap-2 text-sm font-medium shadow-md hover:shadow-lg transition-all duration-200"
+                    className="flex-1 sm:flex-none bg-[#16C47F] hover:bg-[#FF9D23] text-white px-6 py-2 rounded-full flex items-center justify-center gap-2 text-sm font-medium shadow-md hover:shadow-lg transition-all duration-200"
                   >
                     <CornerDownLeft className="w-4 h-4" /> Send Reply
                   </button>
