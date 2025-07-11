@@ -31,6 +31,8 @@ import StripePaymentWrapper from './routes/StripePayment';
 import Accounts from './routes/Accounts';
 import DomainSetting from './routes/DomainSetting';
 import EmailConfiguration from './routes/EmailConfiguration';
+import Inbox from './routes/Inbox';
+import LeadView from './routes/LeadView';
 
 function App() {
   const router = createBrowserRouter(
@@ -45,7 +47,11 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<DashboardPage />} />
           <Route path='/crm' element={<Crm />} />
+          <Route path='/Accounts' element={<Accounts />} />
+
           <Route path='/Accounts/:name' element={<Accounts />} />
+          <Route path='/lead-view/:leadId' element={<LeadView />} />
+
           <Route path='/campaigns' element={<Campaigns />} />
           <Route path='/campaigns/target/:campaignId' element={<CompaignTarget />} />
           <Route path="/calendar" element={<Calendar />} />

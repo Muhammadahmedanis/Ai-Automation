@@ -18,14 +18,21 @@ import {
   PhoneCall,
   Video,
   CalendarDays,
+  Trash2
 } from "lucide-react";
 import axiosInstance from "../services/axiosInstance";
 import { toast } from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 import { Menu } from "@headlessui/react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import { useCampaignQuery } from "../reactQuery/hooks/useCampaignQuery";
+
+import Inbox from "./Inbox";
+import LeadView from "./LeadView";
+import Chatbot from "../components/Chatbot";
 
 export default function Crm() {
+  const [searchParams] = useSearchParams();
   const [accounts, setAccounts] = useState([]);
   const [people, setPeople] = useState([]);
   const [opportunities, setOpportunities] = useState({
@@ -49,6 +56,16 @@ export default function Crm() {
   const [events, setEvents] = useState([]);
   const [calls, setCalls] = useState([]);
   const [meetings, setMeetings] = useState([]);
+  const { campaignsObject, isCampaignsLoading, createCampaignMutation } = useCampaignQuery();
+  const [selectedLeads, setSelectedLeads] = useState([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [titleFilter, setTitleFilter] = useState('');
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam && ['Accounts', 'People', 'Opportunities', 'Calls', 'Meetings', 'Inbox', 'Lead View'].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [searchParams]);
 
   const sortOptions = [
     { value: "Newest first", label: "Newest first" },
@@ -96,6 +113,16 @@ export default function Crm() {
 
         if (response.data.success) {
           console.log("Leads data:", response.data.leads);
+          // Deduplicate leads by email (case-insensitive) or id
+          const uniqueLeadsMap = {};
+          const uniqueLeads = [];
+          for (const lead of response.data.leads) {
+            const key = lead.Email ? lead.Email.toLowerCase() : lead.id;
+            if (!uniqueLeadsMap[key]) {
+              uniqueLeadsMap[key] = true;
+              uniqueLeads.push(lead);
+            }
+          }
           // Group leads by company for Accounts tab
           const groupedLeads = response.data.leads.reduce((acc, lead) => {
             const companyName = lead.Company || "Unassigned";
@@ -118,11 +145,8 @@ export default function Crm() {
           const accountsArray = Object.values(groupedLeads).map((company) => ({
             ...company,
             contacts: company.leads.length,
-            contactAvatars: company.leads.slice(0, 3).map((lead) =>
-              lead.Name.split(" ")
-                .map((n) => n[0])
-                .join("")
-                .toUpperCase()
+            contactAvatars: (company.leads || []).slice(0, 3).map(lead =>
+              (lead.Name || '').split(' ').map(n => n[0]).join('').toUpperCase()
             ),
           }));
 
@@ -142,9 +166,8 @@ export default function Crm() {
           );
 
           // Group leads by status for Opportunities tab
-          const opportunitiesByStatus = response.data.leads.reduce(
-            (acc, lead) => {
-              const status = lead.Status || "Discovery";
+          const opportunitiesByStatus = uniqueLeads.reduce((acc, lead) => {
+            const status = lead.Status || "Discovery";
               if (!acc[status]) {
                 acc[status] = [];
               }
@@ -152,22 +175,14 @@ export default function Crm() {
               return acc;
             },
             {
-              Discovery: [],
-              Evaluation: [],
-              Proposal: [],
-              Negotiation: [],
-              Commit: [],
-              Closed: [],
+              Discovery: [], Evaluation: [], Proposal: [], Negotiation: [], Commit: [], Closed: []
             }
           );
 
           setOpportunities(opportunitiesByStatus);
           console.log("Processed accounts:", accountsArray);
           setAccounts(accountsArray);
-        } else {
-          console.error("API returned unsuccessful response:", response.data);
-          toast.error(response.data.message || "Failed to fetch leads");
-        }
+        } 
       } catch (error) {
         console.error("Error details:", {
           message: error.message,
@@ -201,14 +216,18 @@ export default function Crm() {
     const fetchCallsData = async () => {
       try {
         const response = await axiosInstance.get("/calls");
-        if (response.data.success) {
-          setCalls(response.data.calls || []);
-        } else {
-          toast.error(response.data.message || "Failed to fetch calls");
+        if (!response.data || !response.data.success || !Array.isArray(response.data.calls)) {
+          toast.error(response.data?.message || 'Failed to fetch calls');
+          setCalls([]);
+          return;
         }
+        setCalls(response.data.calls);
+
       } catch (error) {
         console.error("Error fetching calls:", error);
         toast.error("Failed to fetch calls");
+        setCalls([]);
+
       }
     };
     fetchCallsData();
@@ -219,11 +238,12 @@ export default function Crm() {
     const fetchMeetingsData = async () => {
       try {
         const response = await axiosInstance.get("/meetings");
-        if (response.data.success) {
-          setMeetings(response.data.meetings || []);
-        } else {
-          toast.error(response.data.message || "Failed to fetch meetings");
+        if (!response.data || !response.data.success || !Array.isArray(response.data.meetings)) {
+          toast.error(response.data?.message || 'Failed to fetch meetings');
+          setMeetings([]);
+          return;
         }
+        setMeetings(response.data.meetings);
       } catch (error) {
         console.error("Error fetching meetings:", error);
         toast.error("Failed to fetch meetings");
@@ -329,6 +349,77 @@ export default function Crm() {
       (ev.Task_Title && ev.Task_Title.toLowerCase().includes("call")) ||
       (ev.Description && ev.Description.toLowerCase().includes("call"))
   );
+    // Before rendering People table, define visiblePeople
+    const visiblePeople = Array.isArray(people) ? people.filter(person =>
+      person?.Name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      person?.Email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      person?.Company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      person?.Title?.toLowerCase().includes(searchQuery.toLowerCase())
+    ) : [];
+  
+    // Update getAllVisibleLeadIds to use visiblePeople in People tab
+    const getAllVisibleLeadIds = () => {
+      if (activeTab === "Accounts") {
+        return accounts
+          .filter(account =>
+            account?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (Array.isArray(account.leads) && account.leads.some(lead =>
+              lead?.Name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              lead?.Email?.toLowerCase().includes(searchQuery.toLowerCase())
+            ))
+          )
+          .flatMap(account => account.leads.map(lead => lead.id));
+      } else if (activeTab === "People") {
+        return visiblePeople.map(person => person.id);
+      }
+      return [];
+    };
+  
+    // Select all handler
+    const handleSelectAll = (e) => {
+      if (e.target.checked) {
+        setSelectedLeads(getAllVisibleLeadIds());
+      } else {
+        setSelectedLeads([]);
+      }
+    };
+  
+    // Individual select handler
+    const handleSelectLead = (leadId) => {
+      setSelectedLeads(prev =>
+        prev.includes(leadId) ? prev.filter(id => id !== leadId) : [...prev, leadId]
+      );
+    };
+  
+    // Delete handler (no confirm here)
+    const handleDeleteSelected = async () => {
+      console.log("Deleting", selectedLeads);
+      if (selectedLeads.length === 0) return;
+      let notFoundCount = 0;
+      let deletedCount = 0;
+      await Promise.all(selectedLeads.map(async (id) => {
+        try {
+          await axiosInstance.delete(`/lead/DeleteLead/${id}`);
+          deletedCount++;
+        } catch (err) {
+          if (err?.response?.status === 404) {
+            notFoundCount++;
+          } else {
+            toast.error("Failed to delete a lead: " + (err?.response?.data?.message || err.message));
+          }
+        }
+      }));
+      setSelectedLeads([]);
+      await fetchLeads();
+      if (deletedCount > 0 && notFoundCount === 0) {
+        toast.success("Selected lead(s) deleted");
+      } else if (deletedCount > 0 && notFoundCount > 0) {
+        toast.success(`Some leads deleted, but ${notFoundCount} were not found (already removed or not in your workspace).`);
+      } else if (notFoundCount > 0) {
+        toast.error(`No leads deleted. ${notFoundCount} were not found.`);
+      }
+      setShowDeleteModal(false);
+    };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 md:ps-20">
@@ -342,6 +433,8 @@ export default function Crm() {
             Manage your accounts, people, and opportunities
           </p>
         </div>
+        {/* Chatbot */}
+        <Chatbot />
 
         {/* Navigation Tabs */}
         <div className="border-b border-gray-200 mb-8 bg-white rounded-t-lg shadow-sm">
@@ -395,8 +488,24 @@ export default function Crm() {
                 />
               </div>
 
+              {/* Delete button for Accounts and People */}
+              {(activeTab === "Accounts" || activeTab === "People") && (
+                <button
+                  type="button"
+                  onClick={() => setShowDeleteModal(true)}
+                  disabled={selectedLeads.length === 0}
+                  className={`inline-flex items-center px-4 py-2 border border-red-200 rounded-full shadow-sm text-red-600 bg-white hover:bg-red-50 focus:ring-red-500 font-medium ${selectedLeads.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  <Trash2 className="mr-2 h-5 w-5" />
+                  Delete
+                </button>
+              )}
+
+
+
               <div className="flex flex-col sm:flex-row gap-3">
                 {activeTab === "Accounts" && (
+                  
                   <div className="relative inline-block text-left">
                     <button
                       onClick={() => setShowSortDropdown(!showSortDropdown)}
@@ -584,6 +693,13 @@ export default function Crm() {
                                 className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors"
                               >
                                 <div className="flex items-center gap-3">
+                                        {/* Checkbox for individual lead */}
+                                <input
+                                  type="checkbox"
+                                  checked={selectedLeads.includes(lead.id)}
+                                  onChange={() => handleSelectLead(lead.id)}
+                                  className="rounded border-muted cursor-pointer mr-2 checked:bg-green-500 checked:border-green-500 focus:ring-green-500"
+                                />
                                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#16C47F] to-[#FF9D23] flex items-center justify-center">
                                     <span className="text-sm font-medium text-white">
                                       {lead.Name.split(" ")
@@ -1164,7 +1280,19 @@ export default function Crm() {
             </div>
           </div>
         )}
+        {/* Inbox Tab */}
+        {activeTab === "Inbox" && (
+          <div className="bg-white rounded-lg shadow">
+            <Inbox />
+          </div>
+        )}
 
+        {/* Lead View Tab */}
+        {activeTab === "Lead View" && (
+          <div className="bg-white rounded-lg shadow">
+            <LeadView />
+          </div>
+        )}
         {/* Other tabs content */}
         {!["Accounts", "People", "Opportunities", "Calls", "Meetings"].includes(
           activeTab
@@ -1180,6 +1308,36 @@ export default function Crm() {
               <p className="text-gray-500">
                 {activeTab} tab content will be implemented soon
               </p>
+            </div>
+          </div>
+        )}
+                {/* Delete Confirmation Modal */}
+                {showDeleteModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+            <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm relative">
+              <button
+                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl"
+                onClick={() => setShowDeleteModal(false)}
+              >
+                &times;
+              </button>
+              <h2 className="text-lg font-bold mb-4 text-red-600">Are you sure you want to delete?</h2>
+              <p className="mb-4 text-gray-700">This will permanently delete {selectedLeads.length} Lead(s). This action cannot be undone.</p>
+              <div className="flex justify-end gap-2">
+                <button
+                  className="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  onClick={() => setShowDeleteModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
+                  onClick={handleDeleteSelected}
+                >
+                  Yes, Delete
+                  </button>
+              </div>
             </div>
           </div>
         )}

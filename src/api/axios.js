@@ -17,12 +17,10 @@ axiosInstance.interceptors.request.use((config) => {
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-  if (error.response && error.response.status === 401) {
-    // Clear token from localStorage
-    localStorage.removeItem("Token");
-    // Redirect to login page
-    window.location.href = '/login'; // Adjust the path to your login route
-  }
-  return Promise.reject(error);
+    if (error.response && error.response.status === 401) {
+      // Only log unauthorized access, do not redirect or remove token
+      console.error('Unauthorized access');
+    }
+    return Promise.reject(error);
   }
 );
