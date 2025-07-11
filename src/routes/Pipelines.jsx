@@ -23,11 +23,11 @@ import { CSS } from "@dnd-kit/utilities";
 // Pipeline stages
 const pipelineStages = [
   { name: "New", color: "bg-slate-300" },
-  { name: "Discovery", color: "bg-cyan-200" },
-  { name: "Evaluation", color: "bg-orange-200" },
-  { name: "Proposal", color: "bg-amber-200" },
-  { name: "Negotiation", color: "bg-blue-200" },
-  { name: "Commit", color: "bg-violet-200" },
+  { name: "Discovery", color: "bg-[#ffbb74db]" },
+  { name: "Evaluation", color: "bg-slate-300" },
+  { name: "Proposal", color: "bg-[#ffbb74db]" },
+  { name: "Negotiation", color: "bg-slate-300" },
+  { name: "Commit", color: "bg-[#ffbb74db]" },
   { name: "Closed Won", color: "bg-green-300" },
   { name: "Closed Lost", color: "bg-red-300" },
 ];

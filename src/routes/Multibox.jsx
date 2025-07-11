@@ -166,7 +166,7 @@ const Inbox = () => {
 
         <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-3 mb-4 px-2 sm:px-4">
           <div className="bg-white p-2 sm:p-3 rounded-xl sm:rounded-2xl shadow-sm flex flex-wrap gap-2 items-center justify-center lg:justify-start">
-            <button className="flex items-center gap-2 px-3 py-2 rounded-full text-xs sm:text-sm bg-[#16C47F] hover:bg-[#FF9D23] text-[#16C47F] font-medium transition-colors">
+            <button className="flex items-center gap-2 px-3 py-2 rounded-full text-xs sm:text-sm bg-[#16C47F] hover:bg-[#FF9D23] text-white font-medium transition-colors">
               <ArchiveRestore className="h-4 w-4" />
               <span className="hidden xs:inline">Archive</span>
             </button>
@@ -181,7 +181,7 @@ const Inbox = () => {
           </div>
 
           <div className="bg-white p-2 sm:p-3 cursor-pointer rounded-xl sm:rounded-2xl shadow-sm flex items-center justify-center">
-            <button onClick={() => setSliderOpen(!sliderOpen)} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm bg-purple-50 hover:bg-purple-100 text-purple-600 font-medium transition-colors">
+            <button onClick={() => setSliderOpen(!sliderOpen)} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm bg-[#16C47F] hover:bg-[#FF9D23] text-white cursor-pointer font-medium transition-colors">
               <User className="w-4 h-4" />
               <span>About Lead</span>
             </button>

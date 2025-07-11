@@ -366,7 +366,7 @@ const Settings = () => {
                 className={`py-2 sm:py-3 px-1 sm:px-2 text-xs sm:text-sm cursor-pointer font-medium rounded-md transition-all duration-200 ${
                   activeTab === "profile"
                     ? "bg-[#16C47F] text-white  shadow-sm"
-                    : "text-gray-600 hover:bg-[#FF9D23]"
+                    : "text-gray-600 hover:bg-[#FF9D23] hover:text-white"
                 }`}
                 onClick={() => setActiveTab("profile")}
               >
@@ -379,7 +379,7 @@ const Settings = () => {
                 className={`py-2 sm:py-3 px-1 sm:px-2 text-xs sm:text-sm cursor-pointer font-medium rounded-md transition-all duration-200 ${
                   activeTab === "workspace"
                     ? "bg-[#16C47F] text-white  shadow-sm"
-                    : "text-gray-600 hover:bg-[#FF9D23]"
+                    : "text-gray-600 hover:text-white hover:bg-[#FF9D23]"
                 }`}
                 onClick={() => setActiveTab("workspace")}
               >
@@ -409,7 +409,7 @@ const Settings = () => {
                 className={`py-2 sm:py-3 px-1 sm:px-2 text-xs sm:text-sm cursor-pointer font-medium rounded-md transition-all duration-200 ${
                   activeTab === "integrations"
                     ? "bg-[#16C47F] text-white   shadow-sm"
-                    : "text-gray-600 hover:bg-[#FF9D23]"
+                    : "text-gray-600 hover:bg-[#FF9D23] hover:text-white"
                 }`}
                 onClick={() => setActiveTab("integrations")}
               >
@@ -434,7 +434,7 @@ const Settings = () => {
                 className={`py-2 sm:py-3 px-1 sm:px-2 text-xs cursor-pointer sm:text-sm font-medium rounded-md transition-all duration-200 ${
                   activeTab === "businessDetails"
                     ? "bg-[#16C47F] text-white  shadow-sm"
-                    : "text-gray-600 hover:bg-[#FF9D23]"
+                    : "text-gray-600 hover:bg-[#FF9D23] hover:text-white"
                 }`}
                 onClick={() => setActiveTab("businessDetails")}
               >

@@ -87,12 +87,12 @@ export default function DashboardPage() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <button className="relative p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 group">
+              {/* <button className="relative p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 group">
                 <Bell className="h-5 w-5 text-gray-600 group-hover:text-[#FF9D23]" />
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs flex items-center justify-center">
                   <span className="w-1.5 h-1.5 bg-white rounded-full"></span>
                 </span>
-              </button>
+              </button> */}
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="flex items-center gap-2 bg-[#16C47F] hover:bg-[#FF9D23] rounded-full px-4 sm:px-6 py-2.5 text-white cursor-pointer text-sm sm:text-base whitespace-nowrap shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
