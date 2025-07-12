@@ -1,6 +1,17 @@
 import { useState, useEffect } from "react";
 import { MdCheckBox, MdCheckBoxOutlineBlank } from "react-icons/md";
-import { Clock, AlertCircle, User, CalendarDays } from "lucide-react";
+import {
+  Clock,
+  AlertCircle,
+  User,
+  CalendarDays,
+  Briefcase,
+  Users,
+  Megaphone,
+  BarChart3,
+  Target,
+  ClipboardList,
+} from "lucide-react";
 
 function TaskList() {
   const [tasks, setTasks] = useState([
@@ -76,32 +87,24 @@ function TaskList() {
   };
 
   const getPriorityColor = (priority) => {
-    switch (priority) {
-      case "high":
-        return "bg-red-100 text-red-700 border-red-200";
-      case "medium":
-        return "bg-yellow-100 text-yellow-700 border-yellow-200";
-      case "low":
-        return "bg-green-100 text-green-700 border-green-200";
-      default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
-    }
+    return "bg-gray-100 text-gray-600 border-gray-200";
   };
 
   const getCategoryIcon = (category) => {
+    const iconProps = { className: "h-4 w-4 text-orange-500" };
     switch (category) {
       case "sales":
-        return "💼";
+        return <Briefcase {...iconProps} />;
       case "meeting":
-        return "🤝";
+        return <Users {...iconProps} />;
       case "marketing":
-        return "📢";
+        return <Megaphone {...iconProps} />;
       case "analytics":
-        return "📊";
+        return <BarChart3 {...iconProps} />;
       case "onboarding":
-        return "🎯";
+        return <Target {...iconProps} />;
       default:
-        return "📋";
+        return <ClipboardList {...iconProps} />;
     }
   };
 
@@ -130,9 +133,7 @@ function TaskList() {
           <div className="flex-1 min-w-0">
             <div className="flex flex-col gap-2 mb-2">
               <div className="flex items-center gap-2">
-                <span className="text-lg">
-                  {getCategoryIcon(task.category)}
-                </span>
+                {getCategoryIcon(task.category)}
                 <span
                   className={`text-sm sm:text-base font-semibold truncate ${
                     completedTasks[task.id]
@@ -145,13 +146,7 @@ function TaskList() {
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
-                <span
-                  className={`rounded-full px-2 py-1 text-xs font-medium border ${
-                    task.status === "upcoming"
-                      ? "bg-blue-100 text-blue-700 border-blue-200"
-                      : "bg-green-100 text-green-700 border-green-200"
-                  }`}
-                >
+                <span className="rounded-full px-2 py-1 text-xs font-medium border bg-gray-100 text-gray-600 border-gray-200">
                   {task.status === "completed" ? "✓ Completed" : "⏳ Upcoming"}
                 </span>
 
@@ -161,7 +156,7 @@ function TaskList() {
                   )}`}
                 >
                   {task.priority === "high" && (
-                    <AlertCircle className="inline h-3 w-3 mr-1" />
+                    <AlertCircle className="inline h-3 w-3 mr-1 text-gray-500" />
                   )}
                   {task.priority.charAt(0).toUpperCase() +
                     task.priority.slice(1)}{" "}

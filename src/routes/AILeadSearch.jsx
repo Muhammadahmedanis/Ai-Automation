@@ -4,7 +4,7 @@ import { FaBriefcase, FaMapMarkerAlt, FaIndustry, FaUsers, FaDollarSign, FaGlobe
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAILeadScoutQuery } from "../reactQuery/hooks/useAILeadScoutQuery";
 import { toast } from "react-hot-toast";
-import axiosInstance from "../services/axiosInstance";
+import { axiosInstance } from "../api/axios";
 import { summarizeMainKeywords } from "../utils/nlpParser";
 import { useCampaignQuery } from "../reactQuery/hooks/useCampaignQuery";
 import { searchLeads } from "../reactQuery/services/aiLeadScoutService";

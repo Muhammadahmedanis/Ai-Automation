@@ -19,7 +19,7 @@ const emails = [
     id: 1,
     name: "Casper Nelly",
     initials: "CN",
-    bgColor: "bg-yellow-500",
+    bgColor: "bg-[#16C47F]",
     subject: "Re: Request for Overview of Your Solutions",
     time: "7 hrs ago",
     unread: true,
@@ -28,7 +28,7 @@ const emails = [
     id: 2,
     name: "Phillip Passaquindici",
     initials: "PP",
-    bgColor: "bg-red-500",
+    bgColor: "bg-gray-500",
     subject: "Re: Request for Overview of Your Solutions",
     time: "7 hrs ago",
     unread: false,
@@ -37,7 +37,7 @@ const emails = [
     id: 3,
     name: "Anika Rosser",
     initials: "AR",
-    bgColor: "bg-green-500",
+    bgColor: "bg-[#FF9D23]",
     subject: "Re: Request for Overview of Your Solutions",
     time: "7 hrs ago",
     unread: false,
@@ -111,7 +111,7 @@ const Inbox = () => {
               onClick={() => setSelectedEmail(email)}
               className={`p-3 sm:p-4 border-b border-gray-100 flex items-start sm:items-center justify-between cursor-pointer rounded-lg transition-all duration-200 ${
                 selectedEmail?.id === email.id
-                  ? "bg-[#15A395] text-white shadow-md"
+                  ? "bg-gray-200 text-black shadow-md"
                   : "hover:bg-gray-50 hover:shadow-sm"
               } ${email.unread ? "font-semibold" : "font-normal"}`}
             >
@@ -170,24 +170,30 @@ const Inbox = () => {
               <ArchiveRestore className="h-4 w-4" />
               <span className="hidden xs:inline">Archive</span>
             </button>
-            <button className="flex items-center gap-2 px-3 py-2 rounded-full text-xs sm:text-sm bg-yellow-50 hover:bg-yellow-100 text-yellow-600 font-medium transition-colors">
+            <button className="flex items-center gap-2 px-3 py-2 rounded-full text-xs sm:text-sm bg-gray-100 hover:bg-gray-200 text-gray-600 font-medium transition-colors">
               <AlarmClockMinus className="h-4 w-4" />
               <span className="hidden xs:inline">Snooze</span>
             </button>
-            <button className="flex items-center gap-2 px-3 py-2 rounded-full text-xs sm:text-sm bg-red-50 hover:bg-red-100 text-red-600 font-medium transition-colors">
+            <button className="flex items-center gap-2 px-3 py-2 rounded-full text-xs sm:text-sm bg-gray-100 hover:bg-gray-200 text-gray-600 font-medium transition-colors">
               <Trash2 className="h-4 w-4" />
               <span className="hidden xs:inline">Delete</span>
             </button>
           </div>
 
-          <div className="bg-white p-2 sm:p-3 cursor-pointer rounded-xl sm:rounded-2xl shadow-sm flex items-center justify-center">
-            <button onClick={() => setSliderOpen(!sliderOpen)} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm bg-[#16C47F] hover:bg-[#FF9D23] text-white cursor-pointer font-medium transition-colors">
-              <User className="w-4 h-4" />
-              <span>About Lead</span>
-            </button>
-            <MailboxSlider sliderOpen={sliderOpen} setSliderOpen={setSliderOpen} />
-          </div>
+          {/* <div className="bg-white p-2 sm:p-3 cursor-pointer rounded-xl sm:rounded-2xl shadow-sm flex items-center justify-center"> */}
+          <button
+            onClick={() => setSliderOpen(!sliderOpen)}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm bg-[#16C47F] hover:bg-[#FF9D23] text-white cursor-pointer font-medium transition-colors"
+          >
+            <User className="w-4 h-4" />
+            <span>About Lead</span>
+          </button>
+          <MailboxSlider
+            sliderOpen={sliderOpen}
+            setSliderOpen={setSliderOpen}
+          />
         </div>
+        {/* </div> */}
 
         {/* Email Content */}
         <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 mx-2 sm:mx-4 shadow-sm">

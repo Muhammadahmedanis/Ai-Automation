@@ -368,7 +368,7 @@ export default function DashboardPage() {
                   onClick={() => setIsPlusModalOpen(true)}
                   className="bg-[#16C47F] hover:bg-[#FF9D23] rounded-xl p-2 cursor-pointer transition-all duration-300 hover:scale-110 group"
                 >
-                  <Plus className="h-5 w-5 text-gray-600 group-hover:text-[#FF9D23] transition-colors" />
+                  <Plus className="h-5 w-5 text-white group-hover:text-white transition-colors" />
                 </button>
               </div>
               <div className="min-h-[300px] sm:min-h-[400px] overflow-y-auto">

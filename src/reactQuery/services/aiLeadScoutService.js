@@ -1,4 +1,4 @@
-import axiosInstance from "../../services/axiosInstance";
+import { axiosInstance } from "../../api/axios";
 
 export const searchLeads = async ({ 
   query, 

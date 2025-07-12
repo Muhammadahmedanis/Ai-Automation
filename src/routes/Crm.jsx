@@ -18,14 +18,20 @@ import {
   PhoneCall,
   Video,
   CalendarDays,
-  Trash2
+  Trash2,
+  Upload,
+  Sheet,
+  Link2,
+  Database,
+  Cloud,
 } from "lucide-react";
-import axiosInstance from "../services/axiosInstance";
+import { axiosInstance } from "../api/axios";
 import { toast } from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 import { Menu } from "@headlessui/react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useCampaignQuery } from "../reactQuery/hooks/useCampaignQuery";
+import Papa from "papaparse";
 
 import Inbox from "./Inbox";
 import LeadView from "./LeadView";
@@ -56,13 +62,37 @@ export default function Crm() {
   const [events, setEvents] = useState([]);
   const [calls, setCalls] = useState([]);
   const [meetings, setMeetings] = useState([]);
-  const { campaignsObject, isCampaignsLoading, createCampaignMutation } = useCampaignQuery();
+  const { campaignsObject, isCampaignsLoading, createCampaignMutation } =
+    useCampaignQuery();
   const [selectedLeads, setSelectedLeads] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [titleFilter, setTitleFilter] = useState('');
+  const [titleFilter, setTitleFilter] = useState("");
+
+  // Import Leads states
+  const [showImportDropdown, setShowImportDropdown] = useState(false);
+  const [importModal, setImportModal] = useState(null); // 'csv', 'sheets', 'hubspot', etc.
+  const [csvData, setCsvData] = useState(null);
+  const [csvPreview, setCsvPreview] = useState([]);
+  const [csvError, setCsvError] = useState("");
+  const [csvUploading, setCsvUploading] = useState(false);
+  const [sheetUrl, setSheetUrl] = useState("");
+  const [sheetLoading, setSheetLoading] = useState(false);
+  const [hubspotApiKey, setHubspotApiKey] = useState("");
+  const [hubspotLoading, setHubspotLoading] = useState(false);
   useEffect(() => {
-    const tabParam = searchParams.get('tab');
-    if (tabParam && ['Accounts', 'People', 'Opportunities', 'Calls', 'Meetings', 'Inbox', 'Lead View'].includes(tabParam)) {
+    const tabParam = searchParams.get("tab");
+    if (
+      tabParam &&
+      [
+        "Accounts",
+        "People",
+        "Opportunities",
+        "Calls",
+        "Meetings",
+        "Inbox",
+        "Lead View",
+      ].includes(tabParam)
+    ) {
       setActiveTab(tabParam);
     }
   }, [searchParams]);
@@ -145,8 +175,12 @@ export default function Crm() {
           const accountsArray = Object.values(groupedLeads).map((company) => ({
             ...company,
             contacts: company.leads.length,
-            contactAvatars: (company.leads || []).slice(0, 3).map(lead =>
-              (lead.Name || '').split(' ').map(n => n[0]).join('').toUpperCase()
+            contactAvatars: (company.leads || []).slice(0, 3).map((lead) =>
+              (lead.Name || "")
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .toUpperCase()
             ),
           }));
 
@@ -166,8 +200,9 @@ export default function Crm() {
           );
 
           // Group leads by status for Opportunities tab
-          const opportunitiesByStatus = uniqueLeads.reduce((acc, lead) => {
-            const status = lead.Status || "Discovery";
+          const opportunitiesByStatus = uniqueLeads.reduce(
+            (acc, lead) => {
+              const status = lead.Status || "Discovery";
               if (!acc[status]) {
                 acc[status] = [];
               }
@@ -175,14 +210,19 @@ export default function Crm() {
               return acc;
             },
             {
-              Discovery: [], Evaluation: [], Proposal: [], Negotiation: [], Commit: [], Closed: []
+              Discovery: [],
+              Evaluation: [],
+              Proposal: [],
+              Negotiation: [],
+              Commit: [],
+              Closed: [],
             }
           );
 
           setOpportunities(opportunitiesByStatus);
           console.log("Processed accounts:", accountsArray);
           setAccounts(accountsArray);
-        } 
+        }
       } catch (error) {
         console.error("Error details:", {
           message: error.message,
@@ -216,18 +256,20 @@ export default function Crm() {
     const fetchCallsData = async () => {
       try {
         const response = await axiosInstance.get("/calls");
-        if (!response.data || !response.data.success || !Array.isArray(response.data.calls)) {
-          toast.error(response.data?.message || 'Failed to fetch calls');
+        if (
+          !response.data ||
+          !response.data.success ||
+          !Array.isArray(response.data.calls)
+        ) {
+          toast.error(response.data?.message || "Failed to fetch calls");
           setCalls([]);
           return;
         }
         setCalls(response.data.calls);
-
       } catch (error) {
         console.error("Error fetching calls:", error);
         toast.error("Failed to fetch calls");
         setCalls([]);
-
       }
     };
     fetchCallsData();
@@ -238,8 +280,12 @@ export default function Crm() {
     const fetchMeetingsData = async () => {
       try {
         const response = await axiosInstance.get("/meetings");
-        if (!response.data || !response.data.success || !Array.isArray(response.data.meetings)) {
-          toast.error(response.data?.message || 'Failed to fetch meetings');
+        if (
+          !response.data ||
+          !response.data.success ||
+          !Array.isArray(response.data.meetings)
+        ) {
+          toast.error(response.data?.message || "Failed to fetch meetings");
           setMeetings([]);
           return;
         }
@@ -349,55 +395,66 @@ export default function Crm() {
       (ev.Task_Title && ev.Task_Title.toLowerCase().includes("call")) ||
       (ev.Description && ev.Description.toLowerCase().includes("call"))
   );
-    // Before rendering People table, define visiblePeople
-    const visiblePeople = Array.isArray(people) ? people.filter(person =>
-      person?.Name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      person?.Email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      person?.Company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      person?.Title?.toLowerCase().includes(searchQuery.toLowerCase())
-    ) : [];
-  
-    // Update getAllVisibleLeadIds to use visiblePeople in People tab
-    const getAllVisibleLeadIds = () => {
-      if (activeTab === "Accounts") {
-        return accounts
-          .filter(account =>
+  // Before rendering People table, define visiblePeople
+  const visiblePeople = Array.isArray(people)
+    ? people.filter(
+        (person) =>
+          person?.Name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          person?.Email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          person?.Company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          person?.Title?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
+
+  // Update getAllVisibleLeadIds to use visiblePeople in People tab
+  const getAllVisibleLeadIds = () => {
+    if (activeTab === "Accounts") {
+      return accounts
+        .filter(
+          (account) =>
             account?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (Array.isArray(account.leads) && account.leads.some(lead =>
-              lead?.Name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              lead?.Email?.toLowerCase().includes(searchQuery.toLowerCase())
-            ))
-          )
-          .flatMap(account => account.leads.map(lead => lead.id));
-      } else if (activeTab === "People") {
-        return visiblePeople.map(person => person.id);
-      }
-      return [];
-    };
-  
-    // Select all handler
-    const handleSelectAll = (e) => {
-      if (e.target.checked) {
-        setSelectedLeads(getAllVisibleLeadIds());
-      } else {
-        setSelectedLeads([]);
-      }
-    };
-  
-    // Individual select handler
-    const handleSelectLead = (leadId) => {
-      setSelectedLeads(prev =>
-        prev.includes(leadId) ? prev.filter(id => id !== leadId) : [...prev, leadId]
-      );
-    };
-  
-    // Delete handler (no confirm here)
-    const handleDeleteSelected = async () => {
-      console.log("Deleting", selectedLeads);
-      if (selectedLeads.length === 0) return;
-      let notFoundCount = 0;
-      let deletedCount = 0;
-      await Promise.all(selectedLeads.map(async (id) => {
+            (Array.isArray(account.leads) &&
+              account.leads.some(
+                (lead) =>
+                  lead?.Name?.toLowerCase().includes(
+                    searchQuery.toLowerCase()
+                  ) ||
+                  lead?.Email?.toLowerCase().includes(searchQuery.toLowerCase())
+              ))
+        )
+        .flatMap((account) => account.leads.map((lead) => lead.id));
+    } else if (activeTab === "People") {
+      return visiblePeople.map((person) => person.id);
+    }
+    return [];
+  };
+
+  // Select all handler
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedLeads(getAllVisibleLeadIds());
+    } else {
+      setSelectedLeads([]);
+    }
+  };
+
+  // Individual select handler
+  const handleSelectLead = (leadId) => {
+    setSelectedLeads((prev) =>
+      prev.includes(leadId)
+        ? prev.filter((id) => id !== leadId)
+        : [...prev, leadId]
+    );
+  };
+
+  // Delete handler (no confirm here)
+  const handleDeleteSelected = async () => {
+    console.log("Deleting", selectedLeads);
+    if (selectedLeads.length === 0) return;
+    let notFoundCount = 0;
+    let deletedCount = 0;
+    await Promise.all(
+      selectedLeads.map(async (id) => {
         try {
           await axiosInstance.delete(`/lead/DeleteLead/${id}`);
           deletedCount++;
@@ -405,24 +462,145 @@ export default function Crm() {
           if (err?.response?.status === 404) {
             notFoundCount++;
           } else {
-            toast.error("Failed to delete a lead: " + (err?.response?.data?.message || err.message));
+            toast.error(
+              "Failed to delete a lead: " +
+                (err?.response?.data?.message || err.message)
+            );
           }
         }
-      }));
-      setSelectedLeads([]);
-      await fetchLeads();
-      if (deletedCount > 0 && notFoundCount === 0) {
-        toast.success("Selected lead(s) deleted");
-      } else if (deletedCount > 0 && notFoundCount > 0) {
-        toast.success(`Some leads deleted, but ${notFoundCount} were not found (already removed or not in your workspace).`);
-      } else if (notFoundCount > 0) {
-        toast.error(`No leads deleted. ${notFoundCount} were not found.`);
+      })
+    );
+    setSelectedLeads([]);
+    await fetchLeads();
+    if (deletedCount > 0 && notFoundCount === 0) {
+      toast.success("Selected lead(s) deleted");
+    } else if (deletedCount > 0 && notFoundCount > 0) {
+      toast.success(
+        `Some leads deleted, but ${notFoundCount} were not found (already removed or not in your workspace).`
+      );
+    } else if (notFoundCount > 0) {
+      toast.error(`No leads deleted. ${notFoundCount} were not found.`);
+    }
+    setShowDeleteModal(false);
+  };
+
+  // Import Leads handler functions
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (
+        showImportDropdown &&
+        !e.target.closest(".import-dropdown") &&
+        !e.target.closest(".import-btn")
+      ) {
+        setShowImportDropdown(false);
       }
-      setShowDeleteModal(false);
     };
+    if (showImportDropdown) {
+      document.addEventListener("mousedown", handleClick);
+    } else {
+      document.removeEventListener("mousedown", handleClick);
+    }
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [showImportDropdown]);
+
+  // CSV file handler
+  const handleCSVFile = (e) => {
+    setCsvError("");
+    const file = e.target.files[0];
+    if (!file) return;
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        if (results.errors.length) {
+          setCsvError("Error parsing CSV file.");
+        } else {
+          setCsvData(results.data);
+          setCsvPreview(results.data.slice(0, 5));
+        }
+      },
+      error: () => setCsvError("Error reading CSV file."),
+    });
+  };
+
+  // Send CSV data to backend
+  const handleCSVImport = async () => {
+    if (!csvData || !csvData.length) return;
+    setCsvUploading(true);
+    setCsvError("");
+    try {
+      const response = await axiosInstance.post("/lead/import-csv", {
+        leads: csvData,
+      });
+      setImportModal(null);
+      setCsvData(null);
+      setCsvPreview([]);
+      setCsvUploading(false);
+      toast.success("Leads imported successfully!");
+      // Refresh the leads data
+      fetchLeads();
+    } catch (err) {
+      setCsvError(err?.response?.data?.message || "Failed to import leads.");
+      setCsvUploading(false);
+    }
+  };
+
+  // Google Sheets handler
+  const handleGoogleSheetFile = (e) => {
+    setCsvError("");
+    const file = e.target.files[0];
+    if (!file) return;
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        if (results.errors.length) {
+          setCsvError("Error parsing Google Sheets file.");
+        } else {
+          setCsvData(results.data);
+          setCsvPreview(results.data.slice(0, 5));
+        }
+      },
+      error: () => setCsvError("Error reading Google Sheets file."),
+    });
+  };
+
+  // HubSpot fetch handler
+  const handleHubspotFetch = async () => {
+    setCsvError("");
+    setHubspotLoading(true);
+    try {
+      // HubSpot API: https://api.hubapi.com/crm/v3/objects/contacts
+      const url = `https://api.hubapi.com/crm/v3/objects/contacts?limit=100&properties=firstname,lastname,email,phone,company`;
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${hubspotApiKey}` },
+      });
+      if (!response.ok)
+        throw new Error("Failed to fetch contacts from HubSpot");
+      const data = await response.json();
+      if (!data.results || !Array.isArray(data.results))
+        throw new Error("Invalid response from HubSpot");
+      // Map to our lead format
+      const leads = data.results.map((c) => ({
+        Name: `${c.properties.firstname || ""} ${
+          c.properties.lastname || ""
+        }`.trim(),
+        Email: c.properties.email || "",
+        Phone: c.properties.phone || "",
+        Company: c.properties.company || "",
+      }));
+      setCsvData(leads);
+      setCsvPreview(leads.slice(0, 5));
+      setHubspotLoading(false);
+    } catch (err) {
+      setCsvError("Failed to fetch or parse HubSpot contacts.");
+      setHubspotLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 md:ps-20">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto px-4 py-6 max-w-7xl">
         {/* Header */}
         <div className="mb-8">
@@ -488,24 +666,8 @@ export default function Crm() {
                 />
               </div>
 
-              {/* Delete button for Accounts and People */}
-              {(activeTab === "Accounts" || activeTab === "People") && (
-                <button
-                  type="button"
-                  onClick={() => setShowDeleteModal(true)}
-                  disabled={selectedLeads.length === 0}
-                  className={`inline-flex items-center px-4 py-2 border border-red-200 rounded-full shadow-sm text-red-600 bg-white hover:bg-red-50 focus:ring-red-500 font-medium ${selectedLeads.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                >
-                  <Trash2 className="mr-2 h-5 w-5" />
-                  Delete
-                </button>
-              )}
-
-
-
               <div className="flex flex-col sm:flex-row gap-3">
                 {activeTab === "Accounts" && (
-                  
                   <div className="relative inline-block text-left">
                     <button
                       onClick={() => setShowSortDropdown(!showSortDropdown)}
@@ -558,6 +720,114 @@ export default function Crm() {
                     </Menu.Items>
                   </Menu>
                 )}
+
+                {/* Import Leads Button and Dropdown */}
+                <div className="relative flex items-center gap-2">
+                  <button
+                    className="px-4 py-3 text-sm font-medium bg-green-600 hover:bg-green-700 text-white rounded-xl shadow border-2 border-green-700 import-btn transition-all duration-200"
+                    onClick={() => setShowImportDropdown((v) => !v)}
+                  >
+                    <Upload className="inline-block w-4 h-4 mr-2" /> Import
+                    Leads
+                  </button>
+                  {showImportDropdown && (
+                    <div className="import-dropdown absolute right-0 top-full mt-2 min-w-[220px] max-w-[320px] w-72 bg-white rounded-xl shadow-2xl py-2 z-50 border border-gray-200 animate-fade-in transition-all duration-150">
+                      <div className="px-4 pt-2 pb-1 font-semibold text-gray-700 text-base border-b border-gray-100">
+                        Import Leads From
+                      </div>
+                      <button
+                        className="flex flex-col items-start w-full px-4 py-2 hover:bg-green-50 hover:scale-[1.03] transition-transform rounded text-gray-800 group"
+                        onClick={() => {
+                          setImportModal("csv");
+                          setShowImportDropdown(false);
+                        }}
+                      >
+                        <div className="flex items-center">
+                          <FileText className="w-5 h-5 mr-2 text-green-600" />{" "}
+                          CSV File
+                        </div>
+                        <span className="text-xs text-gray-400 ml-7 group-hover:text-green-700">
+                          Upload a CSV file
+                        </span>
+                      </button>
+                      <button
+                        className="flex flex-col items-start w-full px-4 py-2 hover:bg-green-50 hover:scale-[1.03] transition-transform rounded text-gray-800 group"
+                        onClick={() => {
+                          setImportModal("sheets");
+                          setShowImportDropdown(false);
+                        }}
+                      >
+                        <div className="flex items-center">
+                          <Sheet className="w-5 h-5 mr-2 text-green-600" />{" "}
+                          Google Sheets
+                        </div>
+                        <span className="text-xs text-gray-400 ml-7 group-hover:text-green-700">
+                          Import from a Google Sheets file
+                        </span>
+                      </button>
+                      <div className="my-2 border-t border-gray-200"></div>
+                      <button
+                        className="flex flex-col items-start w-full px-4 py-2 hover:bg-blue-50 hover:scale-[1.03] transition-transform rounded text-gray-800 group"
+                        onClick={() => {
+                          setImportModal("hubspot");
+                          setShowImportDropdown(false);
+                        }}
+                      >
+                        <div className="flex items-center">
+                          <Link2 className="w-5 h-5 mr-2 text-blue-600" />{" "}
+                          HubSpot
+                        </div>
+                        <span className="text-xs text-gray-400 ml-7 group-hover:text-blue-700">
+                          Connect your HubSpot account
+                        </span>
+                      </button>
+                      <button
+                        className="flex flex-col items-start w-full px-4 py-2 hover:bg-blue-50 hover:scale-[1.03] transition-transform rounded text-gray-800 group"
+                        onClick={() => {
+                          toast("Coming soon!");
+                          setShowImportDropdown(false);
+                        }}
+                      >
+                        <div className="flex items-center">
+                          <Database className="w-5 h-5 mr-2 text-blue-600" />{" "}
+                          Pipedrive
+                        </div>
+                        <span className="text-xs text-gray-400 ml-7 group-hover:text-blue-700">
+                          Connect your Pipedrive account
+                        </span>
+                      </button>
+                      <button
+                        className="flex flex-col items-start w-full px-4 py-2 hover:bg-blue-50 hover:scale-[1.03] transition-transform rounded text-gray-800 group"
+                        onClick={() => {
+                          toast("Coming soon!");
+                          setShowImportDropdown(false);
+                        }}
+                      >
+                        <div className="flex items-center">
+                          <Cloud className="w-5 h-5 mr-2 text-blue-600" />{" "}
+                          Salesforce
+                        </div>
+                        <span className="text-xs text-gray-400 ml-7 group-hover:text-blue-700">
+                          Connect your Salesforce account
+                        </span>
+                      </button>
+                      <button
+                        className="flex flex-col items-start w-full px-4 py-2 hover:bg-blue-50 hover:scale-[1.03] transition-transform rounded text-gray-800 group"
+                        onClick={() => {
+                          toast("Coming soon!");
+                          setShowImportDropdown(false);
+                        }}
+                      >
+                        <div className="flex items-center">
+                          <Users className="w-5 h-5 mr-2 text-blue-600" /> Zoho
+                        </div>
+                        <span className="text-xs text-gray-400 ml-7 group-hover:text-blue-700">
+                          Connect your Zoho account
+                        </span>
+                      </button>
+                    </div>
+                  )}
+                </div>
 
                 <button
                   type="button"
@@ -693,13 +963,13 @@ export default function Crm() {
                                 className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors"
                               >
                                 <div className="flex items-center gap-3">
-                                        {/* Checkbox for individual lead */}
-                                <input
-                                  type="checkbox"
-                                  checked={selectedLeads.includes(lead.id)}
-                                  onChange={() => handleSelectLead(lead.id)}
-                                  className="rounded border-muted cursor-pointer mr-2 checked:bg-green-500 checked:border-green-500 focus:ring-green-500"
-                                />
+                                  {/* Checkbox for individual lead */}
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedLeads.includes(lead.id)}
+                                    onChange={() => handleSelectLead(lead.id)}
+                                    className="rounded border-muted cursor-pointer mr-2 checked:bg-green-500 checked:border-green-500 focus:ring-green-500"
+                                  />
                                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#16C47F] to-[#FF9D23] flex items-center justify-center">
                                     <span className="text-sm font-medium text-white">
                                       {lead.Name.split(" ")
@@ -1311,8 +1581,8 @@ export default function Crm() {
             </div>
           </div>
         )}
-                {/* Delete Confirmation Modal */}
-                {showDeleteModal && (
+        {/* Delete Confirmation Modal */}
+        {showDeleteModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
             <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm relative">
               <button
@@ -1321,8 +1591,13 @@ export default function Crm() {
               >
                 &times;
               </button>
-              <h2 className="text-lg font-bold mb-4 text-red-600">Are you sure you want to delete?</h2>
-              <p className="mb-4 text-gray-700">This will permanently delete {selectedLeads.length} Lead(s). This action cannot be undone.</p>
+              <h2 className="text-lg font-bold mb-4 text-red-600">
+                Are you sure you want to delete?
+              </h2>
+              <p className="mb-4 text-gray-700">
+                This will permanently delete {selectedLeads.length} Lead(s).
+                This action cannot be undone.
+              </p>
               <div className="flex justify-end gap-2">
                 <button
                   className="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
@@ -1336,12 +1611,166 @@ export default function Crm() {
                   onClick={handleDeleteSelected}
                 >
                   Yes, Delete
-                  </button>
+                </button>
               </div>
             </div>
           </div>
         )}
       </div>
+
+      {/* Import Modals */}
+      {importModal === "csv" && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl"
+              onClick={() => {
+                setImportModal(null);
+                setCsvData(null);
+                setCsvPreview([]);
+                setCsvError("");
+              }}
+            >
+              &times;
+            </button>
+            <h2 className="text-lg font-bold mb-4">Import from CSV</h2>
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleCSVFile}
+              className="mb-2"
+            />
+            {csvError && (
+              <div className="text-red-500 text-sm mb-2">{csvError}</div>
+            )}
+            {csvPreview.length > 0 && (
+              <div className="mb-2">
+                <div className="font-semibold mb-1">
+                  Preview (first 5 rows):
+                </div>
+                <pre className="bg-gray-100 rounded p-2 text-xs overflow-x-auto">
+                  {JSON.stringify(csvPreview, null, 2)}
+                </pre>
+              </div>
+            )}
+            <button
+              className="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+              onClick={handleCSVImport}
+              disabled={!csvData || csvUploading || !!csvError}
+            >
+              {csvUploading ? "Importing..." : "Import"}
+            </button>
+          </div>
+        </div>
+      )}
+      {importModal === "sheets" && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl"
+              onClick={() => {
+                setImportModal(null);
+                setCsvData(null);
+                setCsvPreview([]);
+                setCsvError("");
+              }}
+            >
+              &times;
+            </button>
+            <h2 className="text-lg font-bold mb-4">
+              Import from Google Sheets
+            </h2>
+            <input
+              type="file"
+              accept=".xlsx,.xls"
+              onChange={handleGoogleSheetFile}
+              className="mb-2"
+            />
+            {csvError && (
+              <div className="text-red-500 text-sm mb-2">{csvError}</div>
+            )}
+            {csvPreview.length > 0 && (
+              <div className="mb-2">
+                <div className="font-semibold mb-1">
+                  Preview (first 5 rows):
+                </div>
+                <pre className="bg-gray-100 rounded p-2 text-xs overflow-x-auto">
+                  {JSON.stringify(csvPreview, null, 2)}
+                </pre>
+              </div>
+            )}
+            <button
+              className="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+              onClick={handleCSVImport}
+              disabled={!csvData || csvUploading}
+            >
+              {csvUploading ? "Importing..." : "Import"}
+            </button>
+          </div>
+        </div>
+      )}
+      {importModal === "hubspot" && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl"
+              onClick={() => {
+                setImportModal(null);
+                setCsvData(null);
+                setCsvPreview([]);
+                setCsvError("");
+                setHubspotApiKey("");
+              }}
+            >
+              &times;
+            </button>
+            <h2 className="text-lg font-bold mb-4">Import from HubSpot</h2>
+            {!hubspotLoading && !csvData && (
+              <div className="mb-4">
+                <p className="mb-2">
+                  To import leads from HubSpot, you must connect your HubSpot
+                  account.
+                </p>
+                <button
+                  className="px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700"
+                  onClick={() => {
+                    window.location.href = "http://localhost:4000/auth/hubspot";
+                  }}
+                >
+                  Connect to HubSpot
+                </button>
+              </div>
+            )}
+            {hubspotLoading && (
+              <div className="mb-2 text-gray-500">
+                Loading leads from HubSpot...
+              </div>
+            )}
+            {csvError && (
+              <div className="text-red-500 text-sm mb-2">{csvError}</div>
+            )}
+            {csvPreview.length > 0 && (
+              <div className="mb-2">
+                <div className="font-semibold mb-1">
+                  Preview (first 5 rows):
+                </div>
+                <pre className="bg-gray-100 rounded p-2 text-xs overflow-x-auto">
+                  {JSON.stringify(csvPreview, null, 2)}
+                </pre>
+              </div>
+            )}
+            {csvData && (
+              <button
+                className="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+                onClick={handleCSVImport}
+                disabled={!csvData || csvUploading}
+              >
+                {csvUploading ? "Importing..." : "Import"}
+              </button>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
