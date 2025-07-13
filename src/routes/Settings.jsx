@@ -1292,7 +1292,7 @@ const Settings = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
               {/* Slack */}
-              <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-lg border border-gray-100 shadow-sm group hover:border-[#15A395] transition-colors duration-200">
+              <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-lg border border-gray-100 shadow-sm group hover:border-[#16C47F] transition-colors duration-200">
                 <div className="mb-3 sm:mb-4">
                   <svg
                     width="32"
@@ -1333,7 +1333,7 @@ const Settings = () => {
                     <IoSettingsOutline size={16} />
                     <span>Manage</span>
                   </button>
-                  <button className="w-full sm:w-auto flex items-center justify-center text-xs text-gray-900 font-semibold bg-white group-hover:bg-[#15A395] group-hover:text-white px-4 py-2 rounded-full border border-gray-400 group-hover:border-[#15A395] transition-colors duration-200 cursor-pointer">
+                  <button className="w-full sm:w-auto flex items-center justify-center text-xs text-gray-900 font-semibold bg-white group-hover:bg-[#16C47F] group-hover:text-white px-4 py-2 rounded-full border border-gray-400 group-hover:border-[#16C47F] transition-colors duration-200 cursor-pointer">
                     Connect
                   </button>
                 </div>
@@ -1344,7 +1344,7 @@ const Settings = () => {
                 className={`bg-white p-4 sm:p-5 lg:p-6 rounded-lg border shadow-sm group transition-all duration-300 ${
                   highlightCalendarIntegration
                     ? "border-[#16C47F] ring-2 ring-[#16C47F] shadow-[#16C47F]"
-                    : "border-gray-100 hover:border-[#15A395]"
+                    : "border-gray-100 hover:border-[#16C47F]"
                 }`}
               >
                 {highlightCalendarIntegration && (
@@ -1393,7 +1393,7 @@ const Settings = () => {
                     className={`w-full sm:w-auto flex items-center justify-center text-xs font-semibold px-4 py-2 rounded-full border transition-colors duration-200 cursor-pointer ${
                       highlightCalendarIntegration
                         ? "bg-[#16C47F] hover:bg-[#FF9D23] text-white border-[#16C47F]"
-                        : "text-gray-900 bg-white group-hover:bg-[#FF9D23] group-hover:text-white border-gray-400 group-hover:border-[#15A395]"
+                        : "text-gray-900 bg-white group-hover:bg-[#16C47F] group-hover:text-white border-gray-400 group-hover:border-[#16C47F]"
                     }`}
                   >
                     Connect
@@ -1402,7 +1402,7 @@ const Settings = () => {
               </div>
 
               {/* Open AI */}
-              <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-lg border border-gray-100 shadow-sm group hover:border-[#15A395] transition-colors duration-200">
+              <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-lg border border-gray-100 shadow-sm group hover:border-[#16C47F] transition-colors duration-200">
                 <div className="mb-3 sm:mb-4">
                   <svg
                     width="32"
@@ -1437,14 +1437,14 @@ const Settings = () => {
                     <IoSettingsOutline size={16} />
                     <span>Manage</span>
                   </button>
-                  <button className="w-full sm:w-auto flex items-center justify-center text-xs text-gray-900 font-semibold bg-white group-hover:bg-[#15A395] group-hover:text-white px-4 py-2 rounded-full border border-gray-400 group-hover:border-[#15A395] transition-colors duration-200 cursor-pointer">
+                  <button className="w-full sm:w-auto flex items-center justify-center text-xs text-gray-900 font-semibold bg-white group-hover:bg-[#16C47F] group-hover:text-white px-4 py-2 rounded-full border border-gray-400 group-hover:border-[#16C47F] transition-colors duration-200 cursor-pointer">
                     Connect
                   </button>
                 </div>
               </div>
 
               {/* Hubspot */}
-              <div className="bg-white p-4 sm:p-5 rounded-lg border border-gray-100 shadow-sm group hover:border-[#15A395] transition-colors duration-200">
+              <div className="bg-white p-4 sm:p-5 rounded-lg border border-gray-100 shadow-sm group hover:border-[#16C47F] transition-colors duration-200">
                 <div className="mb-3">
                   <svg
                     width="32"
@@ -1477,14 +1477,14 @@ const Settings = () => {
                     <IoSettingsOutline size={16} />
                     <span>Manage</span>
                   </button>
-                  <button className="w-full sm:w-auto flex items-center justify-center text-xs text-gray-900 font-semibold bg-white group-hover:bg-[#15A395] group-hover:text-white px-4 py-2 rounded-full border border-gray-400 group-hover:border-[#15A395] transition-colors duration-200 cursor-pointer">
+                  <button className="w-full sm:w-auto flex items-center justify-center text-xs text-gray-900 font-semibold bg-white group-hover:bg-[#16C47F] group-hover:text-white px-4 py-2 rounded-full border border-gray-400 group-hover:border-[#16C47F] transition-colors duration-200 cursor-pointer">
                     Connect
                   </button>
                 </div>
               </div>
 
               {/* Salesforce */}
-              <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-lg border border-gray-100 shadow-sm group hover:border-[#15A395] transition-colors duration-200">
+              <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-lg border border-gray-100 shadow-sm group hover:border-[#16C47F] transition-colors duration-200">
                 <div className="mb-3 sm:mb-4">
                   <svg
                     width="32"
@@ -1513,7 +1513,7 @@ const Settings = () => {
                     <IoSettingsOutline size={16} />
                     <span>Manage</span>
                   </button>
-                  <button className="w-full sm:w-auto flex items-center justify-center text-xs text-gray-900 font-semibold bg-white group-hover:bg-[#15A395] group-hover:text-white px-4 py-2 rounded-full border border-gray-400 group-hover:border-[#15A395] transition-colors duration-200 cursor-pointer">
+                  <button className="w-full sm:w-auto flex items-center justify-center text-xs text-gray-900 font-semibold bg-white group-hover:bg-[#16C47F] group-hover:text-white px-4 py-2 rounded-full border border-gray-400 group-hover:border-[#16C47F] transition-colors duration-200 cursor-pointer">
                     Connect
                   </button>
                 </div>
@@ -1557,7 +1557,7 @@ const Settings = () => {
               />
               <button
                 onClick={handleBusinessNameSubmit}
-                className="bg-[#16C47F] hover:bg-[#FF9D23] w-full text-white py-3 px-4 rounded-md flex items-center justify-center gap-2 transition duration-200 text-sm font-medium"
+                className="bg-[#16C47F] hover:bg-[#FF9D23] cursor-pointer w-full text-white py-3 px-4 rounded-md flex items-center justify-center gap-2 transition duration-200 text-sm font-medium"
                 disabled={isLoadingBusinessName}
               >
                 {isLoadingBusinessName ? (
@@ -1651,7 +1651,7 @@ const Settings = () => {
               </div>
               <button
                 onClick={handleWebUrlSubmit}
-                className="bg-[#16C47F] hover:bg-[#FF9D23] w-full text-white py-3 px-4 rounded-md flex items-center justify-center gap-2 transition duration-200 text-sm font-medium"
+                className="bg-[#16C47F] hover:bg-[#FF9D23] cursor-pointer w-full text-white py-3 px-4 rounded-md flex items-center justify-center gap-2 transition duration-200 text-sm font-medium"
                 disabled={isLoadingWebUrl}
               >
                 {isLoadingWebUrl ? (
@@ -1801,7 +1801,7 @@ const Settings = () => {
             {/* Submit Button */}
             <button
               onClick={handleDocSubmit}
-              className="bg-[#16C47F] hover:bg-[#FF9D23] w-full  text-white py-3 px-4 rounded-md flex items-center justify-center gap-2 transition duration-200 text-sm font-medium"
+              className="bg-[#16C47F] hover:bg-[#FF9D23] w-full cursor-pointer text-white py-3 px-4 rounded-md flex items-center justify-center gap-2 transition duration-200 text-sm font-medium"
               disabled={isLoadingAddDoc}
             >
               {isLoadingAddDoc ? (
