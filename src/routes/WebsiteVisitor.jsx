@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import profilePic from "../assets/Boy.png";
 import { ChevronDown, CircleX, Filter, MousePointer2, PlusCircle, User } from "lucide-react";
 import Filters from "../components/Filters";
@@ -12,7 +12,8 @@ const contacts = Array.from({ length: 8 }, (_, i) => ({
 }));
 
 
-const ContactCard = ({ contact, isSelected, onSelect }) => {
+const ContactCard = ({ contact, selected, toggleSelect }) => {
+  const isSelected = selected.includes(contact.id);
   return (
     <div
       className={`flex items-center p-2 md:p-4 rounded-lg border border-gray-200 transition-colors ${isSelected ? "bg-[#e4fff5]" : "hover:bg-[#f5fffb]"}`}
@@ -22,7 +23,7 @@ const ContactCard = ({ contact, isSelected, onSelect }) => {
           type="checkbox" 
           className="form-checkbox w-5 h-5 text-green-500 rounded-full" 
           checked={isSelected}
-          onChange={onSelect} 
+          onChange={() => toggleSelect(contact.id)} 
         />
       </div>
       <img src={profilePic} alt="Profile" className="md:w-5 md:h-5 w-6 h-6 rounded-full mr-4" />
@@ -37,28 +38,55 @@ const ContactCard = ({ contact, isSelected, onSelect }) => {
 };
 
 export default function ContactList() {
-  const [selectedAll, setSelectedAll] = useState(false);
-  const [selectedContacts, setSelectedContacts] = useState({});
+  // const [selectedAll, setSelectedAll] = useState(false);
+  // const [selectedContacts, setSelectedContacts] = useState({});
   const [isModal, setIsModal] = useState(false);
   const [isModal2, setIsModal2] = useState(false);
+  const [selected, setSelected] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
 
-  const toggleSelectAll = () => {
-    const newSelected = !selectedAll;
-    setSelectedAll(newSelected);
-    setSelectedContacts(
-      newSelected ? Object.fromEntries(contacts.map(c => [c.id, true])) : {}
+  const toggleSelect = (id) => {
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
-  const toggleSelect = (id) => {
-    setSelectedContacts((prev) => {
-      const updatedSelection = { ...prev, [id]: !prev[id] };
-      if (!updatedSelection[id]) {
-        setSelectedAll(false);
-      }
-      return updatedSelection;
-    });
+  const handleSelectAll = () => {
+    if (selectAll) {
+      setSelected([]);
+    } else {
+      setSelected(contacts.map((c) => c.id));
+    }
+    setSelectAll(!selectAll);
   };
+
+
+
+//  const toggleSelectAll = () => {
+//   const newValue = !selectedAll;
+//   setSelectedAll(newValue);
+//   setSelectedContacts(
+//     newValue ? Object.fromEntries(contacts.map((c) => [c.id, true])) : {}
+//   );
+// };
+
+
+
+//   const toggleSelect = (id) => {
+//   setSelectedContacts((prev) => {
+//     const updated = { ...prev, [id]: !prev[id] };
+
+//     if (!updated[id]) {
+//       delete updated[id];
+//     }
+
+//     const allSelected = contacts.every(contact => updated[contact.id]);
+//     setSelectedAll(allSelected); // Update top checkbox
+
+//     return updated;
+//   });
+// };
+
 
   return (
     <div className="p-2 md:p-6 bg-white min-h-screen flex justify-center flex-col text-sm ">
@@ -161,18 +189,18 @@ export default function ContactList() {
         <input 
           type="checkbox" 
           className="md:w-6 md:h-6 h-4 w-4 text-green-500 border-gray-300 rounded-full ml-[10px] md:ml-[30px] my-[10px] md:my-[20px] " 
-          checked={selectedAll} 
-          onChange={toggleSelectAll} 
+          checked={selectAll} 
+          onChange={handleSelectAll}
         />
         <span className="text-gray-700">Visitors</span>
       </div>
       <div className="space-y-4">
         {contacts.map((contact) => (
           <ContactCard 
-            key={contact.id} 
-            contact={contact} 
-            isSelected={selectedContacts[contact.id]} 
-            onSelect={() => toggleSelect(contact.id)}
+            key={contact.id}
+            contact={contact}
+            selected={selected}
+            toggleSelect={toggleSelect}
           />
         ))}
       </div>

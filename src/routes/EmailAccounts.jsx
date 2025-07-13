@@ -795,18 +795,15 @@ const EmailAccounts = () => {
                               ? "bg-green-50 border-l-4 border-l-[#15A395]"
                               : "hover:bg-gray-50"
                           }`}
-                          onClick={() => toggleSelect(account.id)}
-                        >
+                          // onClick={() => toggleSelect(account.id)}
+                          >
                           <td className="py-4 px-6">
                             <div className="flex items-center gap-4">
                               <input
                                 type="checkbox"
                                 checked={selected.includes(account.id)}
-                                onChange={(e) => {
-                                  e.stopPropagation();
-                                  toggleSelect(account.id);
-                                }}
-                                className="w-4 h-4 text-[#15A395] border-gray-300 rounded focus:ring-[#15A395]"
+                                onChange={() => { toggleSelect(account.id) }}
+                                className="w-4 h-4 text-[#15A395] cursor-pointer border-gray-300 rounded focus:ring-[#15A395]"
                               />
                               <div
                                 className={`w-7 h-7 flex items-center justify-center rounded-full text-white font-semibold text-sm ${
