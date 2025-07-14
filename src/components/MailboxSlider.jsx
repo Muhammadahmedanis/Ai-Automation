@@ -1,27 +1,7 @@
 import React, { useState } from "react";
-import {
-  Phone,
-  Mail,
-  Calendar,
-  Plus,
-  Clock,
-  CheckSquare,
-  Square,
-  ChevronDown,
-  FileText,
-  CircleCheck,
-  ChevronUp,
-  NotebookPen,
-  ChevronRight,
-  MessageSquareText, 
-  ClipboardList, 
-  StickyNote,
-  X,
-  BookCopy,
-  Sparkle,
-  Clock3
-} from "lucide-react";
+import {Phone,Mail,Calendar,Clock,CheckSquare,ChevronDown,FileText,CircleCheck,ChevronUp,NotebookPen,ChevronRight,MessageSquareText, ClipboardList,StickyNote,X,BookCopy,Sparkle,Clock3} from "lucide-react";
 import { RiEditCircleLine } from "react-icons/ri";
+import SideDrawer from "./SideDrawer";
 
 export default function MailboxSlider({ sliderOpen, setSliderOpen }) {
   const pipelineStages = [
@@ -33,24 +13,24 @@ export default function MailboxSlider({ sliderOpen, setSliderOpen }) {
     { name: "Closed", active: false },
   ];
 
-  const upcomingTasks = [
-    {
-      id: 1,
-      title: "Set up demo for Client",
-      description: "Could you send me an overview of your solutions...",
-      date: "2/12/2025",
-      time: "2:35 PM",
-      completed: false,
-    },
-    {
-      id: 2,
-      title: "Respond to Initial Inquiry",
-      description: "Could you send me an overview of your solutions...",
-      date: "2/12/2025",
-      time: "2:35 PM",
-      completed: false,
-    },
-  ];
+  // const upcomingTasks = [
+  //   {
+  //     id: 1,
+  //     title: "Set up demo for Client",
+  //     description: "Could you send me an overview of your solutions...",
+  //     date: "2/12/2025",
+  //     time: "2:35 PM",
+  //     completed: false,
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Respond to Initial Inquiry",
+  //     description: "Could you send me an overview of your solutions...",
+  //     date: "2/12/2025",
+  //     time: "2:35 PM",
+  //     completed: false,
+  //   },
+  // ];
 
   const pastActivities = [
     {
@@ -121,8 +101,10 @@ const iconMap = {
 const [activeTab, setActiveTab] = useState("all");
 const [showMore, setShowMore] = useState(false);
 const [showNotesModal, setShowNotesModal] = useState(false);
-
 const [isPlusModalOpen, setIsPlusModalOpen] = useState(false);
+const [selectedEvent, setSelectedEvent] = useState(null);
+const [isOpen, setIsOpen] = useState(false);
+
 
 
 // Filtered past activities based on selected tab
@@ -133,8 +115,7 @@ const filteredActivities = activeTab === "all"
   return (
     <div
       className={`fixed top-0 right-0 h-full max-w-[1200px] bg-white shadow-2xl z-[100] transition-transform duration-300 ease-in-out overflow-y-auto border-l border-gray-200 rounded-l-xl
-      ${sliderOpen ? "translate-x-0" : "translate-x-full"}`}
-    >
+      ${sliderOpen ? "translate-x-0" : "translate-x-full"}`}>
       <div className="p-6">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
@@ -213,13 +194,20 @@ const filteredActivities = activeTab === "all"
               ].map(({ Icon, label }, i) => (
                 <button
                   key={i}
-                  onClick={() => label === "New Task" && setIsPlusModalOpen(true)}
-                  className="flex flex-col items-center justify-center p-3"
+                  onClick={() => label === "New Task" ? setIsPlusModalOpen(true) : setIsOpen(!isOpen) }
+                  className="flex flex-col items-center justify-center p-3 cursor-pointer"
                 >
                   <Icon className="w-12 h-12 text-[#16C47F] mb-1 p-3 rounded-full bg-green-50" />
                   <span className="text-xs font-medium text-black">{label}</span>
                 </button>
               ))}
+
+                <SideDrawer
+                  isOpen={isOpen}
+                  setIsOpen={setIsOpen}
+                  data={selectedEvent}
+                  setSelectedEvent={setSelectedEvent}
+                />
 
                 {isPlusModalOpen && (
                   <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
@@ -352,11 +340,11 @@ const filteredActivities = activeTab === "all"
                 </div>
                 {/* Past Activities */}
             <div>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center mt-2">
                 <h3 className="text-lg font-semibold mb-3 text-black">Upcoming Tasks</h3>
                 <div className="flex items-center gap-1">
                 <button className="flex items-center gap-2 cursor-pointer text-gray-600 px-4 py-1.5 border border-gray-300 rounded-full">
-                    <Phone size={15} /> Call
+                    { activeTab === "all" || activeTab === "call" ? <div className="flex items-center gap-3"><Phone size={15} /> Call</div>: activeTab === "note" || activeTab === "email" ?  <div className="flex items-center gap-3"> <Mail size={15} /> Send email</div> : <div className="flex items-center gap-3"> <ClipboardList size={15} /> Add Task</div> }
                 </button>
                 <button onClick={() => setShowNotesModal(!showNotesModal)} className="flex items-center gap-2 cursor-pointer text-gray-600 px-4 py-1.5 border border-gray-300 rounded-full">
                     <NotebookPen size={15} /> Add notes   

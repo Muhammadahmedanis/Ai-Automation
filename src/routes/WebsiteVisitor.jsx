@@ -13,7 +13,7 @@ const contacts = Array.from({ length: 8 }, (_, i) => ({
 
 
 const ContactCard = ({ contact, selected, toggleSelect }) => {
-  const isSelected = selected.includes(contact.id);
+  const isSelected = selected?.includes(contact?.id);
   return (
     <div
       className={`flex items-center p-2 md:p-4 rounded-lg border border-gray-200 transition-colors ${isSelected ? "bg-[#e4fff5]" : "hover:bg-[#f5fffb]"}`}
@@ -38,8 +38,7 @@ const ContactCard = ({ contact, selected, toggleSelect }) => {
 };
 
 export default function ContactList() {
-  // const [selectedAll, setSelectedAll] = useState(false);
-  // const [selectedContacts, setSelectedContacts] = useState({});
+  const [selectedContacts, setSelectedContacts] = useState({});
   const [isModal, setIsModal] = useState(false);
   const [isModal2, setIsModal2] = useState(false);
   const [selected, setSelected] = useState([]);
@@ -60,32 +59,6 @@ export default function ContactList() {
     setSelectAll(!selectAll);
   };
 
-
-
-//  const toggleSelectAll = () => {
-//   const newValue = !selectedAll;
-//   setSelectedAll(newValue);
-//   setSelectedContacts(
-//     newValue ? Object.fromEntries(contacts.map((c) => [c.id, true])) : {}
-//   );
-// };
-
-
-
-//   const toggleSelect = (id) => {
-//   setSelectedContacts((prev) => {
-//     const updated = { ...prev, [id]: !prev[id] };
-
-//     if (!updated[id]) {
-//       delete updated[id];
-//     }
-
-//     const allSelected = contacts.every(contact => updated[contact.id]);
-//     setSelectedAll(allSelected); // Update top checkbox
-
-//     return updated;
-//   });
-// };
 
 
   return (
@@ -109,7 +82,7 @@ export default function ContactList() {
           {isModal2 && (
               <div onClick={() => setIsModal2(false)} className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-30">
                 <div className="bg-white rounded-xl shadow-lg w-full max-w-2xl mx-4 animate-fade-in-up transition-all duration-300">
-                  <div className="flex items-center bg-[#16C47F]  justify-between p-5 border-b border-gray-200">
+                  <div className="flex items-center bg-[#aeead2]  justify-between p-5 border-b border-gray-200">
                     <div>
                       <h3 className="text-lg font-bold text-gray-900">23 Contacts found</h3>
                       <p className="text-sm text-gray-500">AI has found 23 contact from website  visitors Select the contacts you want to add to your campaign or CRM.</p>
