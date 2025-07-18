@@ -116,7 +116,7 @@ const Chatbot = () => {
         // Fetch AI summary from OpenAI
         let botReply = '';
         try {
-          const aiRes = await axios.post('http://localhost:4000/api/chat', { message: `Tell me about the company ${companyQuery.name}` });
+          const aiRes = await axios.post('http://localhost:4000/integration/chat', { message: `Tell me about the company ${companyQuery.name}` });
           aiSummary = aiRes.data.reply;
         } catch (err) {
           aiSummary = null;
@@ -167,7 +167,7 @@ const Chatbot = () => {
       // Fetch AI summary from OpenAI (added for direct/partial matches)
       let aiSummary = null;
       try {
-        const aiRes = await axios.post('http://localhost:4000/api/chat', { message: `Tell me about the company ${companyQuery.name}` });
+        const aiRes = await axios.post('http://localhost:4000/integration/chat', { message: `Tell me about the company ${companyQuery.name}` });
         aiSummary = aiRes.data.reply;
       } catch (err) {
         aiSummary = null;
@@ -345,7 +345,7 @@ const Chatbot = () => {
     let aiRevenue = '';
     let aiStaff = '';
     try {
-      const res = await axios.post('http://localhost:4000/api/chat', { message: userInput });
+      const res = await axios.post('http://localhost:4000/integration/chat', { message: userInput });
       botReply = res.data.reply;
       // Try to extract revenue and staff info from AI summary
       const revenueMatch = botReply.match(/(revenue|turnover|sales)[^\d]*(\d+[\d,\.]*)(\s*(million|m|k|thousand|billion|b))?/i);
@@ -368,9 +368,9 @@ const Chatbot = () => {
       }
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        botReply = 'Unauthorized: The backend rejected the request. Please ensure /api/chat is not protected by authentication.';
+        botReply = 'Unauthorized: The backend rejected the request. Please ensure /integration/chat is not protected by authentication.';
       } else if (err.response && err.response.status === 404) {
-        botReply = 'Not Found: The backend /api/chat route is missing. Please check backend setup.';
+        botReply = 'Not Found: The backend /integration/chat route is missing. Please check backend setup.';
       } else if (err.code === 'ECONNREFUSED') {
         botReply = 'Connection refused: Backend server is not running or not reachable.';
       } else {
