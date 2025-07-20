@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Minimize2, Maximize2, Send, Bot, User, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import axiosInstance from '../services/axiosInstance';
+// import axiosInstance from '../services/axiosInstance';
 import axios from 'axios';
 
 const Chatbot = () => {

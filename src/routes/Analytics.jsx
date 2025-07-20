@@ -18,13 +18,13 @@ function Analytics() {
   const [selectedView, setSelectedView] = useState("week");
   
   const { AnalyticsMonthly, AnalyticsQuaterly, AnalyticsYearly } = useAnalyticsQuery()
-
+console.log(AnalyticsYearly?.Statistics)
   const box = [
     { amount: `${Math.round( AnalyticsYearly?.Statistics?.OpenRate) || Math.round(AnalyticsQuaterly?.Statistics?.OpenRate) || Math.round(AnalyticsMonthly?.Statistics?.OpenRate) || 0 }%`, icon: <Eye size={24} className="text-purple-500" />, text: "Open rate", bg: "bg-purple-100" },
     { amount: `${AnalyticsYearly?.Statistics?.ClickRate || AnalyticsYearly?.Statistics?.ClickRate || AnalyticsYearly?.Statistics?.ClickRate || 0 }%`, icon: <Hand size={24} className="text-pink-500" />, text: "Click rate", bg: "bg-pink-100" },
     { amount: AnalyticsYearly?.Statistics?.SequenceStarted || AnalyticsMonthly?.Statistics?.SequenceStarted || AnalyticsQuaterly?.Statistics?.SequenceStarted || 0, icon: <Zap size={24} className="text-blue-500" />, text: "Sequence started", bg: "bg-blue-100" },
     { amount: AnalyticsYearly?.Statistics?.Opportunities || AnalyticsMonthly?.Statistics?.Opportunities || AnalyticsQuaterly?.Statistics?.Opportunities || 0, icon: <CircleDollarSign size={24} className="text-red-500" />, text: "Opportunities", bg: "bg-red-100" },
-    { amount: AnalyticsYearly?.Statistics?.Conversions || AnalyticsMonthly?.Statistics?.Conversions || AnalyticsQuaterly?.Statistics?.Conversions || 0, icon: <CircleDollarSign size={24} className="text-yellow-500" />, text: "Conversion", bg: "bg-yellow-100" },
+    { amount: AnalyticsYearly?.Statistics?.Amount || AnalyticsMonthly?.Statistics?.Amount || AnalyticsQuaterly?.Statistics?.Amount || 0, icon: <CircleDollarSign size={24} className="text-yellow-500" />, text: "Amount", bg: "bg-yellow-100" },
   ];
 
     const monthMap = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
@@ -33,6 +33,8 @@ function Analytics() {
       sent: item?.Delivered,
       opens: item?.Opens,
       clicks: item?.Clicks,
+      opportunities: item?.Opportunities,
+      conversions: item?.Conversions,
     })) || []
 
 
@@ -42,6 +44,8 @@ function Analytics() {
       sent: item?.Delivered,
       opens: item?.Opens,
       clicks: item?.Clicks,
+      opportunities: item?.Opportunities,
+      conversions: item?.Conversions,
     })) || []
 
 
@@ -65,8 +69,10 @@ function Analytics() {
         const sent = week.reduce((sum, i) => sum + i.Delivered, 0);
         const opens = week.reduce((sum, i) => sum + i.Opens, 0);
         const clicks = week.reduce((sum, i) => sum + i.Clicks, 0);
+        const opportunities = week.reduce((sum, i) => sum + i.Opportunities, 0);
+        const conversions = week.reduce((sum, i) => sum + i.Conversions, 0);
 
-        return { name, sent, opens, clicks };
+        return { name, sent, opens, clicks, opportunities, conversions };
       }).filter(Boolean);
     };
 
@@ -202,6 +208,14 @@ function Analytics() {
                   {/* Chart Lines */}
                   <Line
                     type="monotone"
+                    dataKey="opens"
+                    stroke="#AD46FF"
+                    strokeWidth={2.5}
+                    dot={{ r: 3 }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line
+                    type="monotone"
                     dataKey="clicks"
                     stroke="#ec4899"
                     strokeWidth={2.5}
@@ -210,20 +224,28 @@ function Analytics() {
                   />
                   <Line
                     type="monotone"
-                    dataKey="opens"
+                    dataKey="sent"
                     stroke="#f87171"
                     strokeWidth={2.5}
                     dot={{ r: 3 }}
                     activeDot={{ r: 6 }}
                   />
-                  <Line
-                    type="monotone"
-                    dataKey="sent"
-                    stroke="#fbbf24"
-                    strokeWidth={2.5}
-                    dot={{ r: 3 }}
-                    activeDot={{ r: 6 }}
-                  />
+                <Line
+                  type="monotone"
+                  dataKey="conversions"
+                  stroke="#fbbf24"
+                  strokeWidth={2.5}
+                  dot={{ r: 3 }}
+                  activeDot={{ r: 6 }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="opportunities"
+                  stroke="#FC5B63"
+                  strokeWidth={2.5}
+                  dot={{ r: 3 }}
+                  activeDot={{ r: 6 }}
+                />
                 </LineChart>
               </ResponsiveContainer>
             </div>
