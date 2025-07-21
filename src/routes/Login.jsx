@@ -29,7 +29,8 @@ const Login = () => {
         <div className="w-full max-w-sm">
           {/* Logo */}
           <div className="flex items-center gap-2 mb-8">
-            <CircleDot className="w-8 h-8 text-[#16C47F]" />
+            {/* <CircleDot className="w-8 h-8 text-[#16C47F]" /> */}
+            <img src="src\assets\logo2.png" className="h-7" alt="Logo" />
             <span className="text-xl font-semibold">
               <span className="text-gray-900">Quick</span>
               <span className="text-[#16C47F]">Pipe</span>

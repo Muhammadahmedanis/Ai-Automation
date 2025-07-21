@@ -139,8 +139,8 @@ const Settings = () => {
 
   const handleConnectCalendar = async () => {
     try {
-      const tokenObj = JSON.parse(localStorage.getItem("Token"));
-      const token = tokenObj?.token;
+      const token = JSON.parse(localStorage.getItem("Token"));
+      // const token = tokenObj?.token;
 
       if (!token) {
         alert("No auth token found.");
@@ -466,7 +466,7 @@ const Settings = () => {
       </div>
 
       {/* Content Based on Active Tab */}
-      <div className="px-2 sm:px-4 md:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {activeTab === "profile" ? (
           <div className="space-y-6 sm:space-y-8">
             {/* Profile Card */}

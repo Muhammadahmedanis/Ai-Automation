@@ -57,7 +57,7 @@ function MetricCard({
 
   return (
     <div
-      className={`rounded-xl p-4 sm:p-5 shadow-lg bg-white transition-all border-2 border-transparent hover:border-green-300 duration-500 hover:shadow-[0_8px_30px_rgba(45,212,191,0.3)] transform hover:-translate-y-1 ${
+      className={`rounded-xl p-4 sm:p-5 shadow-lg bg-white transition-all border-2 border-transparent duration-500 transform hover:-translate-y-1 ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       } ${className}`}
     >
