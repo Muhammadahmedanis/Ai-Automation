@@ -324,10 +324,10 @@ const Navbar = () => {
             </div>
 
             <div className="flex items-center md:space-x-2 gap-1">
-
               {/* Mobile Menu Button */}
               <div className="md:hidden">
-                <button onClick={(e) => {
+                <button
+                  onClick={(e) => {
                     e.stopPropagation();
                     closeAllDropdowns();
                     setIsMenuOpen(!isMenuOpen);
@@ -335,10 +335,8 @@ const Navbar = () => {
                   className="p-1 md:p-2 border border-gray-300 text-gray-600 bg-gray-200 rounded-full cursor-pointer"
                 >
                   <Menu size={22} />
-                  </button>
-
-                  </div>
-
+                </button>
+              </div>
 
               {/* Notification Dropdown */}
               <div className="relative dropdown">
@@ -466,81 +464,176 @@ const Navbar = () => {
 
               {/* Organization Dropdown */}
               <div className="relative dropdown flex items-center gap-2">
-                {" "}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     closeAllDropdowns();
                     setIsOrgOpen(!isOrgOpen);
                   }}
-                  className="p-1.5 border border-gray-300 cursor-pointer text-gray-600 rounded-full flex gap-1 items-center"
+                  className="px-3 py-1.5 border border-gray-300 cursor-pointer text-gray-700 bg-white rounded-lg flex gap-2 items-center hover:bg-gray-50 transition-colors duration-200 shadow-sm"
                 >
-                  <span className="hidden md:block text-sm">
-                   {allWorkspace?.OwnedWorkspaces?.map((val) => (
-                      <div key={val?.id}>
-                        <span className="mx-2">{val?.WorkspaceName}</span>
-                      </div>
-                    ))}
+                  <Briefcase className="w-4 h-4 text-gray-500" />
+                  <span className="hidden md:block text-sm font-medium max-w-32 truncate">
+                    {(() => {
+                      // Find current workspace name
+                      const currentWorkspace = [
+                        ...(allWorkspace?.OwnedWorkspaces || []),
+                        ...(allWorkspace?.MemberWorkspaces || []),
+                      ].find((workspace) => workspace?.id === selectedId);
+
+                      return (
+                        currentWorkspace?.WorkspaceName || "Select Workspace"
+                      );
+                    })()}
                   </span>
-                  <ChevronDown className="w-4 h-5" />
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                      isOrgOpen ? "rotate-180" : ""
+                    }`}
+                  />
                 </button>
                 {isOrgOpen && (
-                  <div className="absolute border-none outline-none right-0 top-1 mt-2 w-56 bg-white rounded-md shadow-lg py-2 z-10 border">
-                    {/* <div className="pb-2"> */}
-                    {/* <input
-                        type="text"
-                        placeholder="Search..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full p-2 text-sm border border-gray-300 rounded-md focus:outline-none"
-                      /> */}
-                    {/* </div> */}
-                    <div className="p-2">
-                      <ul>
-                        {allWorkspace.OwnedWorkspaces.map((val) => (
-                          <div key={val?.id}>
-                            <input
-                              onChange={() => handleSwitchWorkspace(val?.id)}
-                              className="cursor-pointer my-2"
-                              type="radio"
-                              name="workspace"
-                              id={`workspace-${val?.id}`}
-                              checked={selectedId === val?.id}
-                            />
-                            <span className="mx-2">{val?.WorkspaceName}</span>
-                            <hr className="text-[#16C47F]" />
-                          </div>
-                        ))}
-                        {allWorkspace.MemberWorkspaces.map((val) => (
-                          <div key={val?.id}>
-                            <input
-                              onChange={() => handleSwitchWorkspace(val?.id)}
-                              className="cursor-pointer my-2"
-                              type="radio"
-                              name="workspace"
-                              id={`workspace-${val?.id}`}
-                              checked={selectedId === val?.id}
-                            />
-                            <span className="mx-2">{val?.WorkspaceName}</span>
-                            <hr className="text-[#16C47F]" />
-                          </div>
-                        ))}
-                      </ul>
+                  <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-20">
+                    {/* Header */}
+                    <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                      <h3 className="text-sm font-semibold text-gray-800">
+                        Switch Workspace
+                      </h3>
                     </div>
 
-                    <div
-                      onClick={() => setIsModalOpen(true)}
-                      className="px-3 py-2 text-gray-500 hover:bg-gray-100 cursor-pointer flex items-center"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      <span className="text-sm">Create Workspace</span>
+                    {/* Owned Workspaces */}
+                    {allWorkspace?.OwnedWorkspaces?.length > 0 && (
+                      <div className="p-2">
+                        <div className="px-2 py-1">
+                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                            Owned by you
+                          </span>
+                        </div>
+                        {allWorkspace.OwnedWorkspaces.map((val) => (
+                          <label
+                            key={val?.id}
+                            htmlFor={`workspace-${val?.id}`}
+                            className={`flex items-center p-3 rounded-md cursor-pointer transition-all duration-200 hover:bg-gray-50 ${
+                              selectedId === val?.id
+                                ? "bg-green-50 border border-green-200"
+                                : "border border-transparent"
+                            }`}
+                          >
+                            <input
+                              onChange={() => handleSwitchWorkspace(val?.id)}
+                              className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500 focus:ring-2"
+                              type="radio"
+                              name="workspace"
+                              id={`workspace-${val?.id}`}
+                              checked={selectedId === val?.id}
+                            />
+                            <div className="ml-3 flex-1">
+                              <div className="flex items-center justify-between">
+                                <span
+                                  className={`text-sm font-medium ${
+                                    selectedId === val?.id
+                                      ? "text-green-800"
+                                      : "text-gray-900"
+                                  }`}
+                                >
+                                  {val?.WorkspaceName}
+                                </span>
+                                {selectedId === val?.id && (
+                                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    Active
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-xs text-gray-500">
+                                Owner
+                              </span>
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Member Workspaces */}
+                    {allWorkspace?.MemberWorkspaces?.length > 0 && (
+                      <div className="p-2 border-t border-gray-100">
+                        <div className="px-2 py-1">
+                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                            Member of
+                          </span>
+                        </div>
+                        {allWorkspace.MemberWorkspaces.map((val) => (
+                          <label
+                            key={val?.id}
+                            htmlFor={`workspace-member-${val?.id}`}
+                            className={`flex items-center p-3 rounded-md cursor-pointer transition-all duration-200 hover:bg-gray-50 ${
+                              selectedId === val?.id
+                                ? "bg-blue-50 border border-blue-200"
+                                : "border border-transparent"
+                            }`}
+                          >
+                            <input
+                              onChange={() => handleSwitchWorkspace(val?.id)}
+                              className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                              type="radio"
+                              name="workspace"
+                              id={`workspace-member-${val?.id}`}
+                              checked={selectedId === val?.id}
+                            />
+                            <div className="ml-3 flex-1">
+                              <div className="flex items-center justify-between">
+                                <span
+                                  className={`text-sm font-medium ${
+                                    selectedId === val?.id
+                                      ? "text-blue-800"
+                                      : "text-gray-900"
+                                  }`}
+                                >
+                                  {val?.WorkspaceName}
+                                </span>
+                                {selectedId === val?.id && (
+                                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    Active
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-xs text-gray-500">
+                                Member
+                              </span>
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Empty state */}
+                    {!allWorkspace?.OwnedWorkspaces?.length &&
+                      !allWorkspace?.MemberWorkspaces?.length && (
+                        <div className="p-6 text-center">
+                          <Briefcase className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                          <p className="text-sm text-gray-500 mb-4">
+                            No workspaces found
+                          </p>
+                        </div>
+                      )}
+
+                    {/* Create Workspace Button */}
+                    <div className="border-t border-gray-200 p-2">
+                      <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="w-full px-3 py-2.5 text-gray-700 hover:bg-gray-50 cursor-pointer flex items-center justify-center rounded-md transition-colors duration-200 border border-dashed border-gray-300 hover:border-gray-400"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        <span className="text-sm font-medium">
+                          Create New Workspace
+                        </span>
+                      </button>
                     </div>
                   </div>
                 )}
               </div>
             </div>
             {isModalOpen && (
-              <div className="fixed bottom-20 inset-0 flex items-center z-40 justify-center">
+              <div className="fixed bottom-20 inset-0 flex items-center z-40 justify-center bg-black/50 min-h-screen">
                 <div className="bg-white md:w-96 w-[80%] z-[150] p-6 rounded-lg shadow-lg modal">
                   <div className="flex justify-between items-center">
                     <h2 className="text-lg font-semibold">

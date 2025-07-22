@@ -25,7 +25,6 @@ import StatsChart from "../components/StatChart";
 import TopPeople from "../components/ToPeople";
 import { RiEditCircleLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
-import widget from "../assets/widget.png";
 import { useAnalyticsQuery } from "../reactQuery/hooks/useAnalyticsQuery";
 
 export default function DashboardPage() {
@@ -194,7 +193,7 @@ export default function DashboardPage() {
                       >
                         <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-4 rounded-xl mb-4 group-hover:from-green-50 group-hover:to-blue-50 transition-all duration-300">
                           <img
-                            src={widget}
+                            src="/widget.png"
                             className="w-full h-32 sm:h-36 bg-white border border-gray-200 rounded-lg object-cover"
                             alt="Widget Preview"
                           />

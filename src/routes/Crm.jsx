@@ -1583,7 +1583,7 @@ export default function Crm() {
         )}
         {/* Delete Confirmation Modal */}
         {showDeleteModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 bg-opacity-30">
             <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm relative">
               <button
                 className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl"
@@ -1620,7 +1620,7 @@ export default function Crm() {
 
       {/* Import Modals */}
       {importModal === "csv" && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-50 z-50">
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
             <button
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl"
@@ -1664,7 +1664,7 @@ export default function Crm() {
         </div>
       )}
       {importModal === "sheets" && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-50 z-50">
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
             <button
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl"
@@ -1710,7 +1710,7 @@ export default function Crm() {
         </div>
       )}
       {importModal === "hubspot" && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-50 z-50">
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
             <button
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl"

@@ -93,7 +93,7 @@ const Settings = () => {
     addMemeberMutation,
   } = useWorkspaceQuery();
 
-  console.log(teamWorkspaceMember)
+  console.log(teamWorkspaceMember);
 
   const [workspaceData, setWorkspaceData] = useState({
     WorkspaceName: "",
@@ -244,7 +244,6 @@ const Settings = () => {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(workspaceData.id);
   };
-
 
   const {
     businessDetails,
@@ -554,7 +553,8 @@ const Settings = () => {
               <div className="flex justify-stretch sm:justify-end pt-6">
                 <button
                   onClick={updateProfile}
-                  className="w-full sm:w-auto bg-[#16C47F] hover:bg-[#FF9D23] text-white cursor-pointer px-6 py-3 rounded-full text-sm font-medium transition-colors">
+                  className="w-full sm:w-auto bg-[#16C47F] hover:bg-[#FF9D23] text-white cursor-pointer px-6 py-3 rounded-full text-sm font-medium transition-colors"
+                >
                   Update Profile
                 </button>
               </div>
@@ -679,12 +679,14 @@ const Settings = () => {
                   <div className="flex flex-col-reverse sm:flex-row justify-end mt-6 gap-3">
                     <button
                       onClick={() => setIsModalOpen(false)}
-                      className="w-full sm:w-auto bg-[#16C47F] hover:bg-[#FF9D23] text-white cursor-pointer border border-gray-300 rounded-full px-4 py-2 text-sm transition-colors">
+                      className="w-full sm:w-auto bg-[#16C47F] hover:bg-[#FF9D23] text-white cursor-pointer border border-gray-300 rounded-full px-4 py-2 text-sm transition-colors"
+                    >
                       Cancel
                     </button>
                     <button
                       onClick={handleUpdatePassword}
-                      className="w-full sm:w-auto bg-[#16C47F] hover:bg-[#FF9D23] cursor-pointer text-white px-4 py-2 rounded-full text-sm transition-colors">
+                      className="w-full sm:w-auto bg-[#16C47F] hover:bg-[#FF9D23] cursor-pointer text-white px-4 py-2 rounded-full text-sm transition-colors"
+                    >
                       Update Password
                     </button>
                   </div>
@@ -904,7 +906,7 @@ const Settings = () => {
                   </button>
 
                   {isModalOpen2 && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
+                    <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-50 z-50 p-4">
                       <div className="bg-white p-4 sm:p-6 rounded-xl shadow-2xl w-full max-w-sm sm:max-w-md max-h-[90vh] overflow-y-auto">
                         <div className="flex justify-between items-center mb-4 sm:mb-6">
                           <h3 className="text-lg sm:text-xl font-semibold text-gray-800 flex items-center">
@@ -1176,7 +1178,7 @@ const Settings = () => {
                                 </div>
                                 <div className="flex-1 min-w-0">
                                   <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
-                                    {member?.FirstName || "Pending User"}
+                                    {member?.FullName || "Pending User"}
                                   </h3>
                                   <p className="text-sm text-gray-600 truncate">
                                     Invitation sent • Waiting for response
@@ -1236,7 +1238,7 @@ const Settings = () => {
             </div>
           </>
         ) : activeTab === "integrations" ? (
-          <div className="px-2 sm:px-4 md:px-6 lg:px-8">
+          <div className="">
             {highlightCalendarIntegration && (
               <div className="mb-6 bg-gradient-to-r from-[#16C47F]to-blue-50 border border-[#16C47F] rounded-lg p-4">
                 <div className="flex items-center gap-3">
@@ -1281,13 +1283,13 @@ const Settings = () => {
                 </div>
               </div>
             )}
-            <div className="relative mb-4 sm:mb-6">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <Search size={16} className="sm:w-5 sm:h-5 text-gray-600" />
+            <div className="relative mb-6 sm:mb-8">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                <Search size={18} className="text-gray-400" />
               </div>
               <input
                 type="search"
-                className="block w-full sm:w-80 p-3 pl-10 text-sm text-gray-700 border border-gray-200 rounded-full bg-gray-50 focus:ring focus:outline-none focus:ring-[#16C47F]"
+                className="block w-full sm:w-96 px-4 py-3.5 pl-12 text-sm text-gray-700 bg-white border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:ring-2 focus:ring-[#16C47F] focus:border-[#16C47F] focus:outline-none transition-all duration-200"
                 placeholder="Search integrations..."
               />
             </div>

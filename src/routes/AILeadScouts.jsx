@@ -15,7 +15,6 @@ import {
   FaChevronDown,
   FaChevronUp,
 } from "react-icons/fa";
-import backgroundImage from "../assets/AILead_Scouts.jpeg";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import {
@@ -898,7 +897,7 @@ export default function LeadSearch() {
       {/* Main Content */}
       <div
         className="flex justify-center items-center w-full bg-black relative bg-cover bg-center rounded-2xl md:mx-4 md:p-10"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
+        style={{ backgroundImage: `url(/AILead_Scouts.jpeg)` }}
       >
         <div className="bg-opacity-60 rounded-2xl shadow-lg w-full max-w-[1000px] md:w-[750px] text-center p-4 md:p-10">
           <h2 className="text-white text-xl md:text-3xl mb-[15px] md:mb-[75px] pb-[15px] md:pb-[30px] mt-[0px]">

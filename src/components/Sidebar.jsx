@@ -13,8 +13,6 @@ import {
   LayoutDashboard,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import logo from "../assets/logo.png";
-import logo2 from "../assets/logo2.png";
 
 const menuItems = [
   { name: "Dashboard", icon: LayoutDashboard, slug: "/" },
@@ -51,10 +49,10 @@ function Sidebar() {
         <div className="flex items-center gap-2 overflow-hidden whitespace-nowrap font-semibold">
           {isExpanded ? (
             <>
-              <img src={logo} alt="Logo" />
+              <img src="/logo.png" alt="Logo" />
             </>
           ) : (
-            <img src={logo2} alt="Logo" className="h-6 w-full" />
+            <img src="/logo2.png" alt="Logo" className="h-6 w-full" />
           )}
         </div>
       </div>

@@ -1892,7 +1892,7 @@ export default function AILeadSearch() {
 
       {/* Campaign Modal */}
       {showCampaignForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <h3 className="text-xl font-bold mb-4">Add to Campaign</h3>
             <form onSubmit={handleCampaignSubmit}>

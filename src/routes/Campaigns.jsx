@@ -164,18 +164,33 @@ function Campaigns() {
   const statusOptions = [
     {
       value: "All statuses",
-      icon: <Filter size={16} className="text-gray-400" />,
+      icon: Filter,
+      iconColor: "text-gray-400",
     },
-    { value: "Active", icon: <Play size={16} className="text-blue-500" /> },
-    { value: "Draft", icon: <Circle size={16} className="text-gray-400" /> },
-    { value: "Paused", icon: <Pause size={16} className="text-yellow-500" /> },
+    {
+      value: "Active",
+      icon: Play,
+      iconColor: "text-blue-500",
+    },
+    {
+      value: "Draft",
+      icon: Circle,
+      iconColor: "text-gray-400",
+    },
+    {
+      value: "Paused",
+      icon: Pause,
+      iconColor: "text-yellow-500",
+    },
     {
       value: "Error",
-      icon: <AlertCircle size={16} className="text-red-500" />,
+      icon: AlertCircle,
+      iconColor: "text-red-500",
     },
     {
       value: "Completed",
-      icon: <CheckCircle size={16} className="text-green-500" />,
+      icon: CheckCircle,
+      iconColor: "text-green-500",
     },
   ];
 
@@ -289,7 +304,10 @@ function Campaigns() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="mb-4">
-            <Loader2 size={48} className="animate-spin text-[#16C47F] mx-auto" />
+            <Loader2
+              size={48}
+              className="animate-spin text-[#16C47F] mx-auto"
+            />
           </div>
           <h2 className="text-lg font-semibold text-gray-900 mb-2">
             Loading Campaigns
@@ -330,7 +348,7 @@ function Campaigns() {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+          <div className="flex flex-col lg:flex-row gap-2 sm:gap-3">
             {/* Status Filter */}
             <div className="relative w-full sm:w-auto">
               <button
@@ -350,20 +368,33 @@ function Campaigns() {
               {/* Status dropdown */}
               {showStatusDropdown && (
                 <div
-                  className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white border border-gray-200 ring-1 ring-black ring-opacity-5 focus:outline-none z-20"
+                  className="absolute right-0 left-0 sm:left-auto mt-2 w-full lg:w-64 rounded-md shadow-lg bg-white border border-gray-200 ring-1 ring-black ring-opacity-5 focus:outline-none z-20"
                   onClick={handleDropdownClick}
                 >
                   <div className="py-1">
-                    {statusOptions.map((option) => (
-                      <button
-                        key={option.value}
-                        className="w-full text-left px-4 py-2 text-sm hover:bg-[#16C47F] hover:text-[#16C47F] flex items-center gap-2 cursor-pointer"
-                        onClick={() => handleStatusChange(option.value)}
-                      >
-                        {option.icon}
-                        <span>{option.value}</span>
-                      </button>
-                    ))}
+                    {statusOptions.map((option) => {
+                      const Icon = option.icon;
+                      const isSelected = statusFilter === option.value;
+                      return (
+                        <button
+                          key={option.value}
+                          className={`w-full text-left px-4 py-2 text-sm flex items-center gap-2 cursor-pointer transition-colors ${
+                            isSelected
+                              ? "text-white bg-[#16C47F] font-medium"
+                              : "text-gray-700 hover:bg-green-50 hover:text-[#16C47F]"
+                          }`}
+                          onClick={() => handleStatusChange(option.value)}
+                        >
+                          <Icon
+                            size={16}
+                            className={
+                              isSelected ? "text-white" : option.iconColor
+                            }
+                          />
+                          <span>{option.value}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -387,17 +418,17 @@ function Campaigns() {
               {/* Sort dropdown */}
               {showSortDropdown && (
                 <div
-                  className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white border border-gray-200 ring-1 ring-black ring-opacity-5 focus:outline-none z-20"
+                  className="absolute right-0 left-0 sm:left-auto mt-2 w-full lg:w-64 rounded-md shadow-lg bg-white border border-gray-200 ring-1 ring-black ring-opacity-5 focus:outline-none z-20"
                   onClick={handleDropdownClick}
                 >
                   <div className="py-1">
                     {sortOptions.map((option) => (
                       <button
                         key={option.value}
-                        className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center cursor-pointer ${
+                        className={`w-full text-left px-4 py-2 text-sm flex items-center cursor-pointer transition-colors ${
                           sortOrder === option.value
-                            ? "text-[#16C47F]  bg-[#16C47F] font-medium"
-                            : "text-gray-700"
+                            ? "text-white bg-[#16C47F] font-medium"
+                            : "text-gray-700 hover:bg-green-50 hover:text-[#16C47F]"
                         }`}
                         onClick={() => handleSortChange(option.value)}
                       >
@@ -413,7 +444,7 @@ function Campaigns() {
             <button
               onClick={() => setShowNewCampaignModal(true)}
               type="button"
-              className="inline-flex items-center justify-center px-4 sm:px-5 py-2 text-sm font-medium text-white bg-[#16C47F] hover:bg-[#FF9D23]  rounded-full focus:outline-none focus:ring-2 focus:ring-[#16C47F] cursor-pointer disabled:opacity-50 w-full sm:w-auto"
+              className="inline-flex items-center justify-center px-4 sm:px-5 py-2 text-sm font-medium text-white bg-[#16C47F] hover:bg-[#0FA968] rounded-full focus:outline-none focus:ring-2 focus:ring-[#16C47F] focus:ring-offset-2 cursor-pointer disabled:opacity-50 w-full sm:w-auto transition-colors"
               disabled={isCreateLoading}
             >
               {isCreateLoading ? (
@@ -428,19 +459,19 @@ function Campaigns() {
 
         {/* Bulk Actions */}
         {selectedCampaigns.size > 0 && (
-          <div className="mb-3 sm:mb-4 p-3 bg-[#16C47F] border border-[#16C47F] rounded-lg">
+          <div className="mb-3 sm:mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <span className="text-sm font-medium text-[#16C47F]">
                 {selectedCampaigns.size} campaign
                 {selectedCampaigns.size > 1 ? "s" : ""} selected
               </span>
               <div className="flex gap-2">
-                <button className="px-3 py-1 text-sm bg-[#16C47F] hover:bg-[#FF9D23] text-white cursor-pointer">
+                <button className="px-3 py-1 text-sm bg-[#16C47F] hover:bg-[#0FA968] text-white rounded transition-colors cursor-pointer">
                   Bulk Actions
                 </button>
                 <button
                   onClick={() => setSelectedCampaigns(new Set())}
-                  className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 cursor-pointer"
+                  className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 rounded transition-colors cursor-pointer"
                 >
                   Clear Selection
                 </button>
@@ -469,7 +500,7 @@ function Campaigns() {
               {!searchQuery && statusFilter === "All statuses" && (
                 <button
                   onClick={() => setShowNewCampaignModal(true)}
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-[#16C47F] hover:bg-[#FF9D23] rounded-md cursor-pointer"
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-[#16C47F] hover:bg-[#0FA968] rounded-md cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-[#16C47F] focus:ring-offset-2"
                 >
                   <Plus size={16} className="mr-2" />
                   Create Campaign
@@ -484,7 +515,7 @@ function Campaigns() {
                     <th scope="col" className="px-6 py-3 text-left">
                       <input
                         type="checkbox"
-                        className="focus:ring-text-[#16C47F] h-4 w-4 text-text-[#16C47F] border-gray-300 rounded cursor-pointer"
+                        className="focus:ring-[#16C47F] h-4 w-4 text-[#16C47F] border-gray-300 rounded cursor-pointer"
                         checked={selectAll}
                         onChange={handleSelectAll}
                       />
@@ -550,13 +581,15 @@ function Campaigns() {
                     <tr
                       key={campaign.id}
                       className={`hover:bg-gray-50 transition-colors ${
-                        selectedCampaigns.has(campaign.id) ? "bg-text-[#16C47F]" : ""
+                        selectedCampaigns.has(campaign.id)
+                          ? "bg-green-50 border-l-4 border-l-[#16C47F]"
+                          : ""
                       }`}
                     >
                       <td className="px-6 py-4 whitespace-nowrap">
                         <input
                           type="checkbox"
-                          className="focus:ring-text-[#16C47F] h-4 w-4 text-text-[#16C47F] border-gray-300 rounded cursor-pointer"
+                          className="focus:ring-[#16C47F] h-4 w-4 text-[#16C47F] border-gray-300 rounded cursor-pointer"
                           checked={selectedCampaigns.has(campaign.id)}
                           onChange={() => handleSelectCampaign(campaign.id)}
                         />
@@ -730,7 +763,7 @@ function Campaigns() {
               {!searchQuery && statusFilter === "All statuses" && (
                 <button
                   onClick={() => setShowNewCampaignModal(true)}
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white  bg-[#16C47F] hover:bg-[#FF9D23] rounded-md cursor-pointer"
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-[#16C47F] hover:bg-[#0FA968] rounded-md cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-[#16C47F] focus:ring-offset-2"
                 >
                   <Plus size={16} className="mr-2" />
                   Create Campaign
@@ -743,7 +776,7 @@ function Campaigns() {
                 key={campaign.id}
                 className={`bg-white shadow rounded-lg p-4 sm:p-6 transition-all hover:shadow-md ${
                   selectedCampaigns.has(campaign.id)
-                    ? "ring-2 ring-[#16C47F] ring-opacity-50 bg-[#16C47F] "
+                    ? "ring-2 ring-[#16C47F] ring-opacity-50 bg-green-50 border-l-4 border-l-[#16C47F]"
                     : ""
                 }`}
               >
@@ -926,7 +959,7 @@ function Campaigns() {
         <div className="fixed inset-0 overflow-y-auto z-50 flex items-center justify-center p-4">
           {/* Overlay */}
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+            className="fixed inset-0 bg-black/50 bg-opacity-50 transition-opacity"
             onClick={() => !isCreateLoading && setShowNewCampaignModal(false)}
           ></div>
 
@@ -991,7 +1024,7 @@ function Campaigns() {
               </button>
               <button
                 type="button"
-                className="w-full sm:w-auto px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#16C47F] hover:bg-[#FF9D23] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#16C47F] transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-w-[100px]"
+                className="w-full sm:w-auto px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#16C47F] hover:bg-[#0FA968] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#16C47F] transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-w-[100px]"
                 onClick={handleCreateCampaign}
                 disabled={!newCampaignName.trim() || isCreateLoading}
               >
@@ -1014,7 +1047,7 @@ function Campaigns() {
         <div className="fixed inset-0 overflow-y-auto z-50 flex items-center justify-center p-4">
           {/* Overlay */}
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+            className="fixed inset-0 bg-black/50 bg-opacity-50 transition-opacity"
             onClick={() => !isUpdateLoading && setShowUpdateNameModal(false)}
           ></div>
 
@@ -1077,7 +1110,7 @@ function Campaigns() {
               </button>
               <button
                 type="button"
-                className="w-full sm:w-auto px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#16C47F] hover:bg-[#FF9D23] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#16C47F] transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-w-[100px]"
+                className="w-full sm:w-auto px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#16C47F] hover:bg-[#0FA968] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#16C47F] transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-w-[100px]"
                 onClick={handleUpdateName}
                 disabled={!newName.trim() || isUpdateLoading}
               >

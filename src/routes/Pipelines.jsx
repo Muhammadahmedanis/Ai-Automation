@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Boy from "../assets/Boy.png";
 import { usePipelineQuery } from "../reactQuery/hooks/usePipelineQuery";
 import {
   DndContext,
@@ -66,11 +65,7 @@ const SortableLeadCard = ({ lead, stage }) => {
       className="group rounded-xl transition-all md:w-full w-60 hover:bg-gray-400 hover:text-white bg-white cursor-grab active:cursor-grabbing"
     >
       <div className="flex items-center gap-3 px-4 py-3">
-        <img
-          src={Boy || "/placeholder.svg"}
-          alt="Profile"
-          className="w-10 h-10 rounded-full"
-        />
+        <img src="/Boy.png" alt="Profile" className="w-10 h-10 rounded-full" />
         <div>
           <p className="">{lead.Name}</p>
           <p className="text-sm group-hover:text-white text-gray-500">
@@ -96,11 +91,7 @@ const LeadCard = ({ name, phone, email, title, company }) => {
   return (
     <div className="group rounded-xl transition-all md:w-40 w-full bg-white shadow-lg">
       <div className="flex items-center gap-3 px-4 py-3">
-        <img
-          src={Boy || "/placeholder.svg"}
-          alt="Profile"
-          className="w-10 h-10 rounded-full"
-        />
+        <img src="/Boy.png" alt="Profile" className="w-10 h-10 rounded-full" />
         <div>
           <p className="">{name}</p>
           <p className="text-sm text-gray-500">

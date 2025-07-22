@@ -481,7 +481,7 @@ export default function ToPeople() {
 
       {/* Second Modal (MailOpen Click) */}
       {isSecondModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-50 p-4 z-50">
           <div className="rounded-lg bg-white p-4 sm:p-6 shadow-lg w-full max-w-[95vw] md:max-w-4xl max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold inline-flex gap-2 items-center">

@@ -678,7 +678,7 @@ export default function CompaignTarget() {
                   <span className="sm:hidden">Add</span>
                 </button>
                 {isModalOpen && (
-                  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4 z-50">
+                  <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-50 p-4 z-50">
                     <div className="w-full max-w-md lg:max-w-lg rounded-xl bg-white p-6 lg:p-8 shadow-2xl">
                       <div className="flex justify-between items-center mb-6">
                         <h3 className="text-lg lg:text-xl font-semibold text-gray-900">
