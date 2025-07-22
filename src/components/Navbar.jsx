@@ -476,13 +476,16 @@ const Navbar = () => {
                   className="p-1.5 border border-gray-300 cursor-pointer text-gray-600 rounded-full flex gap-1 items-center"
                 >
                   <span className="hidden md:block text-sm">
-                    My Organization
+                   {allWorkspace?.OwnedWorkspaces?.map((val) => (
+                      <div key={val?.id}>
+                        <span className="mx-2">{val?.WorkspaceName}</span>
+                      </div>
+                    ))}
                   </span>
-                  {/* <span className='block md:hidden text-sm'>Org</span> */}
                   <ChevronDown className="w-4 h-5" />
                 </button>
                 {isOrgOpen && (
-                  <div className="absolute border-none outline-none right-0 mt-2 w-56 bg-white rounded-md shadow-lg py-2 z-10 border">
+                  <div className="absolute border-none outline-none right-0 top-1 mt-2 w-56 bg-white rounded-md shadow-lg py-2 z-10 border">
                     {/* <div className="pb-2"> */}
                     {/* <input
                         type="text"
@@ -495,6 +498,20 @@ const Navbar = () => {
                     <div className="p-2">
                       <ul>
                         {allWorkspace.OwnedWorkspaces.map((val) => (
+                          <div key={val?.id}>
+                            <input
+                              onChange={() => handleSwitchWorkspace(val?.id)}
+                              className="cursor-pointer my-2"
+                              type="radio"
+                              name="workspace"
+                              id={`workspace-${val?.id}`}
+                              checked={selectedId === val?.id}
+                            />
+                            <span className="mx-2">{val?.WorkspaceName}</span>
+                            <hr className="text-[#16C47F]" />
+                          </div>
+                        ))}
+                        {allWorkspace.MemberWorkspaces.map((val) => (
                           <div key={val?.id}>
                             <input
                               onChange={() => handleSwitchWorkspace(val?.id)}

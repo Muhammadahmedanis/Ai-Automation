@@ -93,6 +93,8 @@ const Settings = () => {
     addMemeberMutation,
   } = useWorkspaceQuery();
 
+  console.log(teamWorkspaceMember)
+
   const [workspaceData, setWorkspaceData] = useState({
     WorkspaceName: "",
     id: "",

@@ -63,8 +63,8 @@ const SignUp = () => {
       return;
     }
     // Handle sign-up logic
-    console.log(formData);
-    // signupMutation.mutate(formData);
+    // console.log(formData);
+    signupMutation.mutate(formData);
   };
 
   return (
