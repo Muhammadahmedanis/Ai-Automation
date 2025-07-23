@@ -85,7 +85,7 @@ const Settings = () => {
   };
 
   // *****************************
-
+  
   const {
     currentWorkspace,
     updateWorkspaceMutation,
