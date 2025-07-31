@@ -182,7 +182,7 @@ const StageContainer = ({ stage, children, leadCount }) => {
             <button
               onClick={scrollUp}
               disabled={!canScrollUp}
-              className={`absolute left-1/2 transform -translate-x-1/2 z-10 w-[80%] h-6 rounded-full flex items-center justify-center text-xs transition-all duration-300 ${
+              className={`absolute left-1/2 transform -translate-x-1/2 z-8 w-[80%] h-6 rounded-full flex items-center justify-center text-xs transition-all duration-300 ${
                 canScrollUp
                   ? "text-white bg-[#16C47F] hover:bg-[#14b574] cursor-pointer shadow-lg"
                   : "bg-gradient-to-b from-gray-200 to-gray-300 text-gray-400 cursor-not-allowed"
@@ -215,7 +215,7 @@ const StageContainer = ({ stage, children, leadCount }) => {
             <button
               onClick={scrollDown}
               disabled={!canScrollDown}
-              className={`absolute left-1/2 transform -translate-x-1/2 z-10 w-[80%] h-6 rounded-full flex items-center justify-center text-xs transition-all duration-300 ${
+              className={`absolute left-1/2 transform -translate-x-1/2 z-8 w-[80%] h-6 rounded-full flex items-center justify-center text-xs transition-all duration-300 ${
                 canScrollDown
                   ? "text-white bg-[#FF9D23] hover:bg-[#e68a1f] cursor-pointer shadow-lg"
                   : "bg-gradient-to-b from-gray-200 to-gray-300 text-gray-400 cursor-not-allowed hover"
