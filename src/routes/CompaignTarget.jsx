@@ -1344,7 +1344,7 @@ export default function CompaignTarget() {
                           </span>
                         </div>
                         <div className="flex gap-3 shrink-0">
-                          <button className="px-4 py-2 border border-[#16C47F] text-[#16C47F] hover:bg-[#16C47F] text-sm rounded-lg flex items-center gap-2 transition-colors duration-200">
+                          <button className="px-4 py-2 border border-[#16C47F] text-[#16C47F] hover:bg-[#16C47F] hover:text-white text-sm rounded-lg flex items-center gap-2 transition-colors duration-200">
                             <Eye size={16} />
                             <span className="hidden sm:inline">Preview</span>
                           </button>

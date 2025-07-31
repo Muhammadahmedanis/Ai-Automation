@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { usePipelineQuery } from "../reactQuery/hooks/usePipelineQuery";
 import {
   DndContext,
@@ -62,26 +62,32 @@ const SortableLeadCard = ({ lead, stage }) => {
       style={style}
       {...attributes}
       {...listeners}
-      className="group rounded-xl transition-all md:w-full w-60 hover:bg-gray-400 hover:text-white bg-white cursor-grab active:cursor-grabbing"
+      className="group rounded-xl transition-all md:w-full w-60 hover:bg-gray-400 hover:text-white bg-white cursor-grab active:cursor-grabbing mb-3 h-32 flex-shrink-0"
     >
-      <div className="flex items-center gap-3 px-4 py-3">
-        <img src="/Boy.png" alt="Profile" className="w-10 h-10 rounded-full" />
-        <div>
-          <p className="">{lead.Name}</p>
-          <p className="text-sm group-hover:text-white text-gray-500">
+      <div className="flex items-center gap-3 px-4 py-2">
+        <img
+          src="/Boy.png"
+          alt="Profile"
+          className="w-8 h-8 rounded-full flex-shrink-0"
+        />
+        <div className="flex-1 min-w-0">
+          <p className="font-medium truncate">{lead.Name}</p>
+          <p className="text-xs group-hover:text-white text-gray-500 truncate">
             {lead.Title}
           </p>
         </div>
       </div>
-      <p className="text-sm group-hover:text-white text-gray-500 mt-2 px-4">
-        @ {lead.Company}
-      </p>
-      <p className="text-sm group-hover:text-white text-gray-500 mt-2 px-4">
-        {lead.Phone}
-      </p>
-      <p className="text-sm group-hover:text-white text-gray-500 px-4 overflow-hidden text-ellipsis pb-4">
-        {lead.Email}
-      </p>
+      <div className="px-4 pb-2">
+        <p className="text-xs group-hover:text-white text-gray-500 truncate">
+          @ {lead.Company}
+        </p>
+        <p className="text-xs group-hover:text-white text-gray-500 truncate">
+          {lead.Phone}
+        </p>
+        <p className="text-xs group-hover:text-white text-gray-500 truncate">
+          {lead.Email}
+        </p>
+      </div>
     </div>
   );
 };
@@ -108,7 +114,12 @@ const LeadCard = ({ name, phone, email, title, company }) => {
 };
 
 // Droppable Stage Container
-const StageContainer = ({ stage, children }) => {
+const StageContainer = ({ stage, children, leadCount }) => {
+  const scrollContainerRef = useRef(null);
+  const [currentScrollIndex, setCurrentScrollIndex] = useState(0);
+  const leadsPerView = 3; // Number of leads to show at once
+  const leadHeight = 140; // Approximate height of each lead card including gap
+
   const { setNodeRef, isOver } = useDroppable({
     id: `stage-${stage.name}`,
     data: {
@@ -116,6 +127,44 @@ const StageContainer = ({ stage, children }) => {
       stageName: stage.name,
     },
   });
+
+  const canScrollUp = currentScrollIndex > 0;
+  const canScrollDown = currentScrollIndex + leadsPerView < leadCount;
+
+  const scrollUp = () => {
+    if (canScrollUp) {
+      const newIndex = Math.max(0, currentScrollIndex - leadsPerView);
+      setCurrentScrollIndex(newIndex);
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTo({
+          top: newIndex * leadHeight,
+          behavior: "smooth",
+        });
+      }
+    }
+  };
+
+  const scrollDown = () => {
+    if (canScrollDown) {
+      const newIndex = Math.min(
+        Math.max(0, leadCount - leadsPerView),
+        currentScrollIndex + leadsPerView
+      );
+      setCurrentScrollIndex(newIndex);
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTo({
+          top: newIndex * leadHeight,
+          behavior: "smooth",
+        });
+      }
+    }
+  };
+
+  const handleScroll = (e) => {
+    const scrollTop = e.target.scrollTop;
+    const newIndex = Math.round(scrollTop / leadHeight);
+    setCurrentScrollIndex(newIndex);
+  };
 
   return (
     <div key={stage.name} className="flex justify-center">
@@ -125,13 +174,56 @@ const StageContainer = ({ stage, children }) => {
         >
           {stage.name}
         </div>
-        <div
-          ref={setNodeRef}
-          className={`space-y-3 mt-3 min-h-[100px] p-1 rounded-lg w-full transition-colors ${
-            isOver ? "bg-gray-200" : ""
-          }`}
-        >
-          {children}
+
+        {/* Navigation Controls */}
+        <div className="relative w-full">
+          {/* Up Button */}
+          {leadCount > leadsPerView && (
+            <button
+              onClick={scrollUp}
+              disabled={!canScrollUp}
+              className={`absolute left-1/2 transform -translate-x-1/2 z-10 w-[80%] h-6 rounded-full flex items-center justify-center text-xs transition-all duration-300 ${
+                canScrollUp
+                  ? "text-white bg-[#16C47F] hover:bg-[#14b574] cursor-pointer shadow-lg"
+                  : "bg-gradient-to-b from-gray-200 to-gray-300 text-gray-400 cursor-not-allowed"
+              }`}
+            >
+              ↑
+            </button>
+          )}
+
+          {/* Scrollable Container */}
+          <div
+            ref={(node) => {
+              setNodeRef(node);
+              scrollContainerRef.current = node;
+            }}
+            onScroll={handleScroll}
+            className={`space-y-3 mt-3 p-1 rounded-lg w-full transition-colors overflow-y-auto scrollbar-hide ${
+              isOver ? "bg-gray-200" : ""
+            }`}
+            style={{
+              height: `${leadsPerView * leadHeight}px`,
+              minHeight: `${leadsPerView * leadHeight}px`,
+            }}
+          >
+            {children}
+          </div>
+
+          {/* Down Button */}
+          {leadCount > leadsPerView && (
+            <button
+              onClick={scrollDown}
+              disabled={!canScrollDown}
+              className={`absolute left-1/2 transform -translate-x-1/2 z-10 w-[80%] h-6 rounded-full flex items-center justify-center text-xs transition-all duration-300 ${
+                canScrollDown
+                  ? "text-white bg-[#FF9D23] hover:bg-[#e68a1f] cursor-pointer shadow-lg"
+                  : "bg-gradient-to-b from-gray-200 to-gray-300 text-gray-400 cursor-not-allowed hover"
+              }`}
+            >
+              ↓
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -273,7 +365,11 @@ const Pipelines = () => {
         >
           <div className="grid xl:grid-cols-8 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 justify-items-center">
             {pipelineStages.map((stage) => (
-              <StageContainer key={stage.name} stage={stage}>
+              <StageContainer
+                key={stage.name}
+                stage={stage}
+                leadCount={leadsByStage[stage.name]?.length || 0}
+              >
                 <SortableContext
                   items={leadsByStage[stage.name]?.map((lead) => lead.id) || []}
                   strategy={verticalListSortingStrategy}
@@ -288,7 +384,9 @@ const Pipelines = () => {
                       />
                     ))
                   ) : (
-                    <p className="p-2 text-center">No leads for this stage.</p>
+                    <div className="p-2 text-center text-gray-500 h-32 flex items-center justify-center">
+                      No leads for this stage.
+                    </div>
                   )}
                 </SortableContext>
               </StageContainer>
