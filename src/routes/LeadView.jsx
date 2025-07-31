@@ -9,6 +9,7 @@ const mockSequences = [
   { id: 3, name: 'Demo Follow-up' },
 ];
 
+
 const mockLead = {
   id: 1,
   Name: 'John Doe',
